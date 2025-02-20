@@ -34,4 +34,8 @@ public class FXAppBoot extends Application {
         return fxmlLoader.load();
     }
 
+    public static void run() {
+        launch();
+    }
+
 }
