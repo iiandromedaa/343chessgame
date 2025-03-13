@@ -11,6 +11,9 @@ public class Main {
 		new Lwjgl3Application(new Chessgame(), config);
         
         System.out.println("hi world hello world hii!!!!!");
+
+        Board board = new Board();
+        board.displayBoard();
     }
 
     //This is Jack's comment for the jackh branch
