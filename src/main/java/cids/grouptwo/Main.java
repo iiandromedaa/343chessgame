@@ -22,9 +22,9 @@ public class Main {
         int w, h;
         boolean fullscreen;
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
-        config.setResizable(false);
         Graphics.DisplayMode dm = Lwjgl3ApplicationConfiguration.getDisplayMode();
         Preferences prefs = Preferences.userNodeForPackage(Main.class);
+
         try {
             w = Integer.parseInt(prefs.get("width", "1280"));
             h = Integer.parseInt(prefs.get("height", "720"));
@@ -35,9 +35,13 @@ public class Main {
             h = dm.height / 2;
             fullscreen = false;
         }
+
+        config.setResizable(false);
         config.setWindowedMode(w, h);
+        
         if (fullscreen)
             config.setFullscreenMode(dm);
+
         System.out.println("launching our awesome game on " + System.getProperty("os.name") + "!!");
 		new Lwjgl3Application(new ChessGame(w, h), config);
     }

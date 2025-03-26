@@ -25,7 +25,7 @@ public class ChessGame extends Game {
         assets.loadAll();
         assets.getAssetManager().finishLoading();
         camera = new OrthographicCamera(1,1);
-        setScreen(new MainMenuScreen(width, height, assets.getAssetManager(), this));
+        setScreen(new MainMenuScreen(width, height, assets, this));
     }
 
     // @Override
