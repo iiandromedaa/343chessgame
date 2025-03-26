@@ -6,6 +6,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Music.OnCompletionListener;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.math.Vector3;
@@ -13,6 +14,8 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.crashinvaders.vfx.VfxManager;
+import com.crashinvaders.vfx.effects.GaussianBlurEffect;
 
 public class MainMenuScreen extends MenuScreen {
 
@@ -20,6 +23,10 @@ public class MainMenuScreen extends MenuScreen {
     private Table table;
     private CameraShake cShake;
     private Music sound;
+    private VfxManager vfxManager;
+    private GaussianBlurEffect blur;
+    private boolean settingsOpen;
+    private Vector3 blurAmount;
 
     MainMenuScreen(int width, int height, Assets assets, ChessGame game) {
         super(width, height, assets, game);
@@ -27,6 +34,14 @@ public class MainMenuScreen extends MenuScreen {
         logo.setFilter(TextureFilter.Linear, TextureFilter.Linear);
         cShake = new CameraShake();
         sound = assets.getMoveSound();
+
+        vfxManager = new VfxManager(Pixmap.Format.RGBA8888);
+        // blur = new CustomGaussianBlur(25);
+        blur = new GaussianBlurEffect();
+        blur.setPasses(5);
+        blurAmount = Vector3.Zero;
+        // blur.setAmount(blurAmount.x);
+        vfxManager.addEffect(blur);
     }
 
     @Override
@@ -50,7 +65,7 @@ public class MainMenuScreen extends MenuScreen {
         table.setPosition(0, 0);
         stage.addActor(table);
 
-        addButton("play", table).addListener(new ClickListener(){
+        addButton("play", table, 0).addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 // TODO swap to game screen and dispose menu
@@ -59,15 +74,19 @@ public class MainMenuScreen extends MenuScreen {
             }
         });
 
-        addButton("settings", table).addListener(new ClickListener(){
+        addButton("settings", table, 0).addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                // TODO swap to settings screen and hide menu
+                // TODO unhide settings table and enable blur
+                if (settingsOpen)
+                    settingsOpen = false;
+                else
+                    settingsOpen = true;
                 sound.play();
             }
         });;
 
-        addButton("quit", table).addListener(new ClickListener(){
+        addButton("quit", table, 0).addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 OnCompletionListener OCL = new OnCompletionListener() {
@@ -88,19 +107,47 @@ public class MainMenuScreen extends MenuScreen {
     @Override
     public void render(float delta) {
         game.getCamera().update();
-        // its not really necessary to set a background for when the buffer
-        // is cleared, it probably will never be seen, but the examples
-        // i was learning from did it, so it can't hurt
+
+        vfxManager.cleanUpBuffers();
+        vfxManager.beginInputCapture();
+        // anything after this and before endInputCapture() will be in the vfxBuffer
+        // and then will have effects applied
+
         Gdx.gl.glClearColor(0.3f, 0.3f, 0.3f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
         stage.act();
         stage.draw();
+
+        vfxManager.endInputCapture();
+        System.out.println(blurAmount.x);
+        if (settingsOpen) 
+            blur.setAmount(blurAmount.lerp(new Vector3(5,0,0), 0.01f).x);
+        else 
+            blur.setAmount(blurAmount.lerp(new Vector3(0.001f,0,0), 0.1f).x);
+        
+        vfxManager.applyEffects();
+        vfxManager.renderToScreen();
+
         if (cShake.getTime() > 0){
             cShake.tick(Gdx.graphics.getDeltaTime());
             game.getCamera().translate(cShake.getPosition());
         } else {
             game.getCamera().position.lerp(new Vector3(width / 2, height / 2, 0), 0.05f);
         }
+    }
+
+    @Override
+    public void resize(int width, int height) {
+        super.resize(width, height);
+        vfxManager.resize(width, height);
+    }
+
+    @Override
+    public void dispose() {
+        vfxManager.dispose();
+        blur.dispose();
+        super.dispose();
     }
 
 }

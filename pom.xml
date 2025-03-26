@@ -26,6 +26,18 @@
             <version>1.12.1</version>
             <classifier>natives-desktop</classifier>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/com.crashinvaders.vfx/gdx-vfx-core -->
+        <dependency>
+            <groupId>com.crashinvaders.vfx</groupId>
+            <artifactId>gdx-vfx-core</artifactId>
+            <version>0.5.4</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/com.crashinvaders.vfx/gdx-vfx-effects -->
+        <dependency>
+            <groupId>com.crashinvaders.vfx</groupId>
+            <artifactId>gdx-vfx-effects</artifactId>
+            <version>0.5.4</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>

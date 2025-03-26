@@ -3,6 +3,7 @@ package cids.grouptwo.gdx;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.math.Quaternion;
 
 /**
  * libgdx game loop, originally implemented ApplicationListener, 
