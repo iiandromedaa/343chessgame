@@ -1,14 +1,13 @@
 package cids.grouptwo;
-public class Piece {
 
+public abstract class Piece {
     private int x, y;
-    private String color, type;
-    
-    public Piece(int x, int y, String color, String type) {
+    private String color;
+
+    public Piece(String color, int x, int y) {
         this.x = x;
         this.y = y;
         this.color = color;
-        this.type = type;
     }
 
     public int getX() {
@@ -23,51 +22,32 @@ public class Piece {
         return color;
     }
 
-    public String getType() {
-        return type;
-    }
-
-    public void setX(int x) {
+    public void piecePosition(int x, int y) {
         this.x = x;
-    }
-
-    public void setY(int y) {
         this.y = y;
     }
 
-    public void setColor(String color) {
-        this.color = color;
-    }
+    // // /* JackH ~ AI generated move validation, need to review
+    // // public boolean isValidMove(int newX, int newY
+    //        switch (type.toLowerCase()
+    //            case "kin
+    //                // King can move one square in any direct
+    //                return Math.abs(newX - x) <= 1 && Math.abs(newY - y) <=
 
-    public void setType(String type) {
-        this.type = type;
-    }
+    //            case "knigh
+    //                // Knight moves in an L-sh
+    //                int dx = Math.abs(newX - 
+    //                int dy = Math.abs(newY - 
+    //                return (dx == 2 && dy == 1) || (dx == 1 && dy == 
 
-    /* JackH ~ AI generated move validation, need to review */
-    public boolean isValidMove(int newX, int newY) {
-        switch (type.toLowerCase()) {
-            case "king":
-                // King can move one square in any direction
-                return Math.abs(newX - x) <= 1 && Math.abs(newY - y) <= 1;
+    //            case "bisho
+    //                // Bishop moves diagona
+    //                return Math.abs(newX - x) == Math.abs(newY - 
 
-            case "knight":
-                // Knight moves in an L-shape
-                int dx = Math.abs(newX - x);
-                int dy = Math.abs(newY - y);
-                return (dx == 2 && dy == 1) || (dx == 1 && dy == 2);
+    //            defau
+    //                // Invalid piece t
+    //                return fal
+         
+    // // }
 
-            case "bishop":
-                // Bishop moves diagonally
-                return Math.abs(newX - x) == Math.abs(newY - y);
-
-            default:
-                // Invalid piece type
-                return false;
-        }
-    }
-
-    @Override
-    public String toString() {
-        return color + " " + type + " at (" + x + ", " + y + ")";
-    }
 }
