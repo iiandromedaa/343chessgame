@@ -45,9 +45,6 @@ public class Main {
         
         if (fullscreen)
             config.setFullscreenMode(dm);
-
-        System.out.println("launching our awesome game on " + System.getProperty("os.name") + "!!");
-        System.out.println();
         new Lwjgl3Application(new ChessGame(h), config);
         
     }

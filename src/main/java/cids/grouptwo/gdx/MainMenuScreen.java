@@ -103,6 +103,7 @@ public class MainMenuScreen extends MenuScreen {
                     public void onCompletion(Music music) {
                         music.dispose();
                         Gdx.app.exit();
+                        Gdx.app.log(null, null);
                     }
                 };
                 sound.setOnCompletionListener(OCL);
@@ -161,7 +162,7 @@ public class MainMenuScreen extends MenuScreen {
     }
 
     private void swapToGame() {
-        System.out.println("swapping to game menu!");
+        Gdx.app.log("chessgame", "swapping to game menu!");
         sound.play();
         stage.getRoot().getColor().a = 1;
         SequenceAction sequenceAction = new SequenceAction();

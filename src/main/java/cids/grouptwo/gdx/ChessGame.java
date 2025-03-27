@@ -1,6 +1,9 @@
 package cids.grouptwo.gdx;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Graphics;
+import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -27,6 +30,11 @@ public class ChessGame extends Game {
 
     @Override
     public void create() {
+        Gdx.app.log("chessgame", "launching our awesome game on " + 
+            System.getProperty("os.name") + "!!");
+        Gdx.app.log("chessgame", "monitor width: " + Lwjgl3ApplicationConfiguration
+            .getDisplayMode().width + ", monitor height: " + Lwjgl3ApplicationConfiguration
+            .getDisplayMode().height);
         assets = new Assets();
         camera = new OrthographicCamera(width, height);
         setScreen(new MainMenuScreen(width, height, this));
