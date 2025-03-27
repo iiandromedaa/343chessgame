@@ -4,7 +4,6 @@ import org.lwjgl.opengl.GL20;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.math.Vector3;
@@ -21,7 +20,7 @@ public class GameScreen extends MenuScreen {
     private GaussianBlurEffect blur;
     private Vector3 blurAmount;
     private boolean modalOpen;
-    private Texture background;
+    private Texture background; 
 
     GameScreen(int width, int height, ChessGame game, VfxManager vfxManager) {
         super(width, height, game);
@@ -49,7 +48,6 @@ public class GameScreen extends MenuScreen {
         background.setPosition(width / 2 - background.getWidth() / 2, 
             height / 2 - background.getHeight() / 2);
         stage.addActor(background);
-
     }
 
     @Override
