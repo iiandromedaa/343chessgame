@@ -2,9 +2,11 @@ package cids.grouptwo;
 
 import java.util.prefs.Preferences;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
+import com.badlogic.gdx.files.FileHandle;
 
 import cids.grouptwo.gdx.ChessGame;
 
@@ -26,9 +28,14 @@ public class Main {
         Preferences prefs = Preferences.userNodeForPackage(Main.class);
 
         try {
-            w = Integer.parseInt(prefs.get("width", "1280"));
-            h = Integer.parseInt(prefs.get("height", "720"));
+            w = Integer.parseInt(prefs.get("width", "0"));
+            h = Integer.parseInt(prefs.get("height", "0"));
             fullscreen = Boolean.parseBoolean(prefs.get("fullscreen", "false"));
+            if (w == 0 || h == 0) {
+                w = dm.width / 2;
+                h = dm.height / 2;
+                fullscreen = false;
+            }
         } catch (NullPointerException | SecurityException | IllegalStateException e) {
             // if settings not found :(
             w = dm.width / 2;
@@ -43,7 +50,9 @@ public class Main {
             config.setFullscreenMode(dm);
 
         System.out.println("launching our awesome game on " + System.getProperty("os.name") + "!!");
-		new Lwjgl3Application(new ChessGame(w, h), config);
+        System.out.println();
+        new Lwjgl3Application(new ChessGame(w, h), config);
+        
     }
 
 }

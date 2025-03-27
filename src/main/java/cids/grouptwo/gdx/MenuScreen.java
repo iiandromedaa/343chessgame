@@ -1,7 +1,6 @@
 package cids.grouptwo.gdx;
 
 import com.badlogic.gdx.ScreenAdapter;
-import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -19,11 +18,11 @@ public class MenuScreen extends ScreenAdapter{
     Stage stage;
     ChessGame game;
 
-    MenuScreen(int width, int height, Assets assets, ChessGame game) {
+    MenuScreen(int width, int height, ChessGame game) {
         this.game = game;
         this.width = width;
         this.height = height;
-        skin = assets.getSkin();
+        skin = game.getAsset("skin");
         viewport = new FitViewport(width, height, game.getCamera());
         stage = new Stage(viewport);
     }
@@ -40,11 +39,11 @@ public class MenuScreen extends ScreenAdapter{
     TextButton addButton(String name, Table table, int flag) {
         TextButton button = new TextButton(name, skin);
         Cell<TextButton> cell = table.add(button);
+        // dont worry about these random float multipliers
         if (flag == 0)
-            cell.fill().padRight(10);
+            cell.fill().padRight(width * 0.0078f);
         else
-            cell.fill().padTop(10).align(Align.top);
-
+            cell.fill().padTop(height * 0.0014f).align(Align.top);
         return button;
     }
 

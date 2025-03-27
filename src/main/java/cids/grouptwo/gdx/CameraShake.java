@@ -12,7 +12,6 @@ public class CameraShake {
     private float curPower;
     private Random random;
     private Vector3 position;
-    private Vector3 rotation;
     
     CameraShake() {
         random = new Random();

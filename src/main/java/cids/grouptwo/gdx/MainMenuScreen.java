@@ -3,7 +3,6 @@ package cids.grouptwo.gdx;
 import org.lwjgl.opengl.GL20;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Music.OnCompletionListener;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -20,6 +19,7 @@ import com.crashinvaders.vfx.effects.GaussianBlurEffect;
 public class MainMenuScreen extends MenuScreen {
 
     private Texture logo;
+    private Texture background;
     private Table table;
     private CameraShake cShake;
     private Music sound;
@@ -28,17 +28,22 @@ public class MainMenuScreen extends MenuScreen {
     private boolean settingsOpen;
     private Vector3 blurAmount;
 
-    MainMenuScreen(int width, int height, Assets assets, ChessGame game) {
-        super(width, height, assets, game);
-        logo = assets.getAssetManager().get(assets.getLogo());
+    MainMenuScreen(int width, int height, ChessGame game) {
+        super(width, height, game);
+
+        logo = game.getAsset("logo");
         logo.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+
+        background = game.getAsset("background");
+        background.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+
         cShake = new CameraShake();
-        sound = assets.getMoveSound();
+        sound = game.getAsset("moveSound");
 
         vfxManager = new VfxManager(Pixmap.Format.RGBA8888);
         // blur = new CustomGaussianBlur(25);
         blur = new GaussianBlurEffect();
-        blur.setPasses(5);
+        blur.setPasses(7);
         blurAmount = Vector3.Zero;
         // blur.setAmount(blurAmount.x);
         vfxManager.addEffect(blur);
@@ -46,8 +51,14 @@ public class MainMenuScreen extends MenuScreen {
 
     @Override
     public void show() {
+        Image background = new Image(this.background);
+        background.setSize(width*1.25f, height*1.25f);
+        background.setPosition(width / 2 - background.getWidth() / 2, 
+            height / 2 - background.getHeight() / 2);
+        stage.addActor(background);
+
         Image logo = new Image(this.logo);
-        logo.setZIndex(0);
+        // logo.setZIndex(0);
         logo.setSize(width/1.5f, height/1.5f);
         // places image a little above the center of the screen
         logo.setPosition(width / 2 - logo.getWidth()/2, height / 2 - logo.getHeight()/3);
@@ -108,6 +119,13 @@ public class MainMenuScreen extends MenuScreen {
     public void render(float delta) {
         game.getCamera().update();
 
+        if (cShake.getTime() > 0){
+            cShake.tick(Gdx.graphics.getDeltaTime());
+            game.getCamera().translate(cShake.getPosition());
+        } else {
+            game.getCamera().position.lerp(new Vector3(width / 2, height / 2, 0), 0.05f);
+        }
+
         vfxManager.cleanUpBuffers();
         vfxManager.beginInputCapture();
         // anything after this and before endInputCapture() will be in the vfxBuffer
@@ -119,22 +137,16 @@ public class MainMenuScreen extends MenuScreen {
         stage.act();
         stage.draw();
 
+        // anything beyond here does not have effects applied
         vfxManager.endInputCapture();
-        System.out.println(blurAmount.x);
+
         if (settingsOpen) 
-            blur.setAmount(blurAmount.lerp(new Vector3(5,0,0), 0.01f).x);
+            blur.setAmount(blurAmount.lerp(new Vector3(5,0,0), 0.025f).x);
         else 
             blur.setAmount(blurAmount.lerp(new Vector3(0.001f,0,0), 0.1f).x);
         
         vfxManager.applyEffects();
         vfxManager.renderToScreen();
-
-        if (cShake.getTime() > 0){
-            cShake.tick(Gdx.graphics.getDeltaTime());
-            game.getCamera().translate(cShake.getPosition());
-        } else {
-            game.getCamera().position.lerp(new Vector3(width / 2, height / 2, 0), 0.05f);
-        }
     }
 
     @Override

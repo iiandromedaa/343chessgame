@@ -1,9 +1,11 @@
 package cids.grouptwo.gdx;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.assets.AssetDescriptor;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.math.Quaternion;
 
 /**
  * libgdx game loop, originally implemented ApplicationListener, 
@@ -14,6 +16,7 @@ public class ChessGame extends Game {
 
     private Camera camera;
     private int width, height;
+    private Assets assets;
 
     public ChessGame(int width, int height) {
         this.width = width;
@@ -22,11 +25,9 @@ public class ChessGame extends Game {
 
     @Override
     public void create() {
-        Assets assets = new Assets();
-        assets.loadAll();
-        assets.getAssetManager().finishLoading();
+        assets = new Assets();
         camera = new OrthographicCamera(1,1);
-        setScreen(new MainMenuScreen(width, height, assets, this));
+        setScreen(new MainMenuScreen(width, height, this));
     }
 
     // @Override
@@ -40,6 +41,17 @@ public class ChessGame extends Game {
 
     public Camera getCamera() {
         return camera;
+    }
+
+    /**
+     * ignore the cast lol its fine trust me
+     * @param key look at the Assets constructor for reference on keys
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    public <T> T getAsset(String key) {
+        AssetDescriptor<?> descriptor = assets.getMap().get(key);
+        return (T) assets.getAssetManager().get(descriptor);
     }
 
 }
