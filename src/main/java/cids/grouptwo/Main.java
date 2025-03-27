@@ -2,12 +2,9 @@ package cids.grouptwo;
 
 import java.util.prefs.Preferences;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
-import com.badlogic.gdx.files.FileHandle;
-
 import cids.grouptwo.gdx.ChessGame;
 
 /**
@@ -51,7 +48,7 @@ public class Main {
 
         System.out.println("launching our awesome game on " + System.getProperty("os.name") + "!!");
         System.out.println();
-        new Lwjgl3Application(new ChessGame(w, h), config);
+        new Lwjgl3Application(new ChessGame(h), config);
         
     }
 

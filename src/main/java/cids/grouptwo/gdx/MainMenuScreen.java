@@ -30,7 +30,6 @@ public class MainMenuScreen extends MenuScreen {
 
     MainMenuScreen(int width, int height, ChessGame game) {
         super(width, height, game);
-
         logo = game.getAsset("logo");
         logo.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 
@@ -41,11 +40,9 @@ public class MainMenuScreen extends MenuScreen {
         sound = game.getAsset("moveSound");
 
         vfxManager = new VfxManager(Pixmap.Format.RGBA8888);
-        // blur = new CustomGaussianBlur(25);
         blur = new GaussianBlurEffect();
         blur.setPasses(7);
         blurAmount = Vector3.Zero;
-        // blur.setAmount(blurAmount.x);
         vfxManager.addEffect(blur);
     }
 
@@ -131,9 +128,6 @@ public class MainMenuScreen extends MenuScreen {
         // anything after this and before endInputCapture() will be in the vfxBuffer
         // and then will have effects applied
 
-        Gdx.gl.glClearColor(0.3f, 0.3f, 0.3f, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
         stage.act();
         stage.draw();
 
@@ -141,18 +135,21 @@ public class MainMenuScreen extends MenuScreen {
         vfxManager.endInputCapture();
 
         if (settingsOpen) 
-            blur.setAmount(blurAmount.lerp(new Vector3(5,0,0), 0.025f).x);
+            blur.setAmount(blurAmount.lerp(new Vector3(5,0,0), 0.015f).x);
         else 
             blur.setAmount(blurAmount.lerp(new Vector3(0.001f,0,0), 0.1f).x);
-        
+
+        Gdx.gl.glClearColor(0.3f, 0.3f, 0.3f, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
         vfxManager.applyEffects();
-        vfxManager.renderToScreen();
+        vfxManager.renderToScreen(viewport.getScreenX(), viewport.getScreenY(), viewport.getScreenWidth(), viewport.getScreenHeight());
     }
 
     @Override
     public void resize(int width, int height) {
-        super.resize(width, height);
         vfxManager.resize(width, height);
+        super.resize(width, height);
     }
 
     @Override
