@@ -169,27 +169,11 @@ public class MainMenuScreen extends MenuScreen {
         sequenceAction.addAction(Actions.run(new Runnable() {
             @Override
             public void run() {
-                game.setScreen(new GameScreen(width, height, game));
+                game.setScreen(new GameScreen(width, height, game, vfxManager));
                 MainMenuScreen.this.dispose();
             }
         }));
         stage.getRoot().addAction(sequenceAction);
     }
 
-    /**
-     * calls the vfx render loop manually to hopefully prevent killing it mid-capture
-     */
-    /*
-    private void disposeVfx() {
-        vfxManager.removeEffect(blur);
-        blur.dispose();
-        vfxManager.setDisabled(true);
-        vfxManager.dispose();
-        vfxManager.beginInputCapture();
-        vfxManager.endInputCapture();
-        vfxManager.renderToScreen(viewport.getScreenX(), viewport.getScreenY(), 
-            viewport.getScreenWidth(), viewport.getScreenHeight());
-        vfxManager.getPingPongWrapper().end();
-    }
-    */
 }

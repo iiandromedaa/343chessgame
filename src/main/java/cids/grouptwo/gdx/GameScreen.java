@@ -23,7 +23,7 @@ public class GameScreen extends MenuScreen {
     private boolean modalOpen;
     private Texture background;
 
-    GameScreen(int width, int height, ChessGame game) {
+    GameScreen(int width, int height, ChessGame game, VfxManager vfxManager) {
         super(width, height, game);
 
         background = game.getAsset("background");
@@ -32,7 +32,8 @@ public class GameScreen extends MenuScreen {
         cShake = new CameraShake();
         sound = game.getAsset("moveSound");
 
-        vfxManager = new VfxManager(Pixmap.Format.RGBA8888);
+        this.vfxManager = vfxManager;
+        this.vfxManager.removeAllEffects();
         blur = new GaussianBlurEffect();
         blur.setPasses(7);
         blurAmount = Vector3.Zero;
