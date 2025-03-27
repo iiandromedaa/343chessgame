@@ -10,6 +10,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -66,6 +68,7 @@ public class MainMenuScreen extends MenuScreen {
                 sound.play();
             }
         });
+
         stage.addActor(logo);
 
         table = new Table();
@@ -76,9 +79,7 @@ public class MainMenuScreen extends MenuScreen {
         addButton("play", table, 0).addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                // TODO swap to game screen and dispose menu
-                sound.play();
-                System.out.println("now hold on, the game doesnt exist yet!");
+                MainMenuScreen.this.swapToGame();
             }
         });
 
@@ -143,7 +144,8 @@ public class MainMenuScreen extends MenuScreen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         vfxManager.applyEffects();
-        vfxManager.renderToScreen(viewport.getScreenX(), viewport.getScreenY(), viewport.getScreenWidth(), viewport.getScreenHeight());
+        vfxManager.renderToScreen(viewport.getScreenX(), viewport.getScreenY(),
+            viewport.getScreenWidth(), viewport.getScreenHeight());
     }
 
     @Override
@@ -154,9 +156,40 @@ public class MainMenuScreen extends MenuScreen {
 
     @Override
     public void dispose() {
-        vfxManager.dispose();
-        blur.dispose();
+        // disposeVfx();
         super.dispose();
     }
 
+    private void swapToGame() {
+        System.out.println("swapping to game menu!");
+        sound.play();
+        stage.getRoot().getColor().a = 1;
+        SequenceAction sequenceAction = new SequenceAction();
+        sequenceAction.addAction(Actions.fadeOut(0.5f));
+        sequenceAction.addAction(Actions.run(new Runnable() {
+            @Override
+            public void run() {
+                game.setScreen(new GameScreen(width, height, game));
+                MainMenuScreen.this.dispose();
+            }
+        }));
+        stage.getRoot().addAction(sequenceAction);
+    }
+
+    /**
+     * calls the vfx render loop manually to hopefully prevent killing it mid-capture
+     */
+    /*
+    private void disposeVfx() {
+        vfxManager.removeEffect(blur);
+        blur.dispose();
+        vfxManager.setDisabled(true);
+        vfxManager.dispose();
+        vfxManager.beginInputCapture();
+        vfxManager.endInputCapture();
+        vfxManager.renderToScreen(viewport.getScreenX(), viewport.getScreenY(), 
+            viewport.getScreenWidth(), viewport.getScreenHeight());
+        vfxManager.getPingPongWrapper().end();
+    }
+    */
 }
