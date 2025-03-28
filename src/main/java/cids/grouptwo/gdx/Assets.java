@@ -7,6 +7,7 @@ import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 public class Assets {
@@ -26,6 +27,7 @@ public class Assets {
         map.put("skin", new AssetDescriptor<>("uiskin.json", Skin.class));
         map.put("logo", new AssetDescriptor<>("logo.png", Texture.class));
         map.put("background", new AssetDescriptor<>("background.jpg", Texture.class));
+        map.put("tilesAtlas", new AssetDescriptor<>("tiles.atlas", TextureAtlas.class));
         loadAll();
         assetManager.finishLoading();
     }

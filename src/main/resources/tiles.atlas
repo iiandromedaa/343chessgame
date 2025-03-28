@@ -1,0 +1,15 @@
+tiles.png
+size:1024,128
+repeat:none
+black
+bounds:0,0,128,128
+blackmove
+bounds:512,0,128,128
+blackselect
+bounds:640,0,128,128
+white
+bounds:384,0,128,128
+whitemove
+bounds:128,0,128,128
+whiteselect
+bounds:256,0,128,128

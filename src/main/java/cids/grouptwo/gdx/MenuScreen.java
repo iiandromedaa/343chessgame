@@ -1,6 +1,7 @@
 package cids.grouptwo.gdx;
 
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -42,9 +43,16 @@ public class MenuScreen extends ScreenAdapter{
         // dont worry about these random float multipliers
         if (flag == 0)
             cell.fill().padRight(width * 0.0078f);
-        else
+        else {
             cell.fill().padTop(height * 0.0014f).align(Align.top);
+            table.row();
+        }
         return button;
+    }
+
+    public void centerActor(Actor actor) {
+        actor.setPosition(width / 2 - actor.getWidth() / 2, 
+        height / 2 - actor.getHeight() / 2);
     }
 
     @Override

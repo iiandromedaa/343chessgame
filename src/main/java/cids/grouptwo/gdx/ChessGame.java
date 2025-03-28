@@ -60,6 +60,9 @@ public class ChessGame extends Game {
     @SuppressWarnings("unchecked")
     public <T> T getAsset(String key) {
         AssetDescriptor<?> descriptor = assets.getMap().get(key);
+        if (descriptor == null) {
+            Gdx.app.error("chessgame", "this asset doesnt exist!");
+        }
         return (T) assets.getAssetManager().get(descriptor);
     }
 

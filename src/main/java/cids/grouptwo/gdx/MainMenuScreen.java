@@ -52,8 +52,7 @@ public class MainMenuScreen extends MenuScreen {
     public void show() {
         Image background = new Image(this.background);
         background.setSize(width*1.25f, height*1.25f);
-        background.setPosition(width / 2 - background.getWidth() / 2, 
-            height / 2 - background.getHeight() / 2);
+        centerActor(background);
         stage.addActor(background);
 
         Image logo = new Image(this.logo);
@@ -103,7 +102,6 @@ public class MainMenuScreen extends MenuScreen {
                     public void onCompletion(Music music) {
                         music.dispose();
                         Gdx.app.exit();
-                        Gdx.app.log(null, null);
                     }
                 };
                 sound.setOnCompletionListener(OCL);
