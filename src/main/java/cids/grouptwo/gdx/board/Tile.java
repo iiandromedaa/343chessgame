@@ -12,9 +12,11 @@ import cids.grouptwo.Coordinate;
 public class Tile extends Widget {
     
     private Image tileBg;
+    // TODO add pieces to sprite sheet, create assets for shogi, courier, and chaturanga
     private Image piece;
     private int colour;
     private final Coordinate coordinate;
+    // TODO reference to Piece
     
     public Tile(Coordinate coordinate, TextureAtlas textureAtlas) {
         this.coordinate = coordinate;
@@ -72,6 +74,7 @@ public class Tile extends Widget {
         tileBg.setPosition(getX(), getY());
         tileBg.draw(batch, parentAlpha);
 
+        // TODO lerp piece when move is performed before handing over ownership to next tile
         piece.setSize(getWidth(), getHeight());
         piece.setPosition(getX(), getY());
         piece.draw(batch, parentAlpha);

@@ -57,7 +57,7 @@ public class Board extends Table {
      * @param flag 0: enter, 1: exit
      */
     public void hoverHandle(Tile tile, int flag) {
-
+        // TODO if tile is valid move highlighted, swap to hover bg, swap back to move bg on mouse exit
     }
 
     public Tile getTileFromCoordinate(Coordinate coordinate) {
@@ -69,6 +69,7 @@ public class Board extends Table {
     }
 
     private void tileSelection(Tile tile) {
+        // TODO if selected is null, validate that tile has a piece, if not, discard click
         // tile is selected
         if (selected == getCell(tile)) {
             selected = null;
@@ -79,7 +80,6 @@ public class Board extends Table {
         // tile already selected
         if (selected != null) {
             tileBgDeselect(selected.getActor());
-            // tileBgDeselect(tile);
             Gdx.app.log("chessgame", "move from " + coordinateToAlgebraic(selected.getActor()
                 .getCoordinate()) + " to " + coordinateToAlgebraic(tile.getCoordinate()));
             selected = null;
