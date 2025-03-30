@@ -8,20 +8,21 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Widget;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import cids.grouptwo.Coordinate;
+import cids.grouptwo.Piece;
 
 public class Tile extends Widget {
     
     private Image tileBg;
     // TODO add pieces to sprite sheet, create assets for shogi, courier, and chaturanga
-    private Image piece;
+    private Image pieceSprite;
     private int colour;
+    private Piece piece;
     private final Coordinate coordinate;
-    // TODO reference to Piece
     
     public Tile(Coordinate coordinate, TextureAtlas textureAtlas) {
         this.coordinate = coordinate;
         tileBg = new Image(textureAtlas.findRegion("white"));
-        piece = new Image();
+        pieceSprite = new Image();
     }
 
     public Coordinate getCoordinate() {
@@ -32,8 +33,8 @@ public class Tile extends Widget {
         return tileBg;
     }
 
-    public Image getPiece() {
-        return piece;
+    public Image getPieceSprite() {
+        return pieceSprite;
     }
 
     public int getColour() {
@@ -65,7 +66,7 @@ public class Tile extends Widget {
     }
 
     public void setPiece(AtlasRegion atlasRegion) {
-        piece.setDrawable(new TextureRegionDrawable(atlasRegion));
+        pieceSprite.setDrawable(new TextureRegionDrawable(atlasRegion));
     }
 
     @Override
@@ -75,9 +76,9 @@ public class Tile extends Widget {
         tileBg.draw(batch, parentAlpha);
 
         // TODO lerp piece when move is performed before handing over ownership to next tile
-        piece.setSize(getWidth(), getHeight());
-        piece.setPosition(getX(), getY());
-        piece.draw(batch, parentAlpha);
+        pieceSprite.setSize(getWidth(), getHeight());
+        pieceSprite.setPosition(getX(), getY());
+        pieceSprite.draw(batch, parentAlpha);
         
     }
 
