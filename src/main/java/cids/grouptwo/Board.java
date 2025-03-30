@@ -1,20 +1,19 @@
 package cids.grouptwo;
 public class Board {
 
-    private int[][] board;
+    private Piece[][] board;
     /* Chess board parameters */
     private int boardParams = 8;
 
-    /* Figured translating these numbers to sprites would be easier than "black" and "white" 
-     * Feel free to adjust to what suits you best, Danielle.
+    /* Modified the code from integers to be objects of type Piece
+    * theres an "BoardSquare" piece type now that represents an empty square
     */
-    /* board colors */
-    private int black = -1;
-    private int white = -2;
+    private Piece white = new BoardSquare("white", 0, 0);
+    private Piece black = new BoardSquare("black", 0, 0);
 
     /* Constructor for a basic chess board */
     public Board() {
-        board = new int[boardParams][boardParams];
+        board = new Piece[boardParams][boardParams];
         
         /* loops through and alternates the board colors */
         for (int i = 0; i < boardParams; i++)
@@ -41,7 +40,7 @@ public class Board {
     public void displayBoard() {
         for (int i = 0; i < boardParams; i++) {
             for (int j = 0; j < boardParams; j++) {
-                System.out.print("[" + board[i][j] + "]");
+                System.out.print("[" + board[i][j].getColor() + "]");
             }
             System.out.println();
         }

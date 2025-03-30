@@ -13,20 +13,26 @@ public class Main {
 
         System.out.println("hi world hello world hii!!!!!");
 
+        /* variables for black and white player 
+         * ngl I want to encapsulate these somewhere else but
+         * its not a priority right now for me
+         * TODO: betcha cant guess ma dude
+        */
+        String pBlack = "black";
+        String pWhite = "white";
+
+        /* creates the backend board data */
         Board board = new Board();
         board.displayBoard();
 
-        // /* JackH ~ creates 3 piece types for the board of each color */
-        // Piece bKing = new Piece(0, 3, "black", "king"); // black king
-        // Piece bKnightL = new Piece(0, 1, "black", "knight"); // black knight left
-        // Piece bKnightR = new Piece(0, 6, "black", "knight"); // black knight right
-        // Piece bBishopL = new Piece(0, 2, "black", "bishop"); // black bishop left
-        // Piece bBishopR = new Piece(0, 5, "black", "bishop"); // black bishop right
-        // Piece wKing = new Piece(7, 3, "white", "king"); // white king
-        // Piece wKnightL = new Piece(7, 1, "white", "knight"); // white knight left
-        // Piece wKnightR = new Piece(7, 6, "white", "knight"); // white knight right
-        // Piece wBishopL = new Piece(7, 2, "white", "bishop"); // white bishop left
-        // Piece wBishopR = new Piece(7, 5, "white", "bishop"); // white bishop right
+        /* creating some pieces, doesnt have to be used and can be modified */
+        Piece whiteKing = new King(pWhite, 4, 0);
+        Piece blackKing = new King(pBlack, 4, 7);
+        Piece whiteBishop = new Bishop(pWhite, 2, 0);
+        Piece blackBishop = new Bishop(pBlack, 2, 7);
+        Piece whiteKnight = new Knight(pWhite, 1, 0);
+        Piece blackKnight = new Knight(pBlack, 1, 7);
+
     }
 
     // This is Jack's comment for the jackh branch

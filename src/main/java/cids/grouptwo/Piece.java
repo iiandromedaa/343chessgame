@@ -27,27 +27,10 @@ public abstract class Piece {
         this.y = y;
     }
 
-    // // /* JackH ~ AI generated move validation, need to review
-    // // public boolean isValidMove(int newX, int newY
-    //        switch (type.toLowerCase()
-    //            case "kin
-    //                // King can move one square in any direct
-    //                return Math.abs(newX - x) <= 1 && Math.abs(newY - y) <=
+    public boolean isValidMove(int newX, int newY) {
+        // Default implementation, can be overridden by subclasses
+        return false;
+    }
 
-    //            case "knigh
-    //                // Knight moves in an L-sh
-    //                int dx = Math.abs(newX - 
-    //                int dy = Math.abs(newY - 
-    //                return (dx == 2 && dy == 1) || (dx == 1 && dy == 
-
-    //            case "bisho
-    //                // Bishop moves diagona
-    //                return Math.abs(newX - x) == Math.abs(newY - 
-
-    //            defau
-    //                // Invalid piece t
-    //                return fal
-         
-    // // }
 
 }
