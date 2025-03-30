@@ -28,6 +28,7 @@ public class Assets {
         map.put("logo", new AssetDescriptor<>("logo.png", Texture.class));
         map.put("background", new AssetDescriptor<>("background.jpg", Texture.class));
         map.put("tilesAtlas", new AssetDescriptor<>("tiles.atlas", TextureAtlas.class));
+        map.put("shogiAtlas", new AssetDescriptor<>("shogi.atlas", TextureAtlas.class));
         loadAll();
         assetManager.finishLoading();
     }

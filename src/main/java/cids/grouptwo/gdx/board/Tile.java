@@ -1,5 +1,6 @@
 package cids.grouptwo.gdx.board;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
@@ -8,7 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Widget;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import cids.grouptwo.Coordinate;
-import cids.grouptwo.Piece;
+// import cids.grouptwo.Piece;
 
 public class Tile extends Widget {
     
@@ -16,7 +17,7 @@ public class Tile extends Widget {
     // TODO add pieces to sprite sheet, create assets for shogi, courier, and chaturanga
     private Image pieceSprite;
     private int colour;
-    private Piece piece;
+    // private Piece piece;
     private final Coordinate coordinate;
     
     public Tile(Coordinate coordinate, TextureAtlas textureAtlas) {
@@ -65,7 +66,12 @@ public class Tile extends Widget {
         tileBg.setDrawable(new TextureRegionDrawable(atlasRegion));
     }
 
-    public void setPiece(AtlasRegion atlasRegion) {
+    // public void setPiece(Piece piece) {
+        // this.piece = piece;
+        // pieceSprite.setDrawable(new TextureRegionDrawable(piece.getSprite()));
+    // }
+
+    public void setPieceSprite(AtlasRegion atlasRegion) {
         pieceSprite.setDrawable(new TextureRegionDrawable(atlasRegion));
     }
 
