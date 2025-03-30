@@ -46,8 +46,8 @@ public class Board {
                 } else {
                     System.out.print("[ ]"); /* crude error checker */
                 }
-                System.out.println();
             }
+            System.out.println();
         }
     }
 
