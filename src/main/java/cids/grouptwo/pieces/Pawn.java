@@ -1,14 +1,15 @@
-package cids.grouptwo;
+package cids.grouptwo.pieces;
 
-class Pawn extends Piece {
-    public Pawn(String color, int x, int y) {
+public class Pawn extends Piece {
+
+    public Pawn(Color color, int x, int y) {
         super(color, x, y);
     }
 
     @Override
     public boolean isValidMove(int targetX, int targetY, Piece[][] board) {
-        int direction = (this.getColor().equals("White")) ? -1 : 1;
-        int startingRow = (this.getColor().equals("White")) ? 6 : 1;
+        int direction = (this.getColor() == Piece.Color.BLACK) ? -1 : 1;
+        int startingRow = (this.getColor() == Piece.Color.WHITE) ? 6 : 1;
         int moveDistance = targetX - this.getX();
         int colDistance = targetY - this.getY();
     
@@ -24,4 +25,13 @@ class Pawn extends Piece {
     
         return false;
     }
+
+    @Override
+    public String toString() {
+        if (getColor() == Color.WHITE)
+            return "♙";
+        else
+            return "♟";
+    }
+
 }

@@ -1,11 +1,12 @@
-package cids.grouptwo;
+package cids.grouptwo.pieces;
 
 class Rook extends Piece {
-    public Rook(String color, int x, int y) {
+
+    public Rook(Color color, int x, int y) {
         super(color, x, y);
     }
 
-   @Override
+    @Override
     public boolean isValidMove(int targetY, int targetX, Piece[][] board) {
         if (this.getY() == targetY && this.getX() == targetX) {
             return false;
@@ -35,4 +36,13 @@ class Rook extends Piece {
     
         return true;
     }
+
+    @Override
+    public String toString() {
+        if (getColor() == Color.WHITE)
+            return "♖";
+        else
+            return "♜";
+    }
+
 }

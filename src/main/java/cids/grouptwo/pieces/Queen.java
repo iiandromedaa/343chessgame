@@ -1,7 +1,8 @@
-package cids.grouptwo;
+package cids.grouptwo.pieces;
 
 class Queen extends Piece {
-    public Queen(String color, int x, int y) {
+
+    public Queen(Color color, int x, int y) {
        super(color, x, y);
    }
 
@@ -11,5 +12,13 @@ class Queen extends Piece {
        Bishop bishopMove = new Bishop(this.getColor(), this.getX(), this.getY());
 
        return rookMove.isValidMove(targetX, targetY, board) || bishopMove.isValidMove(targetX, targetY, board);
+   }
+
+   @Override
+   public String toString() {
+       if (getColor() == Color.WHITE)
+            return "♕";
+        else
+            return "♛";
    }
 }
