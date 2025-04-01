@@ -33,6 +33,7 @@ public class Main {
         Piece whiteKnight = new Knight(pWhite, 1, 0);
         Piece blackKnight = new Knight(pBlack, 1, 7);
 
+        System.out.println("goobed");
     }
 
     // This is Jack's comment for the jackh branch

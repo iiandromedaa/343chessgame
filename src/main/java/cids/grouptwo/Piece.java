@@ -1,6 +1,7 @@
 package cids.grouptwo;
 
 public abstract class Piece {
+
     private int x, y;
     private String color;
 
@@ -27,10 +28,9 @@ public abstract class Piece {
         this.y = y;
     }
 
-    public boolean isValidMove(int newX, int newY) {
+    public boolean isValidMove(int newX, int newY, Piece[][] board) {
         // Default implementation, can be overridden by subclasses
         return false;
     }
-
 
 }
