@@ -27,5 +27,8 @@ public abstract class Piece {
         this.y = y;
     }
 
+    public abstract boolean isValidMove(int targetX, int targetY, Piece[][] board);
+
+
 
 }
