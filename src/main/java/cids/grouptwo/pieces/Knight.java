@@ -11,7 +11,13 @@ public class Knight extends Piece {
         // Knight moves in an L-shape: two squares in one direction and one square perpendicular
         int dx = Math.abs(newX - getX());
         int dy = Math.abs(newY - getY());
-        return (dx == 2 && dy == 1) || (dx == 1 && dy == 2);
+
+        if (((dx == 2 && dy == 1) || (dx == 1 && dy == 2)) && (board[dy][dx]).getColor() != getColor())
+            return true;
+        else
+            return false;
+
+        // return (dx == 2 && dy == 1) || (dx == 1 && dy == 2);
     }
 
     @Override

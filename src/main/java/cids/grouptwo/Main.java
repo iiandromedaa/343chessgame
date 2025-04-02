@@ -1,11 +1,11 @@
 package cids.grouptwo;
 
-import cids.grouptwo.pieces.Bishop;
-import cids.grouptwo.pieces.King;
-import cids.grouptwo.pieces.Knight;
+import cids.grouptwo.pieces.*;
+
 import static cids.grouptwo.pieces.Piece.Color.*;
 
 import java.io.IOException;
+import java.util.Scanner;
 
 public class Main {
 
@@ -15,14 +15,25 @@ public class Main {
         Board board = new Board();
         
         /* creating some pieces, doesnt have to be used and can be modified */
-        board.setPiece(new King(WHITE, 4, 0));
-        board.setPiece(new King(BLACK, 4, 7));
-        board.setPiece(new Bishop(WHITE, 2, 0));
-        board.setPiece(new Bishop(BLACK, 2, 7));
-        board.setPiece(new Knight(WHITE, 1, 0));
-        board.setPiece(new Knight(BLACK, 1, 7));
+        board.setPiece(new Pawn(WHITE, 2, 0));
+
+        board.setPiece(new Pawn(BLACK, 4, 6));
+        board.setPiece(new Pawn(WHITE, 5, 5));
+        board.setPiece(new Pawn(WHITE, 3, 5));
+        board.setPiece(new Pawn(WHITE, 4, 5));
+
+        board.setPiece(new Pawn(WHITE, 1, 3));
+
+        board.setPiece(new Pawn(WHITE, 5, 2));
+
+        board.setPiece(new Bishop(WHITE, 2, 4));
+        // board.setPiece(new Rook(WHITE, 4, 4));
 
         board.displayBoard();
+        new Scanner(System.in).nextLine();
+        board.displayMoves(board.getPieceFromXY(4, 6).getValidMoves(board.getBoard()));
+        // System.out.println(board.getPieceFromXY(4, 6).isValidMove(4, 4, board.getBoard()));
+        // System.out.println(board.getPieceFromXY(1, 6).getValidMoves(board.getBoard()));
     }
 
     public static void clear() {

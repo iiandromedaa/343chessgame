@@ -1,40 +1,42 @@
 package cids.grouptwo.pieces;
 
-class Rook extends Piece {
+public class Rook extends Piece {
 
     public Rook(Color color, int x, int y) {
         super(color, x, y);
     }
 
     @Override
-    public boolean isValidMove(int targetY, int targetX, Piece[][] board) {
-        if (this.getY() == targetY && this.getX() == targetX) {
+    public boolean isValidMove(int newX, int newY, Piece[][] board) {
+        if (this.getY() == newY && this.getX() == newX) {
             return false;
         }
     
-        if (this.getY() != targetY && this.getX() != targetX) {
+        if (this.getY() != newY && this.getX() != newX) {
             return false;
         }
     
-        if (this.getY() == targetY) {
-            int start = Math.min(this.getX(), targetX) + 1;
-            int end = Math.max(this.getX(), targetX);
-            for (int i = start; i < end; i++) {
-                if (board[targetY][i] != null) {
+        if (this.getY() == newY) {
+            // horizontal
+            int dx = (getX() < newX) ? 1 : -1;
+            for (int i = getX() + dx; i != newX; i += dx) {
+                if (board[getY()][i] != null)
                     return false;
-                }
             }
         } else {
-            int start = Math.min(this.getY(), targetY) + 1;
-            int end = Math.max(this.getY(), targetY);
-            for (int i = start; i < end; i++) {
-                if (board[i][targetX] != null) {
+            int dy = (getY() < newY) ? 1 : -1;
+            for (int i = getY() + dy; i != newY; i += dy) {
+                if (board[i][getX()] != null)
                     return false;
-                }
             }
         }
     
-        return true;
+        // valid move if board empty
+        if (board[newY][newX] == null)
+            return true;
+        
+        // if square isnt empty and the piece there is a different colour, return true
+        return (board[newY][newX].getColor() != getColor());
     }
 
     @Override

@@ -1,5 +1,6 @@
 package cids.grouptwo;
 
+import cids.grouptwo.exceptions.FenParseException;
 import cids.grouptwo.pieces.Piece;
 
 /**
@@ -9,8 +10,8 @@ import cids.grouptwo.pieces.Piece;
  */
 public final class FenParse {
     
-    public static Piece[][] parse(String Fen) {
-        if (Fen == null)
+    public static Piece[][] parse(String fen) throws FenParseException {
+        if (fen == null)
             return null;
 
         return null;

@@ -16,12 +16,20 @@ public abstract class Piece {
         this.color = color;
     }
 
+    public Piece(Color color, Coordinate coordinate) {
+        this(color, coordinate.X, coordinate.Y);
+    }
+
     public int getX() {
         return x;
     }
 
     public int getY() {
         return y;
+    }
+
+    public Coordinate getPosition() {
+        return new Coordinate(x, y);
     }
 
     public Color getColor() {
@@ -67,7 +75,7 @@ public abstract class Piece {
 
     public enum Color {
 
-        WHITE, BLACK;
+        WHITE, BLACK, DEBUG;
 
     }
 

@@ -7,20 +7,21 @@ public class Pawn extends Piece {
     }
 
     @Override
-    public boolean isValidMove(int targetX, int targetY, Piece[][] board) {
-        int direction = (this.getColor() == Piece.Color.BLACK) ? -1 : 1;
-        int startingRow = (this.getColor() == Piece.Color.WHITE) ? 6 : 1;
-        int moveDistance = targetX - this.getX();
-        int colDistance = targetY - this.getY();
+    public boolean isValidMove(int newX, int newY, Piece[][] board) {
+        int direction = (getColor() == Piece.Color.WHITE) ? 1 : -1;
+        int startingRow = (getColor() == Piece.Color.WHITE) ? 1 : 6;
+        
+        int dx = newX - getX();
+        int dy = newY - getY();
     
-        if (colDistance == 0) {
-            if (moveDistance == direction) {
-                return board[targetX][targetY] == null;
-            } else if (moveDistance == 2 * direction && this.getX() == startingRow) {
-                return board[targetX][targetY] == null && board[this.getX() + direction][targetY] == null;
+        if (dx == 0) {
+            if (dy == direction) {
+                return board[newY][newX] == null;
+            } else if (dy == (2 * direction) && getY() == startingRow) {
+                return board[newY][newX] == null && board[getY() + direction][newX] == null;
             }
-        } else if (Math.abs(colDistance) == 1 && moveDistance == direction) {
-            return board[targetX][targetY] != null && !board[targetX][targetY].getColor().equals(this.getColor());
+        } else if (Math.abs(dx) == 1 && dy == direction) {
+            return board[newY][newX] != null && !board[newY][newX].getColor().equals(getColor());
         }
     
         return false;
