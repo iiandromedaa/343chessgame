@@ -1,8 +1,12 @@
 package cids.grouptwo;
 
 import cids.grouptwo.pieces.Piece;
+import java.util.Random;
 
 public class Board {
+    
+    private boolean[][] obstacles;
+    private Random random = new Random();
 
     private Piece[][] board;
     /* Chess board parameters */
@@ -13,6 +17,7 @@ public class Board {
      */
     public Board() {
         board = new Piece[BOARDPARAMS][BOARDPARAMS];
+        obstacles = new boolean[BOARDPARAMS][BOARDPARAMS];
     }
 
     /**
@@ -21,6 +26,7 @@ public class Board {
      */
     public Board(String Fen) {
         board = new Piece[BOARDPARAMS][BOARDPARAMS];
+        obstacles = new boolean[BOARDPARAMS][BOARDPARAMS];
         try {
 			setBoard(FenParse.parse(Fen));
 		} catch (Exception e) {
@@ -59,5 +65,36 @@ public class Board {
             throw new Exception();
         this.board = board;
     }
+
+    /* 10% chance of spawning an obstacle on the board */
+    public void attemptObstacleSpawn() {
+        if (random.nextInt(100) < 10) {
+            int x, y;
+            do {
+                x = random.nextInt(BOARDPARAMS);
+                y = random.nextInt(BOARDPARAMS);
+            } while (board[y][x] != null || obstacles[y][x]);
+
+            obstacles[y][x] = true;
+            System.out.println("Obstacle spawned at (" + x + ", " + y + ")");
+        }
+    }
+
+    /* method to clear obstacles (50% chance each turn - can be changed to whatever) */
+    public void clearObstacles() {
+        for (int y = 0; y < BOARDPARAMS; y++) {
+            for (int x = 0; x < BOARDPARAMS; x++) {
+                if (obstacles[y][x] && random.nextInt(100) < 50) {
+                    obstacles[y][x] = false;
+                    
+                }
+            }
+        }
+    }
+
+    public boolean isBlocked(int x, int y) {
+        return obstacles[y][x];
+    }
+
 
 }
