@@ -1,5 +1,6 @@
 package cids.grouptwo;
 
+import java.io.IOException;
 import java.util.prefs.Preferences;
 
 import com.badlogic.gdx.Graphics;
@@ -47,6 +48,21 @@ public class Main {
             config.setFullscreenMode(dm);
         new Lwjgl3Application(new ChessGame(h), config);
         
+    }
+
+    public static void clear() {
+        try {
+            if (System.getProperty("os.name").contains("Windows")) {
+                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+            } else {
+                System.out.print("\033[H\033[2J");
+                System.out.flush();
+                Runtime.getRuntime().exec("clear");
+            }
+        } catch (InterruptedException | IOException e) {
+            e.printStackTrace();
+            System.out.println("Clear failed :( " + e);
+        }  
     }
 
 }
