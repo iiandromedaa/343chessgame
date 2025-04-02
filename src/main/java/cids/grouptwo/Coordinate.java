@@ -13,4 +13,8 @@ public class Coordinate {
         Y = y;
     }
 
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> main

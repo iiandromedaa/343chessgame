@@ -1,54 +1,63 @@
 package cids.grouptwo;
 
+import cids.grouptwo.pieces.Piece;
+
 public class Board {
 
     private Piece[][] board;
     /* Chess board parameters */
-    private int boardParams = 8;
+    private final int BOARDPARAMS = 8;
 
-    /*
-     * Modified the code from integers to be objects of type Piece
-     * theres an "BoardSquare" piece type now that represents an empty square
+    /**
+     * creates empty board
      */
-    private Piece white = new BoardSquare("white", 0, 0);
-    private Piece black = new BoardSquare("black", 0, 0);
-
-    /* Constructor for a basic chess board */
     public Board() {
-        board = new Piece[boardParams][boardParams];
-
-        /* loops through and alternates the board colors */
-        for (int i = 0; i < boardParams; i++)
-            for (int j = 0; j < boardParams; j++) {
-                if (i % 2 == 0) {
-                    if (j % 2 == 0)
-                        board[i][j] = white;
-                    else
-                        board[i][j] = black;
-                } else {
-                    if (j % 2 == 0)
-                        board[i][j] = black;
-                    else
-                        board[i][j] = white;
-                }
-            }
-        ;
+        board = new Piece[BOARDPARAMS][BOARDPARAMS];
     }
 
-    /* Displays the chess board */
+    /**
+     * creates board with set state from FEN notation
+     * @param Fen FEN notation
+     */
+    public Board(String Fen) {
+        board = new Piece[BOARDPARAMS][BOARDPARAMS];
+        try {
+			setBoard(FenParse.parse(Fen));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+    }
+
+    /**
+     * displays chess board, only for debug purposes, shows only from
+     * black's perspective
+     */
     public void displayBoard() {
-        for (int i = 0; i < boardParams; i++) {
-            for (int j = 0; j < boardParams; j++) {
-                if (board[i][j] == white) {
-                    System.out.print("[" + "W" + "]");
-                } else if (board[i][j] == black) {
-                    System.out.print("[" + "B" + "]");
-                } else {
-                    System.out.print("[ ]"); /* crude error checker */
-                }
+        Main.clear();
+        for (int y = 0; y < BOARDPARAMS; y++) {
+            for (int x = 0; x < BOARDPARAMS; x++) {
+                if (board[y][x] == null)
+                    System.out.print("[ ]");
+                else
+                    System.out.print("[" + board[y][x].toString() + "]");
             }
             System.out.println();
         }
+    }
+
+    /**
+     * manually sets piece on board, overwriting what was in that space before<p>
+     * use with caution
+     * @param piece
+     */
+    public void setPiece(Piece piece) {
+        board[piece.getY()][piece.getX()] = piece;
+    }
+
+    private void setBoard(Piece[][] board) throws Exception {
+        if (board.length != this.board.length)
+            throw new Exception();
+        this.board = board;
     }
 
 }
