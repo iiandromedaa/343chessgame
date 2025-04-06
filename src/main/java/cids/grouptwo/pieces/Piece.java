@@ -59,10 +59,10 @@ public abstract class Piece {
      */
     public List<Coordinate> getValidMoves(Piece[][] board) {
         List<Coordinate> retList = new ArrayList<>();
-        for (int y = 0; y < board.length; y++) {
-            for (int x = 0; x < board[y].length; x++) {
-                if (isValidMove(x, y, board))
-                    retList.add(new Coordinate(x, y));
+        for (int row = 0; row < board.length; row++) {
+            for (int col = 0; col < board[row].length; col++) {
+                if (isValidMove(col, row, board))
+                    retList.add(new Coordinate(col, row));
             }
         }
         return retList;
