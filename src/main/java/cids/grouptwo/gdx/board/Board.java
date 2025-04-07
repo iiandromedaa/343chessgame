@@ -16,6 +16,7 @@ public class Board extends Table {
 
     private final char LETTERS[] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
     
+    @SuppressWarnings("unchecked")
     public Board(ChessGame game, int width, int height) {
         this.game = game;
         tilesAtlas = this.game.getAsset("tilesAtlas");
