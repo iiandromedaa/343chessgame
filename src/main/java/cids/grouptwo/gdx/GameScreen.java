@@ -20,6 +20,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.crashinvaders.vfx.VfxManager;
 import com.crashinvaders.vfx.effects.GaussianBlurEffect;
 
+import cids.grouptwo.ChessGame;
 import cids.grouptwo.gdx.board.Board;
 
 public class GameScreen extends MenuScreen {
@@ -33,8 +34,8 @@ public class GameScreen extends MenuScreen {
     private Texture background; 
     private Board boardTable;
 
-    GameScreen(int width, int height, ChessGame game, VfxManager vfxManager) {
-        super(width, height, game);
+    GameScreen(int width, int height, GdxChessGame game, VfxManager vfxManager, ChessGame backend) {
+        super(width, height, game, backend);
 
         background = game.getAsset("background");
         background.setFilter(TextureFilter.Linear, TextureFilter.Linear);
@@ -49,6 +50,7 @@ public class GameScreen extends MenuScreen {
         blurAmount = Vector3.Zero;
         vfxManager.addEffect(blur);
         boardTable = new Board(game, width/2, height);
+        boardTable.populate();
     }
 
     @Override

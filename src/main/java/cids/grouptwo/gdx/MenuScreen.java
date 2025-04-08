@@ -11,18 +11,22 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+import cids.grouptwo.ChessGame;
+
 public class MenuScreen extends ScreenAdapter{
 
     Skin skin;
     int width, height;
     Viewport viewport;
     Stage stage;
-    ChessGame game;
+    GdxChessGame game;
+    ChessGame backend;
 
-    MenuScreen(int width, int height, ChessGame game) {
+    MenuScreen(int width, int height, GdxChessGame game, ChessGame backend) {
         this.game = game;
         this.width = width;
         this.height = height;
+        this.backend = backend;
         skin = game.getAsset("skin");
         viewport = new FitViewport(width, height, game.getCamera());
         stage = new Stage(viewport);

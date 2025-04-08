@@ -22,12 +22,12 @@ public class TileClickListener extends ClickListener {
 
     @Override
     public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-        // board.hoverHandle(tile, 0);
+        board.hoverHandle(tile, 0);
     }
 
     @Override
     public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
-        // board.hoverHandle(tile, 1);
+        board.hoverHandle(tile, 1);
     }
 
     

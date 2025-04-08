@@ -18,6 +18,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.crashinvaders.vfx.VfxManager;
 import com.crashinvaders.vfx.effects.GaussianBlurEffect;
 
+import cids.grouptwo.ChessGame;
+
 public class MainMenuScreen extends MenuScreen {
 
     private Texture logo;
@@ -30,8 +32,8 @@ public class MainMenuScreen extends MenuScreen {
     private boolean settingsOpen;
     private Vector3 blurAmount;
 
-    MainMenuScreen(int width, int height, ChessGame game) {
-        super(width, height, game);
+    MainMenuScreen(int width, int height, GdxChessGame game, ChessGame backend) {
+        super(width, height, game, backend);
         logo = game.getAsset("logo");
         logo.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 
@@ -168,7 +170,7 @@ public class MainMenuScreen extends MenuScreen {
         sequenceAction.addAction(Actions.run(new Runnable() {
             @Override
             public void run() {
-                game.setScreen(new GameScreen(width, height, game, vfxManager));
+                game.setScreen(new GameScreen(width, height, game, vfxManager, backend));
                 MainMenuScreen.this.dispose();
             }
         }));

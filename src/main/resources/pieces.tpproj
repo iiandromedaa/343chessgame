@@ -1,5 +1,5 @@
-name=
-filename=shogi.atlas
+name=pieces
+filename=
 output=.
 
 alias=true
@@ -11,8 +11,8 @@ fast=false
 filterMag=Nearest
 filterMin=Nearest
 ignoreBlankImages=true
-maxHeight=8192
-maxWidth=8192
+maxHeight=2048
+maxWidth=2048
 minHeight=16
 minWidth=16
 paddingX=0
@@ -25,7 +25,7 @@ stripWhitespaceY=false
 wrapX=ClampToEdge
 wrapY=ClampToEdge
 premultiplyAlpha=false
-grid=false
+grid=true
 square=false
 bleed=true
 limitMemory=true
@@ -34,7 +34,7 @@ prettyPrint=false
 legacyOutput=false
 
 scaleFactors=[{suffix:"",factor:1,resampling:bicubic}]
-inputFiles=[{path:shogi,type:Input,dirFilePrefix:null,recursive:false,flattenPaths:false}]
+inputFiles=[{path:chess,type:Input,dirFilePrefix:null,recursive:false,flattenPaths:false},{path:shogi,type:Input,dirFilePrefix:null,recursive:false,flattenPaths:false}]
 keepInputFileExtensions=false
 
 

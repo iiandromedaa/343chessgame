@@ -1,6 +1,7 @@
 package cids.grouptwo.roguestuff;
 /* i am just exploring a possible modifier here, this can be changed into an interface if we want */
-public class Obstacle {
+public class Obstacle implements Modifier {
+
     private int lifespan;
 
     public Obstacle(int lifespan) {
@@ -14,4 +15,5 @@ public class Obstacle {
     public boolean isExpired() {
         return lifespan <= 0;
     }
+    
 }

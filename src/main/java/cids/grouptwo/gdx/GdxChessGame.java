@@ -7,24 +7,32 @@ import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 
+import cids.grouptwo.ChessGame;
+
 /**
  * libgdx game loop, originally implemented ApplicationListener, 
  * now extends Game (which itself implements Application Listener),
  * switched because Game has the setScreen() method :]
  */
-public class ChessGame extends Game {
+public class GdxChessGame extends Game {
 
     private Camera camera;
     private int width, height;
     private Assets assets;
+    private final ChessGame backend;
 
-    public ChessGame(int height) {
+    public GdxChessGame(ChessGame game, int height) {
         /**
          * making the viewport a different size than the actual window, to allow for people
          * with fucked up evil ultrawide monitors to still play without stretching the game
          */
         width = (int) Math.ceil(height * 1.7777777f);
         this.height = height;
+        backend = game;
+    }
+
+    public ChessGame getBackend() {
+        return backend;
     }
 
     @Override
@@ -36,7 +44,7 @@ public class ChessGame extends Game {
             .getDisplayMode().height);
         assets = new Assets();
         camera = new OrthographicCamera(width, height);
-        setScreen(new MainMenuScreen(width, height, this));
+        setScreen(new MainMenuScreen(width, height, this, backend));
     }
 
     // @Override
