@@ -48,7 +48,7 @@ public class MenuScreen extends ScreenAdapter{
         if (flag == 0)
             cell.fill().padRight(width * 0.0078f);
         else {
-            cell.fill().padTop(height * 0.0014f).align(Align.top);
+            cell.fill(0.5f, 1f).padTop(height * 0.0014f).align(Align.top);
             table.row();
         }
         return button;

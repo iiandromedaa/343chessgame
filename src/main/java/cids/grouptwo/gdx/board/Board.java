@@ -58,6 +58,18 @@ public class Board extends Table {
             case 5:
                 tile.setTileBg(tilesAtlas.findRegion("blackmove"));
                 break;
+            case 6:
+                tile.setTileBg(tilesAtlas.findRegion("whitehover"));
+                break;
+            case 7:
+                tile.setTileBg(tilesAtlas.findRegion("blackhover"));
+                break;
+            case 8:
+                tile.setTileBg(tilesAtlas.findRegion("whitetake"));
+                break;
+            case 9:
+                tile.setTileBg(tilesAtlas.findRegion("blacktake"));
+                break;
         }
     }
 
@@ -71,7 +83,8 @@ public class Board extends Table {
      * @param flag 0: enter, 1: exit
      */
     public void hoverHandle(Tile tile, int flag) {
-        // TODO if tile is valid move highlighted, swap to hover bg, swap back to move bg on mouse exit
+        // Gdx.app.log("chessgame", tile + " hovered" + " | in valid moves " + 
+        //     Boolean.toString(valid.contains(getCell(tile))) + " | hover flag " + flag);
         if (valid.contains(getCell(tile)) && flag == 0)
             tileBgHover(tile);
         else if (valid.contains(getCell(tile)) && flag == 1)
@@ -108,7 +121,8 @@ public class Board extends Table {
             });
             valid.clear();
             Gdx.app.log("chessgame", coordinateToAlgebraic(selected.getActor()
-                .getCoordinate()) + " deselect");
+                .getCoordinate()) + " deselect | " + selected.getActor().getPiece()
+                .getClass().getCanonicalName() + " " + selected.getActor().getPiece().getColor());
             selected = null;
             tileBgDeselect(tile);
             return;
@@ -124,8 +138,6 @@ public class Board extends Table {
             });
             move(selected.getActor(), tile);
             valid.clear();
-            Gdx.app.log("chessgame", "move from " + coordinateToAlgebraic(selected.getActor()
-                .getCoordinate()) + " to " + coordinateToAlgebraic(tile.getCoordinate()));
             selected = null;
             return;
         }
@@ -144,7 +156,8 @@ public class Board extends Table {
         tileBgSelect(tile);
         valid.clear();
         Gdx.app.log("chessgame", coordinateToAlgebraic(selected.getActor()
-                .getCoordinate()) + " select");
+                .getCoordinate()) + " select | " + selected.getActor().getPiece()
+                .getClass().getCanonicalName() + " " + selected.getActor().getPiece().getColor());
         selected.getActor().getPiece().getValidMoves(realBoard.getBoard()).forEach(c -> {
             valid.add(getCell(getTileFromCoordinate(c)));
         });
@@ -154,6 +167,9 @@ public class Board extends Table {
     }
 
     private void move(Tile from, Tile to) {
+        Gdx.app.log("chessgame", "move from " + coordinateToAlgebraic(from.getCoordinate()) + 
+            " to " + coordinateToAlgebraic(to.getCoordinate()) + " | " + from.getPiece()
+            .getClass().getCanonicalName());
         // calls to backend methods
         cids.grouptwo.Board board = game.getBackend().getBoard();
         board.clearPosition(from.getCoordinate());
@@ -166,7 +182,6 @@ public class Board extends Table {
         from.clearPiece();
         to.setPiece(piece, PieceSpriteLookup.pieceToSprite(piece, piecesAtlas));
         ((Music) game.getAsset("moveSound")).play();
-
     }
 
     private void tileBgSelect(Tile tile) {
@@ -185,30 +200,32 @@ public class Board extends Table {
     
     private void tileBgMove(Tile tile) {
         if (tile.getColour() == Colours.WHITE)
-            swap(tile, Colours.WHITEMOVE);
+            swap(tile, tile.getPiece() == null ? Colours.WHITEMOVE : Colours.WHITETAKE);
         else if (tile.getColour() == Colours.BLACK)
-            swap(tile, Colours.BLACKMOVE);
+            swap(tile, tile.getPiece() == null ? Colours.BLACKMOVE : Colours.BLACKTAKE);
     }
 
     private void tileBgDemove(Tile tile) {
-        if (tile.getColour() == Colours.WHITEMOVE)
+        if (tile.getColour() == Colours.WHITEMOVE || tile.getColour() == Colours.WHITEHOVER
+            || tile.getColour() == Colours.WHITETAKE)
             swap(tile, Colours.WHITE);
-        else if (tile.getColour() == Colours.BLACKMOVE)
+        else if (tile.getColour() == Colours.BLACKMOVE || tile.getColour() == Colours.BLACKHOVER
+            || tile.getColour() == Colours.BLACKTAKE)
             swap(tile, Colours.BLACK);
     }
 
     private void tileBgHover(Tile tile) {
-        if (tile.getColour() == Colours.WHITEMOVE)
+        if (tile.getColour() == Colours.WHITEMOVE || tile.getColour() == Colours.WHITETAKE)
             swap(tile, Colours.WHITEHOVER);
-        else if (tile.getColour() == Colours.BLACKMOVE)
+        else if (tile.getColour() == Colours.BLACKMOVE || tile.getColour() == Colours.BLACKTAKE)
             swap(tile, Colours.BLACKHOVER);
     }
 
     private void tileBgDehover(Tile tile) {
         if (tile.getColour() == Colours.WHITEHOVER)
-            swap(tile, Colours.WHITE);
+            swap(tile, tile.getPiece() == null ? Colours.WHITEMOVE : Colours.WHITETAKE);
         else if (tile.getColour() == Colours.BLACKHOVER)
-            swap(tile, Colours.BLACK);
+            swap(tile, tile.getPiece() == null ? Colours.BLACKMOVE : Colours.BLACKTAKE);
     }
     
     private void setUpTiles(int width, int height) {
@@ -247,7 +264,9 @@ public class Board extends Table {
             WHITEMOVE = 4,
             BLACKMOVE = 5,
             WHITEHOVER = 6,
-            BLACKHOVER = 7;
+            BLACKHOVER = 7,
+            WHITETAKE = 8,
+            BLACKTAKE = 9;
     }  
 
 }

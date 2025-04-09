@@ -30,6 +30,4 @@ public class TileClickListener extends ClickListener {
         board.hoverHandle(tile, 1);
     }
 
-    
-
 }
