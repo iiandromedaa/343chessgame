@@ -27,6 +27,8 @@ public class Lance extends Rook implements Shogi {
         else {
             int dy = (getColor() == Color.BLACK) ? 1 : -1;
             for (int i = getY() + dy; i != newY; i += dy) {
+                if (i >= 8 || i < 0)
+                    return false;
                 if (board[i][getX()] != null)
                     return false;
             }
