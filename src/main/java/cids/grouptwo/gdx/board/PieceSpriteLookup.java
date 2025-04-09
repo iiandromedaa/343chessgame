@@ -15,34 +15,40 @@ public class PieceSpriteLookup {
      * the big ugly static method in question, i really wanted to use pattern matching
      * but that would require us to switch to java 21+ which is a hastle for users tbh
      * @param piece
-     * @param atlases
+     * @param textureAtlas
      * @return atlasregion corresponding to piece
      */
     public static AtlasRegion pieceToSprite(Piece piece, TextureAtlas textureAtlas) {
         // here comes the big ugly ifelse
-        /* TODO use Shogi interface to categorize shogi variants of chess pieces
-           for example, inside if (piece instanceof Pawn) we also check if (piece instanceof Shogi)
-           and from there we can return specifically a shogi pawn
-        */
         String regionName = "";
         if (piece instanceof Pawn) {
             regionName += "pawn";
         } else if (piece instanceof Bishop) {
-            regionName += "bishop";
+            if (piece instanceof Alfil)
+                regionName += "elephant";
+            else
+                regionName += "bishop";
         } else if (piece instanceof King) {
             regionName += "king";
         } else if (piece instanceof Knight) {
             regionName += "knight";
         } else if (piece instanceof Queen) {
             regionName += "queen";
+        } else if (piece instanceof Lance) {
+            regionName += "lance";
         } else if (piece instanceof Rook) {
             regionName += "rook";
         }
 
-        if (piece.getColor() == Color.WHITE) {
+        if (piece.getColor() == Color.WHITE && !(piece instanceof Shogi)) {
             regionName += "w";
-        } else if (piece.getColor() == Color.BLACK) {
+        } else if (piece.getColor() == Color.BLACK && !(piece instanceof Shogi)) {
             regionName += "b";
+        }
+
+        if (piece.getColor() == Color.BLACK && piece instanceof Shogi && piece instanceof King) {
+            // i know the piece really says jade, but i dont feel like updating the atlas again
+            regionName = "jewel";
         }
 
         return textureAtlas.findRegion(regionName);

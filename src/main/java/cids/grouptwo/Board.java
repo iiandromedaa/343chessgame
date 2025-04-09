@@ -2,7 +2,9 @@ package cids.grouptwo;
 
 import cids.grouptwo.pieces.Piece;
 import java.util.Random;
+
 import java.util.List;
+import java.util.Map;
 
 import cids.grouptwo.exceptions.BoardException;
 import cids.grouptwo.exceptions.FenParseException;
@@ -22,10 +24,10 @@ public class Board {
     /**
      * creates standard chess board
      */
-    public Board() {
+    public Board(Map<Piece, Piece> pieceSet) {
         board = new Piece[BOARDPARAMS][BOARDPARAMS];
         obstacles = new boolean[BOARDPARAMS][BOARDPARAMS];
-        defaultBoard();
+        defaultBoard(pieceSet);
     }
 
     /**
@@ -33,13 +35,13 @@ public class Board {
      * <p>call using null as parameter for empty board
      * @param fen FEN notation
      */
-    public Board(String fen) {
+    public Board(Map<Piece, Piece> pieceSet, String fen) {
         board = new Piece[BOARDPARAMS][BOARDPARAMS];
         obstacles = new boolean[BOARDPARAMS][BOARDPARAMS];
         if (fen == null)
             return;
         try {
-			setBoard(FenParse.parse(fen));
+			setBoard(FenParse.parse(fen, pieceSet));
 		} catch (BoardException | FenParseException e) {
 			e.printStackTrace();
 		}
@@ -202,22 +204,38 @@ public class Board {
      *
      * @param board the chess board to set up
      */
-    public void defaultBoard() {
+    private void defaultBoard(Map<Piece, Piece> pieceSet) {
         // Add pieces in their initial positions
 
         // White pieces
         setPiece(new Rook(WHITE, 0, 7));
+        pieceSet.put(getPieceFromXY(0, 7), getPieceFromXY(0, 7));
+
         setPiece(new Knight(WHITE, 1, 7));
+        pieceSet.put(getPieceFromXY(1, 7), getPieceFromXY(1, 7));
+
         setPiece(new Bishop(WHITE, 2, 7));
+        pieceSet.put(getPieceFromXY(2, 7), getPieceFromXY(2, 7));
+
         setPiece(new Queen(WHITE, 3, 7));
+        pieceSet.put(getPieceFromXY(3, 7), getPieceFromXY(3, 7));
+
         setPiece(new King(WHITE, 4, 7));
+        pieceSet.put(getPieceFromXY(4, 7), getPieceFromXY(4, 7));
+
         setPiece(new Bishop(WHITE, 5, 7));
+        pieceSet.put(getPieceFromXY(5, 7), getPieceFromXY(5, 7));
+        
         setPiece(new Knight(WHITE, 6, 7));
+        pieceSet.put(getPieceFromXY(6, 7), getPieceFromXY(6, 7));
+
         setPiece(new Rook(WHITE, 7, 7));
+        pieceSet.put(getPieceFromXY(7, 7), getPieceFromXY(7, 7));
 
         // White pawns
         for (int i = 0; i < 8; i++) {
             setPiece(new Pawn(WHITE, i, 6));
+            pieceSet.put(getPieceFromXY(i, 6), getPieceFromXY(i, 6));
         }
 
         // Black pieces

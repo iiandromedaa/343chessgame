@@ -16,7 +16,7 @@ public class Main {
 
     public static void main(String[] args) {
         ChessGame game = new ChessGame();
-        game.getBoard().defaultBoard();
+        // game.getBoard().defaultBoard(game.getPieceSet());
         // game.estoyLoopin();
         launchGdx(game);
     }

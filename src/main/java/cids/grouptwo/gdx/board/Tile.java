@@ -65,6 +65,18 @@ public class Tile extends Widget {
             case "blackmove":
                 colour = Board.Colours.BLACKMOVE;
                 break;
+            case "whitehover":
+                colour = Board.Colours.WHITEHOVER;
+                break;
+            case "blackhover":
+                colour = Board.Colours.BLACKHOVER;
+                break;
+            case "whitetake":
+                colour = Board.Colours.WHITETAKE;
+                break;
+            case "blacktake":
+                colour = Board.Colours.BLACKTAKE;
+                break;
         }
         tileBg.setDrawable(new TextureRegionDrawable(atlasRegion));
     }
@@ -92,6 +104,11 @@ public class Tile extends Widget {
         pieceSprite.setSize(getWidth(), getHeight());
         pieceSprite.setPosition(getX(), getY());
         pieceSprite.draw(batch, parentAlpha);
+    }
+
+    @Override
+    public String toString() {
+        return "Tile at " + coordinate.X + " " + coordinate.Y;
     }
 
 }

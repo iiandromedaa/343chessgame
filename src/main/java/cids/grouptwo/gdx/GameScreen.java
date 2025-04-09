@@ -21,7 +21,10 @@ import com.crashinvaders.vfx.VfxManager;
 import com.crashinvaders.vfx.effects.GaussianBlurEffect;
 
 import cids.grouptwo.ChessGame;
+import cids.grouptwo.Coordinate;
 import cids.grouptwo.gdx.board.Board;
+import cids.grouptwo.gdx.board.PieceSpriteLookup;
+import cids.grouptwo.pieces.*;
 
 public class GameScreen extends MenuScreen {
 
@@ -49,7 +52,10 @@ public class GameScreen extends MenuScreen {
         blur.setPasses(7);
         blurAmount = Vector3.Zero;
         vfxManager.addEffect(blur);
+
+        backend.newBoard();
         boardTable = new Board(game, width/2, height);
+        Gdx.app.log("chessgame", backend.getPieceSet().toString());
         boardTable.populate();
     }
 
@@ -66,7 +72,41 @@ public class GameScreen extends MenuScreen {
         stage.addActor(background);
 
         Table menu = new Table();
-        addButton("quit!!!", menu, 0).addListener(new ClickListener(){
+        menu.setPosition(width/16, 0);
+        menu.setSize(width/20, height/4);
+
+        // ignore this awful slop code, its just to test piece replacing and some new piece movements
+        addButton("debug piece swap", menu, 1).addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                for (Piece p : game.getBackend().getPieceSet().values()) {
+                    if (p instanceof Pawn && !(p instanceof Shogi)) {
+                        ShogiPawn sp = new ShogiPawn(p.getColor(), p.getX(), p.getY());
+                        backend.swapPiece(p, sp);
+                        boardTable.getTileFromCoordinate(new Coordinate(p.getX(), p.getY()))
+                            .setPiece(sp, PieceSpriteLookup.pieceToSprite(sp, game.getAsset("piecesAtlas")));
+                        Gdx.app.log("chessgame", game.getBackend().getPieceSet().toString());
+                        break;
+                    } else if (p instanceof Rook && !(p instanceof Shogi)) {
+                        Lance sp = new Lance(p.getColor(), p.getX(), p.getY());
+                        backend.swapPiece(p, sp);
+                        boardTable.getTileFromCoordinate(new Coordinate(p.getX(), p.getY()))
+                            .setPiece(sp, PieceSpriteLookup.pieceToSprite(sp, game.getAsset("piecesAtlas")));
+                        Gdx.app.log("chessgame", game.getBackend().getPieceSet().toString());
+                        break;
+                    } else if (p instanceof Bishop && !(p instanceof Alfil)) {
+                        Alfil sp = new Alfil(p.getColor(), p.getX(), p.getY());
+                        backend.swapPiece(p, sp);
+                        boardTable.getTileFromCoordinate(new Coordinate(p.getX(), p.getY()))
+                            .setPiece(sp, PieceSpriteLookup.pieceToSprite(sp, game.getAsset("piecesAtlas")));
+                        Gdx.app.log("chessgame", game.getBackend().getPieceSet().toString());
+                        break;
+                    }
+                }
+            }
+        });
+
+        addButton("quit!!!", menu, 1).addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 OnCompletionListener OCL = new OnCompletionListener() {
@@ -81,8 +121,6 @@ public class GameScreen extends MenuScreen {
             }
         });
         
-        menu.setPosition(0, 0);
-        menu.setSize(width/4, height/4);
         stage.addActor(menu);
         
         addBoard();
