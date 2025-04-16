@@ -7,9 +7,12 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.utils.Timer;
+import com.badlogic.gdx.utils.Timer.Task;
 import com.badlogic.gdx.audio.Music;
 
 import cids.grouptwo.Coordinate;
+import cids.grouptwo.gdx.GameScreen;
 import cids.grouptwo.gdx.GdxChessGame;
 import cids.grouptwo.pieces.Piece;
 
@@ -21,14 +24,16 @@ public class Board extends Table {
     private Cell<Tile> cellBoard[][];
     private Cell<Tile> selected;
     private List<Cell<Tile>> valid;
+    private GameScreen gameScreen;
 
     private cids.grouptwo.Board realBoard;
 
     private final char LETTERS[] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
     
     @SuppressWarnings("unchecked")
-    public Board(GdxChessGame game, int width, int height) {
+    public Board(GdxChessGame game, int width, int height, GameScreen gameScreen) {
         this.game = game;
+        this.gameScreen = gameScreen;
         tilesAtlas = this.game.getAsset("tilesAtlas");
         piecesAtlas = this.game.getAsset("piecesAtlas");
         cellBoard = new Cell[8][8];
@@ -130,6 +135,11 @@ public class Board extends Table {
 
         // tile already selected
         if (selected != null) {
+            if (!valid.contains(getCell(tile)) && tile.getPiece() == null)
+                return;
+            if (!valid.contains(getCell(tile)) && tile.getPiece().getColor() != 
+                (game.getBackend().getTurn() == 0 ? Piece.Color.WHITE : Piece.Color.BLACK))
+                return;
             tileBgDeselect(selected.getActor());
             selected.getActor().getPiece().getValidMoves(realBoard.getBoard()).forEach(c -> {
                 tileBgDemove(getTileFromCoordinate(c));
@@ -149,7 +159,7 @@ public class Board extends Table {
         if (tile.getPiece() == null)
             return;
 
-        // discard wrong colour selections
+        // discard wrong colour click
         if (tile.getPiece().getColor() != (game.getBackend().getTurn() == 0 ? 
             Piece.Color.WHITE : Piece.Color.BLACK))
             return;
@@ -183,12 +193,28 @@ public class Board extends Table {
         Piece piece = from.getPiece();
         piece.piecePosition(to.getCoordinate());
         board.setPiece(piece);
-        game.getBackend().step();
         // now we handle the graphical move
-        // TODO lerp piece when move is performed before handing over ownership to next tile
-        from.clearPiece();
-        to.setPiece(piece, PieceSpriteLookup.pieceToSprite(piece, piecesAtlas));
+        // this mess is to lerp the pieces while respecting the z order of the tiles
+        if (((from.getCoordinate().Y > to.getCoordinate().Y) || 
+            (from.getCoordinate().X > to.getCoordinate().X))) {
+            from.lerpTo(to);
+            Timer.schedule(new Task(){
+                @Override
+                public void run() {
+                    to.setPiece(piece, PieceSpriteLookup.pieceToSprite(piece, piecesAtlas));
+                    from.clearPiece();
+                }
+            }, 0.2f);
+        } else {
+            to.setPiece(piece, PieceSpriteLookup.pieceToSprite(piece, piecesAtlas));
+            to.lerpFrom(from);
+            from.clearPiece();
+        }
+        gameScreen.getCameraShake().shake(5, 0.15f);
+        
         ((Music) game.getAsset("moveSound")).play();
+        // lastly we end our turn
+        game.getBackend().step();
     }
 
     private void tileBgSelect(Tile tile) {

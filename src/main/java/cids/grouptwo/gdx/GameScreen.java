@@ -54,9 +54,14 @@ public class GameScreen extends MenuScreen {
         vfxManager.addEffect(blur);
 
         backend.newBoard();
-        boardTable = new Board(game, width/2, height);
+        boardTable = new Board(game, width/2, height, this);
         Gdx.app.log("chessgame", backend.getPieceSet().toString());
         boardTable.populate();
+
+    }
+
+    public CameraShake getCameraShake() {
+        return cShake;
     }
 
     @Override
