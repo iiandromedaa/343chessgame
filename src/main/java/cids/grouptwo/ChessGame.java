@@ -1,15 +1,11 @@
 package cids.grouptwo;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
-import cids.grouptwo.pieces.Bishop;
-import cids.grouptwo.pieces.King;
-import cids.grouptwo.pieces.Knight;
-import cids.grouptwo.pieces.Pawn;
-import cids.grouptwo.pieces.Piece;
-import cids.grouptwo.pieces.Queen;
-import cids.grouptwo.pieces.Rook;
+import cids.grouptwo.pieces.*;
 import cids.grouptwo.roguestuff.Modifier;
 
 /**
@@ -19,15 +15,24 @@ import cids.grouptwo.roguestuff.Modifier;
 public class ChessGame {
 
     /**
-     * Game state indicator:
-     * -1: game over
-     * 0: white's turn
-     * 1: black's turn
+     * Game state indicator:<p>
+     * </p><p>-1: game over
+     * </p><p>0: white's turn
+     * </p><p>1: black's turn
      */
     private int turn;
     private Board board;
     // temporary, we dont know how we wanna store modifiers yet
     private List<Modifier> modifiers;
+    /**
+     * map to store piece transformations (promotion / swapping a piece for another as a modifier)
+     * when the FEN parser is setting up a game state, it will refer to this map to place pieces
+     * where they would have been in the original FEN game state, even if the modified piece
+     * did not exist in the original notation
+     * <p>PS, this only needs to store white pieces, until we figure out if we want the AI to get
+     * piece swaps too
+     */
+    private Map<Piece, Piece> pieceSet;
 
     /**
      * Constructor initializes a new chess game with white to move first
@@ -36,7 +41,19 @@ public class ChessGame {
     public ChessGame() {
         // white first move of course
         turn = 0;
-        board = new Board();
+        pieceSet = new HashMap<>();
+    }
+
+    public void newBoard() {
+        board = new Board(pieceSet);
+    }
+
+    public void newBoard(String fen) {
+        board = new Board(pieceSet, fen);
+    }
+
+    public Map<Piece, Piece> getPieceSet() {
+        return pieceSet;
     }
 
     /**
@@ -162,30 +179,29 @@ public class ChessGame {
             System.out.println("Pawn promotion! Enter your choice (Q=Queen, R=Rook, B=Bishop, N=Knight): ");
             String choice = scanner.nextLine().toUpperCase();
             
-            Piece promotedPiece = null;
-            
             switch (choice) {
                 case "Q":
-                    promotedPiece = new Queen(piece.getColor(), piece.getX(), piece.getY());
+                    swapPiece(piece, new Queen(piece.getColor(), piece.getX(), piece.getY()));
                     break;
                 case "R":
-                    promotedPiece = new Rook(piece.getColor(), piece.getX(), piece.getY());
+                    swapPiece(piece, new Rook(piece.getColor(), piece.getX(), piece.getY()));
                     break;
                 case "B":
-                    promotedPiece = new Bishop(piece.getColor(), piece.getX(), piece.getY());
+                    swapPiece(piece, new Bishop(piece.getColor(), piece.getX(), piece.getY()));
                     break;
                 case "N":
-                    promotedPiece = new Knight(piece.getColor(), piece.getX(), piece.getY());
+                    swapPiece(piece, new Knight(piece.getColor(), piece.getX(), piece.getY()));
                     break;
                 default:
-                    promotedPiece = new Queen(piece.getColor(), piece.getX(), piece.getY()); // Default to Queen
+                    swapPiece(piece, new Queen(piece.getColor(), piece.getX(), piece.getY())); // Default to Queen
                     break;
             }
-            
-            if (promotedPiece != null) {
-                board.setPiece(promotedPiece); // Replace the pawn with the promoted piece
-            }
         }
+    }
+
+    public void swapPiece(Piece from, Piece to) {
+        pieceSet.put(from, to);
+        board.setPiece(to);
     }
 
     /**
