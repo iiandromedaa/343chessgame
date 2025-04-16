@@ -1,5 +1,10 @@
 package cids.grouptwo.pieces;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import cids.grouptwo.Coordinate;
+
 public class King extends Piece {
 
     private boolean hasMoved = false;
@@ -42,6 +47,50 @@ public class King extends Piece {
         }
 
         return false;
+    }
+
+    /**
+     * Efficiently gets all possible valid moves for the King
+     * including standard moves and castling
+     */
+    @Override
+    public List<Coordinate> getValidMoves(Piece[][] board) {
+        List<Coordinate> validMoves = new ArrayList<>();
+        
+        // Check all eight adjacent squares (standard king moves)
+        for (int dx = -1; dx <= 1; dx++) {
+            for (int dy = -1; dy <= 1; dy++) {
+                // Skip the current position
+                if (dx == 0 && dy == 0) continue;
+                
+                int newX = getX() + dx;
+                int newY = getY() + dy;
+                
+                // Check if the position is on the board
+                if (newX >= 0 && newX < 8 && newY >= 0 && newY < 8) {
+                    // Valid if empty or enemy piece
+                    if (board[newY][newX] == null || board[newY][newX].getColor() != getColor()) {
+                        validMoves.add(new Coordinate(newX, newY));
+                    }
+                }
+            }
+        }
+        
+        // Check for castling moves
+        if (!hasMoved) {
+            // Kingside castling
+            if (canCastle(board, true)) {
+                validMoves.add(new Coordinate(getX() + 2, getY()));
+            }
+            // Queenside castling
+            if (canCastle(board, false)) {
+                validMoves.add(new Coordinate(getX() - 2, getY()));
+            }
+        }
+
+        System.out.println("King valid moves: " + validMoves);
+        
+        return validMoves;
     }
 
     /**

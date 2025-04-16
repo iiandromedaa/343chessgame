@@ -1,5 +1,10 @@
 package cids.grouptwo.pieces;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import cids.grouptwo.Coordinate;
+
 public class Knight extends Piece {
 
     public Knight(Color color, int x, int y) {
@@ -30,6 +35,38 @@ public class Knight extends Piece {
             return board[newY][newX].getColor() != getColor();
         }
         return false;
+    }
+
+    /**
+     * Efficiently gets all possible valid moves for the Knight
+     */
+    @Override
+    public List<Coordinate> getValidMoves(Piece[][] board) {
+        List<Coordinate> validMoves = new ArrayList<>();
+        
+        // All possible L-shaped knight moves
+        int[][] knightMoves = {
+            {2, 1}, {2, -1}, {-2, 1}, {-2, -1},
+            {1, 2}, {1, -2}, {-1, 2}, {-1, -2}
+        };
+        
+        // Check each possible knight move
+        for (int[] move : knightMoves) {
+            int newX = getX() + move[0];
+            int newY = getY() + move[1];
+            
+            // Check if the position is on the board
+            if (newX >= 0 && newX < 8 && newY >= 0 && newY < 8) {
+                // Valid if empty or enemy piece
+                if (board[newY][newX] == null || board[newY][newX].getColor() != getColor()) {
+                    validMoves.add(new Coordinate(newX, newY));
+                }
+            }
+        }
+
+        System.out.println("Knight valid moves: " + validMoves);
+        
+        return validMoves;
     }
 
     @Override
