@@ -130,12 +130,15 @@ public class Board extends Table {
 
         // tile already selected
         if (selected != null) {
-            if (!valid.contains(getCell(tile)))
-                return;
             tileBgDeselect(selected.getActor());
             selected.getActor().getPiece().getValidMoves(realBoard.getBoard()).forEach(c -> {
                 tileBgDemove(getTileFromCoordinate(c));
             });
+            if (!valid.contains(getCell(tile))) {
+                selected = null;
+                select(tile);
+                return;
+            }
             move(selected.getActor(), tile);
             valid.clear();
             selected = null;
@@ -152,6 +155,10 @@ public class Board extends Table {
             return;
 
         // no tile selected
+        select(tile);
+    }
+
+    private void select(Tile tile) {
         selected = getCell(tile);
         tileBgSelect(tile);
         valid.clear();
