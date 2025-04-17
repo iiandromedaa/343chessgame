@@ -1,16 +1,21 @@
 package cids.grouptwo;
 
-import cids.grouptwo.pieces.Piece;
-import java.util.Random;
-
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import cids.grouptwo.exceptions.BoardException;
 import cids.grouptwo.exceptions.FenParseException;
-import cids.grouptwo.pieces.*;
-
-import static cids.grouptwo.pieces.Piece.Color.*;
+import cids.grouptwo.pieces.Bishop;
+import cids.grouptwo.pieces.King;
+import cids.grouptwo.pieces.Knight;
+import cids.grouptwo.pieces.Pawn;
+import cids.grouptwo.pieces.Piece;
+import static cids.grouptwo.pieces.Piece.Color.BLACK;
+import static cids.grouptwo.pieces.Piece.Color.DEBUG;
+import static cids.grouptwo.pieces.Piece.Color.WHITE;
+import cids.grouptwo.pieces.Queen;
+import cids.grouptwo.pieces.Rook;
 
 public class Board {
 
@@ -56,7 +61,7 @@ public class Board {
         for(int i = 0; i < BOARDPARAMS; i++){
             for(int j = 0; j < BOARDPARAMS; j++){
                 if(other.getPieceFromXY(i,j) != null){
-                    Piece piece = Piece(other.getPieceFromXY(i,j));
+                    Piece piece = other.getPieceFromXY(i,j).copyPiece();
                     this.setPiece(piece);
                 }
             }

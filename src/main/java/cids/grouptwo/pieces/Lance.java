@@ -7,6 +7,12 @@ public class Lance extends Rook implements Shogi {
 	}
 
     @Override
+    public Lance copyPiece(){
+        Lance tempPiece = new Lance(this.getColor(), this.getX(), this.getY());
+        return tempPiece;
+    }
+
+    @Override
     public boolean isValidMove(int newX, int newY, Piece[][] board) {
         // Check board boundaries
         if (newX < 0 || newX >= 8 || newY < 0 || newY >= 8) {

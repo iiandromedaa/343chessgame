@@ -1,12 +1,17 @@
 package cids.grouptwo;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.prefs.Preferences;
 
-import cids.grouptwo.gdx.GdxChessGame;
 import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
+
+import static cids.grouptwo.ai.minimaxRoot;
+import cids.grouptwo.gdx.GdxChessGame;
+import cids.grouptwo.pieces.Piece;
 
 /**
  * just for neatness' sake, use the main method just to bootstrap
@@ -20,7 +25,7 @@ public class Main {
         // game.estoyLoopin();
         launchGdx(game);
     }
-
+    
     private static void launchGdx(ChessGame game) {
         int w, h;
         boolean fullscreen;
@@ -70,5 +75,4 @@ public class Main {
             System.out.println("Clear failed :( " + e);
         }
     }
-    
 }
