@@ -7,6 +7,14 @@ import cids.grouptwo.pieces.Piece;
 
 public class ai {
 
+    /**
+     * This method takes a board state, a search depth, and a variable to tell who's turn it is and 
+     * returns the best move it can find. For white let "isMaximisingPlayer" be true, for black let it be false. 
+     * @param board
+     * @param depth
+     * @param isMaximisingPlayer
+     * @return
+     */
     public static Board minimaxRoot(Board board, int depth, boolean isMaximisingPlayer){
         List<Board> newGameMoves;
         newGameMoves = generateMoves(board, isMaximisingPlayer);
