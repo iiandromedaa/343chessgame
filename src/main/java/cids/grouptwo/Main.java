@@ -1,30 +1,61 @@
 package cids.grouptwo;
 
-import cids.grouptwo.pieces.Bishop;
-import cids.grouptwo.pieces.King;
-import cids.grouptwo.pieces.Knight;
-import static cids.grouptwo.pieces.Piece.Color.*;
-
 import java.io.IOException;
+import java.util.prefs.Preferences;
 
+import cids.grouptwo.gdx.GdxChessGame;
+import com.badlogic.gdx.Graphics;
+import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
+import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
+
+/**
+ * just for neatness' sake, use the main method just to bootstrap
+ * other things, like the libgdx
+ */
 public class Main {
 
     public static void main(String[] args) {
-
-        /* creates the backend board data */
-        Board board = new Board();
-        
-        /* creating some pieces, doesnt have to be used and can be modified */
-        board.setPiece(new King(WHITE, 4, 0));
-        board.setPiece(new King(BLACK, 4, 7));
-        board.setPiece(new Bishop(WHITE, 2, 0));
-        board.setPiece(new Bishop(BLACK, 2, 7));
-        board.setPiece(new Knight(WHITE, 1, 0));
-        board.setPiece(new Knight(BLACK, 1, 7));
-
-        board.displayBoard();
+        ChessGame game = new ChessGame();
+        // game.getBoard().defaultBoard(game.getPieceSet());
+        // game.estoyLoopin();
+        launchGdx(game);
     }
 
+    private static void launchGdx(ChessGame game) {
+        int w, h;
+        boolean fullscreen;
+        Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
+        Graphics.DisplayMode dm = Lwjgl3ApplicationConfiguration.getDisplayMode();
+        Preferences prefs = Preferences.userNodeForPackage(Main.class);
+
+        try {
+            w = Integer.parseInt(prefs.get("width", "0"));
+            h = Integer.parseInt(prefs.get("height", "0"));
+            fullscreen = Boolean.parseBoolean(prefs.get("fullscreen", "false"));
+            if (w == 0 || h == 0) {
+                w = dm.width / 2;
+                h = dm.height / 2;
+                fullscreen = false;
+            }
+        } catch (NullPointerException | SecurityException | IllegalStateException e) {
+            // if settings not found :(
+            w = dm.width / 2;
+            h = dm.height / 2;
+            fullscreen = false;
+        }
+
+        config.setResizable(false);
+        config.setWindowedMode(w, h);
+        
+        if (fullscreen)
+            config.setFullscreenMode(dm);
+        new Lwjgl3Application(new GdxChessGame(game, h), config);
+        
+    }
+
+    /**
+     * Clears the console screen
+     */
     public static void clear() {
         try {
             if (System.getProperty("os.name").contains("Windows")) {
@@ -37,7 +68,7 @@ public class Main {
         } catch (InterruptedException | IOException e) {
             e.printStackTrace();
             System.out.println("Clear failed :( " + e);
-        }  
+        }
     }
-
+    
 }
