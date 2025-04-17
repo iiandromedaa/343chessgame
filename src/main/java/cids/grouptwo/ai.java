@@ -1,27 +1,39 @@
 package cids.grouptwo;
 
-import com.badlogic.gdx.Game;
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
+
 import cids.grouptwo.pieces.Piece;
 
 public class ai {
-    
-    private Board[] placeHolder = new Board[10];
-    private int bestMove;
 
+    public Board minimaxRoot(Board board, int depth, boolean isMaximisingPlayer){
+        List<Board> newGameMoves = generateMoves(board);
+        double bestMove = -9999;
+        Board bestMoveFound = board;
+        for(int i=0; i < newGameMoves.size(); i++){
+            Board newGameMove = newGameMoves.get(i);
+            double value = minimax(newGameMove, depth-1, -10000, 10000, !isMaximisingPlayer);
+            if(value >= bestMove){
+                bestMove = value;
+                bestMoveFound = newGameMove;
+            }
+        }
+        return bestMoveFound;
+    }
     /**
      * This is the algorithm meant to give the best move, where the intial alpha should be -9999
      * and the initial beta should be 9999
     **/
-    private int minimax(Board board, int depth, int alpha, int beta, boolean isMaximisingPlayer){
+    private double minimax(Board board, int depth, double alpha, double beta, boolean isMaximisingPlayer){
         if(depth == 0){
             return evaluateBoard(board);
         }
-            Board[] newGameMoves = generateMoves(board);
+            List<Board> newGameMoves = generateMoves(board);
         if(isMaximisingPlayer){
-            bestMove = -9999;
-            for(int i = 0; i < placeHolder.length; i++){
-                Board newGameMove = newGameMoves[i];
+            double bestMove = -9999;
+            for(int i = 0; i < newGameMoves.size(); i++){
+                Board newGameMove = newGameMoves.get(i);
                 bestMove = Math.max(bestMove, minimax(newGameMove, depth - 1, alpha, beta, !isMaximisingPlayer));
                 alpha = Math.max(alpha, bestMove);
                 if (beta <= alpha) {
@@ -31,9 +43,9 @@ public class ai {
 
         }
         else{
-            bestMove = 9999;
-            for(int i = 0; i < placeHolder.length; i++){
-                Board newGameMove = newGameMoves[i];
+            double bestMove = 9999;
+            for(int i = 0; i < newGameMoves.size(); i++){
+                Board newGameMove = newGameMoves.get(i);
                 bestMove = Math.max(bestMove, minimax(newGameMove, depth - 1, alpha, beta, !isMaximisingPlayer));
                 beta = Math.max(beta, bestMove);
                 if (beta <= alpha) {
@@ -47,17 +59,36 @@ public class ai {
     }
 
     //need to impliment a method to find every available move 
-    private Board[] generateMoves(Board board){
-        return placeHolder;
+    private List<Board> generateMoves(Board board){
+        List<Board> boardList = new ArrayList<>();
+        List<Piece> pieces = new ArrayList<>();
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if(board.getPieceFromXY(i, j) != null){
+                    pieces.add(board.getPieceFromXY(i, j));
+                }
+            }
+        }
+        for(int k = 0; k < pieces.size(); k++){
+           List<Coordinate> possibleMoves = pieces.get(k).getValidMoves(board.getBoard());
+           Board tempBoard = new Board(board);
+           for(int r = 0; r < possibleMoves.size(); r++){
+                tempBoard.getPieceFromCoordinate(pieces.get(k).getPosition()).piecePosition(possibleMoves.get(r));
+                boardList.add(tempBoard);
+           }
+        }
+        return boardList;
     }
 
     //need a way to get the pieces from a board
-    private int evaluateBoard(Board board) {
-        int totalEvaluation = 0;
+    private double evaluateBoard(Board board) {
+        double totalEvaluation = 0;
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-                Piece piece = board[i][j];
-                totalEvaluation = totalEvaluation + getPieceValue(piece, i ,j);
+                if(board.getPieceFromXY(i, j) != null){
+                    Piece piece = board.getPieceFromXY(i, j);
+                    totalEvaluation = totalEvaluation + getPieceValue(piece, i ,j);
+                }
             }
         }
         return totalEvaluation;

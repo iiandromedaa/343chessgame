@@ -20,6 +20,14 @@ public abstract class Piece {
         this(color, coordinate.X, coordinate.Y);
     }
 
+    /**
+     * Author: Adam
+     */
+    public Piece copyPiece(Piece other){
+      Piece piece = Piece(other.getColor(), other.x, other.y);
+
+    }
+
     public int getX() {
         return x;
     }

@@ -48,6 +48,23 @@ public class Board {
     }
 
     /**
+     * author:Adam
+     * @param other
+     */
+    public Board(Board other){
+        this.board =  new Piece[BOARDPARAMS][BOARDPARAMS];
+        for(int i = 0; i < BOARDPARAMS; i++){
+            for(int j = 0; j < BOARDPARAMS; j++){
+                if(other.getPieceFromXY(i,j) != null){
+                    Piece piece = Piece(other.getPieceFromXY(i,j));
+                    this.setPiece(piece);
+                }
+            }
+        }
+    }
+
+
+    /**
      * Displays chess board with proper chess notation for coordinates
      * Shows the full board with coordinate labels (a-h, 1-8)
      * Black pieces are at the top (rows 0-1), white pieces at the bottom (rows 6-7)
@@ -111,6 +128,10 @@ public class Board {
         }
     }
 
+    /**
+     * Returns the board as a piece array
+     * Author:Adam
+     */
     public Piece[][] getBoard() {
         return board;
     }
