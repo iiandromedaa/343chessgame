@@ -11,12 +11,14 @@ import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.Timer.Task;
 import com.badlogic.gdx.audio.Music;
 
+import cids.grouptwo.Board;
+import cids.grouptwo.BoardListener;
 import cids.grouptwo.Coordinate;
 import cids.grouptwo.gdx.GameScreen;
 import cids.grouptwo.gdx.GdxChessGame;
 import cids.grouptwo.pieces.Piece;
 
-public class Board extends Table {
+public class GdxBoard extends Table implements BoardListener {
 
     private GdxChessGame game;
     private TextureAtlas tilesAtlas;
@@ -26,12 +28,12 @@ public class Board extends Table {
     private List<Cell<Tile>> valid;
     private GameScreen gameScreen;
 
-    private cids.grouptwo.Board realBoard;
+    private Board realBoard;
 
     private final char LETTERS[] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
     
     @SuppressWarnings("unchecked")
-    public Board(GdxChessGame game, int width, int height, GameScreen gameScreen) {
+    public GdxBoard(GdxChessGame game, int width, int height, GameScreen gameScreen) {
         this.game = game;
         this.gameScreen = gameScreen;
         tilesAtlas = this.game.getAsset("tilesAtlas");
@@ -118,6 +120,46 @@ public class Board extends Table {
         }
     }
 
+    /**
+     * runs the graphical move so this will be triggered even if the move occurs from outside 
+     * the gui, for example if the ai moves a piece
+     * @param board the board, duh
+     * @param coordinate the square being updated
+     * @param piece the piece involved in the update, if null, piece was moved off of square
+     */
+    public void boardUpdate(Board board, Coordinate from, Coordinate to, Piece piece) {
+        // if this is true, its a promotion/swap
+        if (from.equals(to)) {
+            getTileFromCoordinate(from).setPiece(piece, 
+                PieceSpriteLookup.pieceToSprite(piece, game.getAsset("piecesAtlas")));
+            return;
+        }
+
+        Gdx.app.log("chessgame", "move from " + coordinateToAlgebraic(from) + 
+            " to " + coordinateToAlgebraic(to) + " | " + piece.getClass().getCanonicalName());
+        Tile fromTile = getTileFromCoordinate(from);
+        Tile toTile = getTileFromCoordinate(to);
+        // now we handle the graphical move
+        // this mess is to lerp the pieces while respecting the z order of the tiles
+        if (((from.Y > to.Y) || (from.X > to.X)) &&
+            !((from.X > to.X) && (from.Y < to.Y))) {
+            fromTile.lerpTo(toTile);
+            Timer.schedule(new Task(){
+                @Override
+                public void run() {
+                    toTile.setPiece(piece, PieceSpriteLookup.pieceToSprite(piece, piecesAtlas));
+                    fromTile.clearPiece();
+                }
+            }, 0.2f);
+        } else {
+            toTile.setPiece(piece, PieceSpriteLookup.pieceToSprite(piece, piecesAtlas));
+            toTile.lerpFrom(fromTile);
+            fromTile.clearPiece();
+        }
+        gameScreen.getCameraShake().shake(7.5f, 0.075f);
+        ((Music) game.getAsset("moveSound")).play();
+    }
+
     private void tileSelection(Tile tile) {
         // tile is selected
         if (selected == getCell(tile)) {
@@ -184,36 +226,9 @@ public class Board extends Table {
     }
 
     private void move(Tile from, Tile to) {
-        Gdx.app.log("chessgame", "move from " + coordinateToAlgebraic(from.getCoord()) + 
-            " to " + coordinateToAlgebraic(to.getCoord()) + " | " + from.getPiece()
-            .getClass().getCanonicalName());
-        // calls to backend methods
-        cids.grouptwo.Board board = game.getBackend().getBoard();
-        board.clearPosition(from.getCoord());
+        Board board = game.getBackend().getBoard();
         Piece piece = from.getPiece();
-        piece.piecePosition(to.getCoord());
-        board.setPiece(piece);
-        // now we handle the graphical move
-        // this mess is to lerp the pieces while respecting the z order of the tiles
-        if (((from.getCoord().Y > to.getCoord().Y) || (from.getCoord().X > to.getCoord().X)) &&
-            !((from.getCoord().X > to.getCoord().X) && (from.getCoord().Y < to.getCoord().Y))) {
-            from.lerpTo(to);
-            Timer.schedule(new Task(){
-                @Override
-                public void run() {
-                    to.setPiece(piece, PieceSpriteLookup.pieceToSprite(piece, piecesAtlas));
-                    from.clearPiece();
-                }
-            }, 0.2f);
-        } else {
-            to.setPiece(piece, PieceSpriteLookup.pieceToSprite(piece, piecesAtlas));
-            to.lerpFrom(from);
-            from.clearPiece();
-        }
-        gameScreen.getCameraShake().shake(7.5f, 0.075f);
-        
-        ((Music) game.getAsset("moveSound")).play();
-        // lastly we end our turn
+        board.move(piece, to.getCoord());
         game.getBackend().step();
     }
 
@@ -300,6 +315,6 @@ public class Board extends Table {
             BLACKHOVER = 7,
             WHITETAKE = 8,
             BLACKTAKE = 9;
-    }  
+    }
 
 }

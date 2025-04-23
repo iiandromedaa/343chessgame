@@ -18,4 +18,18 @@ public class Coordinate {
         return "x: " + X + " y: " + Y;
     }
 
+    /**
+     * handles coordinate comparison, more readable than manually comparing both x and y
+     * every single time we want to check if 2 coordinates are the "Same" (not literally
+     * the same reference but equal X and Y values)
+     * @param obj object to be compared (automatically false if not coordinate)
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Coordinate) {
+            return (((Coordinate)obj).X == X && ((Coordinate)obj).Y == Y);
+        } else
+            return false;
+    }
+
 }

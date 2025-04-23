@@ -2,7 +2,7 @@ package cids.grouptwo;
 
 import cids.grouptwo.pieces.Piece;
 import java.util.Random;
-
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -16,6 +16,7 @@ public class Board {
 
     private boolean[][] obstacles;
     private Random random = new Random();
+    private List<BoardListener> listeners;
 
     private Piece[][] board;
 
@@ -28,6 +29,7 @@ public class Board {
         board = new Piece[BOARDPARAMS][BOARDPARAMS];
         obstacles = new boolean[BOARDPARAMS][BOARDPARAMS];
         defaultBoard(pieceSet);
+        listeners = new ArrayList<>();
     }
 
     /**
@@ -45,6 +47,7 @@ public class Board {
 		} catch (BoardException | FenParseException e) {
 			e.printStackTrace();
 		}
+        listeners = new ArrayList<>();
     }
 
     /**
@@ -162,6 +165,18 @@ public class Board {
         clearPosition(coordinate.X, coordinate.Y);
     }
 
+    /**
+     * bundles together the method calls required to make a move
+     * @param piece piece
+     * @param coordinate coordinate to move it to
+     */
+    public void move(Piece piece, Coordinate coordinate) {
+        clearPosition(piece.getPosition());
+        notifyListeners(piece.getPosition(), coordinate, piece);
+        piece.piecePosition(coordinate);
+        setPiece(piece);
+    }
+
     private void setBoard(Piece[][] board) throws BoardException {
         if (board.length != this.board.length)
             throw new BoardException();
@@ -196,6 +211,16 @@ public class Board {
 
     public boolean isBlocked(int x, int y) {
         return obstacles[y][x];
+    }
+
+    public void addListener(BoardListener boardListener) {
+        listeners.add(boardListener);
+    }
+
+    public void notifyListeners(Coordinate from, Coordinate to, Piece piece) {
+        for (BoardListener boardListener : listeners) {
+            boardListener.boardUpdate(this, from, to, piece);
+        }
     }
 
 

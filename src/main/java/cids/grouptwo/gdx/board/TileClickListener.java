@@ -7,9 +7,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 public class TileClickListener extends ClickListener {
     
     private Tile tile;
-    private Board board;
+    private GdxBoard board;
 
-    public TileClickListener(Tile tile, Board board) {
+    public TileClickListener(Tile tile, GdxBoard board) {
         this.tile = tile;
         this.board = board;
     }

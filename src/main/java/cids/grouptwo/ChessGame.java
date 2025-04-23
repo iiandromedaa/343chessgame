@@ -202,6 +202,7 @@ public class ChessGame {
     public void swapPiece(Piece from, Piece to) {
         pieceSet.put(from, to);
         board.setPiece(to);
+        board.notifyListeners(from.getPosition(), to.getPosition(), to);
     }
 
     /**

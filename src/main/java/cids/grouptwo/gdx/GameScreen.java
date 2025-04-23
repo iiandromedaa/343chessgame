@@ -1,5 +1,7 @@
 package cids.grouptwo.gdx;
 
+import java.util.Random;
+
 import org.lwjgl.opengl.GL20;
 
 import com.badlogic.gdx.Gdx;
@@ -9,6 +11,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
@@ -20,7 +23,7 @@ import com.crashinvaders.vfx.effects.GaussianBlurEffect;
 
 import cids.grouptwo.ChessGame;
 import cids.grouptwo.Coordinate;
-import cids.grouptwo.gdx.board.Board;
+import cids.grouptwo.gdx.board.GdxBoard;
 import cids.grouptwo.gdx.board.PieceSpriteLookup;
 import cids.grouptwo.pieces.*;
 
@@ -30,9 +33,9 @@ public class GameScreen extends MenuScreen {
     private Music sound;
     private VfxManager vfxManager;
     private GaussianBlurEffect blur;
-    private Vector3 blurAmount;
+    private Vector2 blurAmount;
     private boolean modalOpen;
-    private Board boardTable;
+    private GdxBoard boardTable;
 
     GameScreen(int width, int height, GdxChessGame game, VfxManager vfxManager, ChessGame backend) {
         super(width, height, game, backend);
@@ -44,11 +47,12 @@ public class GameScreen extends MenuScreen {
         this.vfxManager.removeAllEffects();
         blur = new GaussianBlurEffect();
         blur.setPasses(7);
-        blurAmount = Vector3.Zero;
+        blurAmount = Vector2.Zero;
         vfxManager.addEffect(blur);
 
         backend.newBoard();
-        boardTable = new Board(game, width/2, height, this);
+        boardTable = new GdxBoard(game, width/2, height, this);
+        backend.getBoard().addListener(boardTable);
         Gdx.app.log("chessgame", backend.getPieceSet().toString());
         boardTable.populate();
 
@@ -68,7 +72,8 @@ public class GameScreen extends MenuScreen {
         background.setSize(width*5, height*5);
         background.setColor(Color.GRAY);
         centerActor(background);
-        background.setShear(0.2f, 0.2f);
+        Random rand = new Random();
+        background.setShear(0.1f + rand.nextFloat() * (0.6f), 0.1f + rand.nextFloat() * (0.2f));
         stage.addActor(background);
 
         Table menu = new Table();
@@ -83,22 +88,16 @@ public class GameScreen extends MenuScreen {
                     if (p instanceof Pawn && !(p instanceof Shogi)) {
                         ShogiPawn sp = new ShogiPawn(p.getColor(), p.getX(), p.getY());
                         backend.swapPiece(p, sp);
-                        boardTable.getTileFromCoordinate(new Coordinate(p.getX(), p.getY()))
-                            .setPiece(sp, PieceSpriteLookup.pieceToSprite(sp, game.getAsset("piecesAtlas")));
                         Gdx.app.log("chessgame", game.getBackend().getPieceSet().toString());
                         break;
                     } else if (p instanceof Rook && !(p instanceof Shogi)) {
                         Lance sp = new Lance(p.getColor(), p.getX(), p.getY());
                         backend.swapPiece(p, sp);
-                        boardTable.getTileFromCoordinate(new Coordinate(p.getX(), p.getY()))
-                            .setPiece(sp, PieceSpriteLookup.pieceToSprite(sp, game.getAsset("piecesAtlas")));
                         Gdx.app.log("chessgame", game.getBackend().getPieceSet().toString());
                         break;
                     } else if (p instanceof Bishop && !(p instanceof Alfil)) {
                         Alfil sp = new Alfil(p.getColor(), p.getX(), p.getY());
                         backend.swapPiece(p, sp);
-                        boardTable.getTileFromCoordinate(new Coordinate(p.getX(), p.getY()))
-                            .setPiece(sp, PieceSpriteLookup.pieceToSprite(sp, game.getAsset("piecesAtlas")));
                         Gdx.app.log("chessgame", game.getBackend().getPieceSet().toString());
                         break;
                     }
@@ -151,9 +150,9 @@ public class GameScreen extends MenuScreen {
         vfxManager.endInputCapture();
 
         if (modalOpen) 
-            blur.setAmount(blurAmount.lerp(new Vector3(5,0,0), 0.015f).x);
+            blur.setAmount(blurAmount.lerp(new Vector2(5,0), 0.015f).x);
         else 
-            blur.setAmount(blurAmount.lerp(new Vector3(0.001f,0,0), 0.1f).x);
+            blur.setAmount(blurAmount.lerp(new Vector2(0.001f,0), 0.1f).x);
 
         Gdx.gl.glClearColor(0.3f, 0.3f, 0.3f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);

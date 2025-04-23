@@ -53,34 +53,34 @@ public class Tile extends Widget {
     public void setTileBg(AtlasRegion atlasRegion) {
         switch (atlasRegion.name) {
             case "white":
-                colour = Board.Colours.WHITE;
+                colour = GdxBoard.Colours.WHITE;
                 break;
             case "black":
-                colour = Board.Colours.BLACK;
+                colour = GdxBoard.Colours.BLACK;
                 break;
             case "whiteselect":
-                colour = Board.Colours.WHITESELECT;
+                colour = GdxBoard.Colours.WHITESELECT;
                 break;
             case "blackselect":
-                colour = Board.Colours.BLACKSELECT;
+                colour = GdxBoard.Colours.BLACKSELECT;
                 break;
             case "whitemove":
-                colour = Board.Colours.WHITEMOVE;
+                colour = GdxBoard.Colours.WHITEMOVE;
                 break;
             case "blackmove":
-                colour = Board.Colours.BLACKMOVE;
+                colour = GdxBoard.Colours.BLACKMOVE;
                 break;
             case "whitehover":
-                colour = Board.Colours.WHITEHOVER;
+                colour = GdxBoard.Colours.WHITEHOVER;
                 break;
             case "blackhover":
-                colour = Board.Colours.BLACKHOVER;
+                colour = GdxBoard.Colours.BLACKHOVER;
                 break;
             case "whitetake":
-                colour = Board.Colours.WHITETAKE;
+                colour = GdxBoard.Colours.WHITETAKE;
                 break;
             case "blacktake":
-                colour = Board.Colours.BLACKTAKE;
+                colour = GdxBoard.Colours.BLACKTAKE;
                 break;
         }
         tileBg.setDrawable(new TextureRegionDrawable(atlasRegion));

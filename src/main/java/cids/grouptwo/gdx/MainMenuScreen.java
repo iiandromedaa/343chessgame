@@ -1,5 +1,7 @@
 package cids.grouptwo.gdx;
 
+import java.util.Random;
+
 import org.lwjgl.opengl.GL20;
 
 import com.badlogic.gdx.Gdx;
@@ -9,6 +11,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
@@ -30,7 +33,7 @@ public class MainMenuScreen extends MenuScreen {
     private VfxManager vfxManager;
     private GaussianBlurEffect blur;
     private boolean settingsOpen;
-    private Vector3 blurAmount;
+    private Vector2 blurAmount;
 
     MainMenuScreen(int width, int height, GdxChessGame game, ChessGame backend) {
         super(width, height, game, backend);
@@ -43,7 +46,7 @@ public class MainMenuScreen extends MenuScreen {
         vfxManager = new VfxManager(Pixmap.Format.RGBA8888);
         blur = new GaussianBlurEffect();
         blur.setPasses(7);
-        blurAmount = Vector3.Zero;
+        blurAmount = Vector2.Zero;
         vfxManager.addEffect(blur);
     }
 
@@ -53,7 +56,8 @@ public class MainMenuScreen extends MenuScreen {
         background.setSize(width*5, height*5);
         background.setColor(Color.GRAY);
         centerActor(background);
-        background.setShear(0.2f, 0.2f);
+        Random rand = new Random();
+        background.setShear(0.1f + rand.nextFloat() * (0.6f), 0.1f + rand.nextFloat() * (0.2f));
         stage.addActor(background);
 
         Image logo = new Image(this.logo);
@@ -136,9 +140,9 @@ public class MainMenuScreen extends MenuScreen {
         vfxManager.endInputCapture();
 
         if (settingsOpen) 
-            blur.setAmount(blurAmount.lerp(new Vector3(5,0,0), 0.015f).x);
+            blur.setAmount(blurAmount.lerp(new Vector2(5, 0), 0.015f).x);
         else 
-            blur.setAmount(blurAmount.lerp(new Vector3(0.001f,0,0), 0.1f).x);
+            blur.setAmount(blurAmount.lerp(new Vector2(0.001f, 0), 0.1f).x);
 
         Gdx.gl.glClearColor(0.3f, 0.3f, 0.3f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);

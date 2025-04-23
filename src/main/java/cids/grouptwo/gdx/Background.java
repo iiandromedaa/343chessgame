@@ -1,13 +1,11 @@
 package cids.grouptwo.gdx;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.Texture.TextureWrap;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Affine2;
-import com.badlogic.gdx.math.Matrix3;
-import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
@@ -25,6 +23,7 @@ public class Background extends Actor {
     Background(Texture texture) {
         this.texture = texture;
         this.texture.setWrap(TextureWrap.Repeat, TextureWrap.Repeat);
+        this.texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
         textureRegion = new TextureRegion(texture, texture.getWidth()*10, texture.getHeight()*10);
         affine = new Affine2();
         scale = new Vector2(1f, 1f);
@@ -41,10 +40,10 @@ public class Background extends Actor {
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        batch.setColor(getColor());
         affine.setToTranslation(getX(), getY());
         affine.scale(scale);
         affine.shear(shear);
+        batch.setColor(getColor().r, getColor().g, getColor().b, parentAlpha);
         batch.draw(textureRegion, getWidth(), getWidth(), affine);
     }
 
