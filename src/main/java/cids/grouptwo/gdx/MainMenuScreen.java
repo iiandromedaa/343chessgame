@@ -54,7 +54,6 @@ public class MainMenuScreen extends MenuScreen {
     public void show() {
         Background background = new Background(game.getAsset("background"));
         background.setSize(width*5, height*5);
-        background.setColor(Color.GRAY);
         centerActor(background);
         Random rand = new Random();
         background.setShear(0.1f + rand.nextFloat() * (0.6f), 0.1f + rand.nextFloat() * (0.2f));

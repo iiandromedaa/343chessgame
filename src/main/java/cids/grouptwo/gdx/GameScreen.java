@@ -50,7 +50,8 @@ public class GameScreen extends MenuScreen {
         blurAmount = Vector2.Zero;
         vfxManager.addEffect(blur);
 
-        backend.newBoard();
+        // backend.newBoard();
+        backend.newBoard("q3k1nr/1pp1nQpp/3p4/1P2p3/4P3/B1PP1b2/B5PP/5K2");
         boardTable = new GdxBoard(game, width/2, height, this);
         backend.getBoard().addListener(boardTable);
         Gdx.app.log("chessgame", backend.getPieceSet().toString());
