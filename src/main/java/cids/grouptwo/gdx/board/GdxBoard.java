@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -38,6 +39,10 @@ public class GdxBoard extends Table implements BoardListener {
         this.gameScreen = gameScreen;
         tilesAtlas = this.game.getAsset("tilesAtlas");
         piecesAtlas = this.game.getAsset("piecesAtlas");
+        tilesAtlas.getTextures().forEach(t -> 
+            t.setFilter(TextureFilter.Linear, TextureFilter.Linear));
+        piecesAtlas.getTextures().forEach(t -> 
+            t.setFilter(TextureFilter.Linear, TextureFilter.Linear));
         cellBoard = new Cell[8][8];
         realBoard = game.getBackend().getBoard();
         valid = new ArrayList<>();
@@ -150,7 +155,7 @@ public class GdxBoard extends Table implements BoardListener {
                     toTile.setPiece(piece, PieceSpriteLookup.pieceToSprite(piece, piecesAtlas));
                     fromTile.clearPiece();
                 }
-            }, 0.2f);
+            }, 0.175f);
         } else {
             toTile.setPiece(piece, PieceSpriteLookup.pieceToSprite(piece, piecesAtlas));
             toTile.lerpFrom(fromTile);
