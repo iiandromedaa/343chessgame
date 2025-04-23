@@ -8,12 +8,10 @@ import com.badlogic.gdx.audio.Music.OnCompletionListener;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
@@ -34,14 +32,10 @@ public class GameScreen extends MenuScreen {
     private GaussianBlurEffect blur;
     private Vector3 blurAmount;
     private boolean modalOpen;
-    private Texture background; 
     private Board boardTable;
 
     GameScreen(int width, int height, GdxChessGame game, VfxManager vfxManager, ChessGame backend) {
         super(width, height, game, backend);
-
-        background = game.getAsset("background");
-        background.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 
         cShake = new CameraShake();
         sound = game.getAsset("moveSound");
@@ -70,10 +64,11 @@ public class GameScreen extends MenuScreen {
         stage.getRoot().addAction(Actions.fadeIn(0.5f));
 
         // draws background, note to self do not add actors above here
-        Image background = new Image(this.background);
-        background.setSize(width*1.25f, height*1.25f);
+        Background background = new Background(game.getAsset("background"));
+        background.setSize(width*5, height*5);
         background.setColor(Color.GRAY);
         centerActor(background);
+        background.setShear(0.2f, 0.2f);
         stage.addActor(background);
 
         Table menu = new Table();

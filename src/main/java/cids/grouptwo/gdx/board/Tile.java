@@ -30,7 +30,7 @@ public class Tile extends Widget {
         imagePos = new Vector2();
     }
 
-    public Coordinate getCoordinate() {
+    public Coordinate getCoord() {
         return coordinate;
     }
     

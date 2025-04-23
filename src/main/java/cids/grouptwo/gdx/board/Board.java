@@ -126,7 +126,7 @@ public class Board extends Table {
             });
             valid.clear();
             Gdx.app.log("chessgame", coordinateToAlgebraic(selected.getActor()
-                .getCoordinate()) + " deselect | " + selected.getActor().getPiece()
+                .getCoord()) + " deselect | " + selected.getActor().getPiece()
                 .getClass().getCanonicalName() + " " + selected.getActor().getPiece().getColor());
             selected = null;
             tileBgDeselect(tile);
@@ -173,7 +173,7 @@ public class Board extends Table {
         tileBgSelect(tile);
         valid.clear();
         Gdx.app.log("chessgame", coordinateToAlgebraic(selected.getActor()
-                .getCoordinate()) + " select | " + selected.getActor().getPiece()
+                .getCoord()) + " select | " + selected.getActor().getPiece()
                 .getClass().getCanonicalName() + " " + selected.getActor().getPiece().getColor());
         selected.getActor().getPiece().getValidMoves(realBoard.getBoard()).forEach(c -> {
             valid.add(getCell(getTileFromCoordinate(c)));
@@ -184,19 +184,19 @@ public class Board extends Table {
     }
 
     private void move(Tile from, Tile to) {
-        Gdx.app.log("chessgame", "move from " + coordinateToAlgebraic(from.getCoordinate()) + 
-            " to " + coordinateToAlgebraic(to.getCoordinate()) + " | " + from.getPiece()
+        Gdx.app.log("chessgame", "move from " + coordinateToAlgebraic(from.getCoord()) + 
+            " to " + coordinateToAlgebraic(to.getCoord()) + " | " + from.getPiece()
             .getClass().getCanonicalName());
         // calls to backend methods
         cids.grouptwo.Board board = game.getBackend().getBoard();
-        board.clearPosition(from.getCoordinate());
+        board.clearPosition(from.getCoord());
         Piece piece = from.getPiece();
-        piece.piecePosition(to.getCoordinate());
+        piece.piecePosition(to.getCoord());
         board.setPiece(piece);
         // now we handle the graphical move
         // this mess is to lerp the pieces while respecting the z order of the tiles
-        if (((from.getCoordinate().Y > to.getCoordinate().Y) || 
-            (from.getCoordinate().X > to.getCoordinate().X))) {
+        if (((from.getCoord().Y > to.getCoord().Y) || (from.getCoord().X > to.getCoord().X)) &&
+            !((from.getCoord().X > to.getCoord().X) && (from.getCoord().Y < to.getCoord().Y))) {
             from.lerpTo(to);
             Timer.schedule(new Task(){
                 @Override
@@ -210,7 +210,7 @@ public class Board extends Table {
             to.lerpFrom(from);
             from.clearPiece();
         }
-        gameScreen.getCameraShake().shake(5, 0.15f);
+        gameScreen.getCameraShake().shake(7.5f, 0.075f);
         
         ((Music) game.getAsset("moveSound")).play();
         // lastly we end our turn

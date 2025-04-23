@@ -26,7 +26,7 @@ public class Assets {
         map.put("moveSound", new AssetDescriptor<>("moveShort.mp3", Music.class));
         map.put("skin", new AssetDescriptor<>("uiskin.json", Skin.class));
         map.put("logo", new AssetDescriptor<>("logo.png", Texture.class));
-        map.put("background", new AssetDescriptor<>("background.jpg", Texture.class));
+        map.put("background", new AssetDescriptor<>("background.png", Texture.class));
         map.put("tilesAtlas", new AssetDescriptor<>("tiles.atlas", TextureAtlas.class));
         map.put("piecesAtlas", new AssetDescriptor<>("pieces.atlas", TextureAtlas.class));
         loadAll();

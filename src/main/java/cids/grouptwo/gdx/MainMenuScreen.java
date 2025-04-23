@@ -5,6 +5,7 @@ import org.lwjgl.opengl.GL20;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Music.OnCompletionListener;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
@@ -23,7 +24,6 @@ import cids.grouptwo.ChessGame;
 public class MainMenuScreen extends MenuScreen {
 
     private Texture logo;
-    private Texture background;
     private Table table;
     private CameraShake cShake;
     private Music sound;
@@ -37,9 +37,6 @@ public class MainMenuScreen extends MenuScreen {
         logo = game.getAsset("logo");
         logo.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 
-        background = game.getAsset("background");
-        background.setFilter(TextureFilter.Linear, TextureFilter.Linear);
-
         cShake = new CameraShake();
         sound = game.getAsset("moveSound");
 
@@ -52,9 +49,11 @@ public class MainMenuScreen extends MenuScreen {
 
     @Override
     public void show() {
-        Image background = new Image(this.background);
-        background.setSize(width*1.25f, height*1.25f);
+        Background background = new Background(game.getAsset("background"));
+        background.setSize(width*5, height*5);
+        background.setColor(Color.GRAY);
         centerActor(background);
+        background.setShear(0.2f, 0.2f);
         stage.addActor(background);
 
         Image logo = new Image(this.logo);
