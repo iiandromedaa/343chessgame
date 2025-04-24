@@ -16,9 +16,11 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Align;
 import com.crashinvaders.vfx.VfxManager;
 import com.crashinvaders.vfx.effects.GaussianBlurEffect;
 
@@ -37,6 +39,7 @@ public class GameScreen extends MenuScreen {
     private Vector2 blurAmount;
     private boolean modalOpen;
     private GdxBoard boardTable;
+    private String currentFen;
 
     GameScreen(int width, int height, GdxChessGame game, VfxManager vfxManager, ChessGame backend) {
         super(width, height, game, backend);
@@ -51,8 +54,8 @@ public class GameScreen extends MenuScreen {
         blurAmount = Vector2.Zero;
         vfxManager.addEffect(blur);
 
-        // backend.newBoard();
-        backend.newBoard(game.getRandomFen());
+        currentFen = game.getRandomFen();
+        backend.newBoard(currentFen);
         boardTable = new GdxBoard(game, width/2, height, this);
         backend.getBoard().addListener(boardTable);
         Gdx.app.log("chessgame", backend.getPieceSet().toString());
@@ -110,6 +113,8 @@ public class GameScreen extends MenuScreen {
         addButton("new board", menu, 1).addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                if (game.getBackend().getTurn() != 0)
+                    game.getBackend().step();
                 newRound();
             }
         });
@@ -132,6 +137,12 @@ public class GameScreen extends MenuScreen {
         stage.addActor(menu);
         
         addBoard();
+
+        Label fenLabel = new Label(currentFen.split("@")[1], skin);
+        fenLabel.setSize(width, height/7);
+        fenLabel.setPosition(width/50, height-(height/7));
+        fenLabel.setFontScale(2f);
+        stage.addActor(fenLabel);
 
         Gdx.input.setInputProcessor(stage);
     }
@@ -178,7 +189,7 @@ public class GameScreen extends MenuScreen {
     @Override
     public void dispose() {
         // vfxManager.dispose();
-        // blur.dispose();
+        blur.dispose();
         super.dispose();
     }
 

@@ -159,7 +159,7 @@ public class MainMenuScreen extends MenuScreen {
 
     @Override
     public void dispose() {
-        // disposeVfx();
+        blur.dispose();
         super.dispose();
     }
 
