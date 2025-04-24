@@ -15,6 +15,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
@@ -51,7 +52,7 @@ public class GameScreen extends MenuScreen {
         vfxManager.addEffect(blur);
 
         // backend.newBoard();
-        backend.newBoard("q3k1nr/1pp1nQpp/3p4/1P2p3/4P3/B1PP1b2/B5PP/5K2");
+        backend.newBoard(game.getRandomFen());
         boardTable = new GdxBoard(game, width/2, height, this);
         backend.getBoard().addListener(boardTable);
         Gdx.app.log("chessgame", backend.getPieceSet().toString());
@@ -82,7 +83,7 @@ public class GameScreen extends MenuScreen {
         menu.setSize(width/20, height/4);
 
         // ignore this awful slop code, its just to test piece replacing and some new piece movements
-        addButton("debug piece swap", menu, 1).addListener(new ClickListener(){
+        addButton("debug piece swap", menu, 1).addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 for (Piece p : game.getBackend().getPieceSet().values()) {
@@ -106,7 +107,14 @@ public class GameScreen extends MenuScreen {
             }
         });
 
-        addButton("quit!!!", menu, 1).addListener(new ClickListener(){
+        addButton("new board", menu, 1).addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                newRound();
+            }
+        });
+
+        addButton("quit!!!", menu, 1).addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 OnCompletionListener OCL = new OnCompletionListener() {
@@ -169,8 +177,8 @@ public class GameScreen extends MenuScreen {
 
     @Override
     public void dispose() {
-        vfxManager.dispose();
-        blur.dispose();
+        // vfxManager.dispose();
+        // blur.dispose();
         super.dispose();
     }
 
@@ -186,6 +194,22 @@ public class GameScreen extends MenuScreen {
 
         centerActor(boardTable);
         stage.addActor(boardTable);
+    }
+
+    private void newRound() {
+        Gdx.app.log("chessgame", "swapping out gamescreen, now round " + "round goes here");
+        sound.play();
+        stage.getRoot().getColor().a = 1;
+        SequenceAction sequenceAction = new SequenceAction();
+        sequenceAction.addAction(Actions.fadeOut(0.5f));
+        sequenceAction.addAction(Actions.run(new Runnable() {
+            @Override
+            public void run() {
+                game.setScreen(new GameScreen(width, height, game, vfxManager, backend));
+                GameScreen.this.dispose();
+            }
+        }));
+        stage.getRoot().addAction(sequenceAction);
     }
     
 }

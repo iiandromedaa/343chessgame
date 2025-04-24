@@ -1,5 +1,6 @@
 package cids.grouptwo;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -14,13 +15,16 @@ import cids.grouptwo.pieces.Piece.Color;
  */
 public final class FenParse {
     
-    public static Piece[][] parse(String fen, Map<Piece, Piece> pieceSet) throws FenParseException {
+    public static Piece[][] parse(String fen, Map<Piece, Piece> playerPieceSet) throws FenParseException {
         if (fen == null)
             throw new FenParseException();
         String[] ranks = fen.split("/");
         if (ranks.length != 8)
             throw new FenParseException();
         Piece[][] temp = new Piece[8][8];
+
+        // make a shallow copy of the player pieces map, youll see why later
+        Map<Piece, Piece> playerSetCopy = new HashMap<>(playerPieceSet);
         
         int rankCursor = 0;
         int fileCursor = 0;
@@ -38,55 +42,55 @@ public final class FenParse {
                 try {
                     fileCursor += Integer.parseInt(Character.toString(ranks[i].charAt(j)));
                 } catch (NumberFormatException e) {
-                    // big stupid switch case incoming
+                    // big stupid switch incoming
                     switch (ranks[i].charAt(j)) {
                         case 'r':
                             temp[rankCursor][fileCursor] = new Rook(Color.BLACK, 
                                 fileCursor, rankCursor);
                             break;
                         case 'R':
-                            temp[rankCursor][fileCursor] = new Rook(Color.WHITE, 
-                                fileCursor, rankCursor);
+                            replaceHandler(temp, playerSetCopy, 
+                                Rook.class, rankCursor, fileCursor);
                             break;
                         case 'n':
                             temp[rankCursor][fileCursor] = new Knight(Color.BLACK, 
                                 fileCursor, rankCursor);
                             break;
                         case 'N':
-                            temp[rankCursor][fileCursor] = new Knight(Color.WHITE, 
-                                fileCursor, rankCursor);
+                            replaceHandler(temp, playerSetCopy, 
+                                Knight.class, rankCursor, fileCursor);
                             break;
                         case 'b':
                             temp[rankCursor][fileCursor] = new Bishop(Color.BLACK, 
                                 fileCursor, rankCursor);
                             break;
                         case 'B':
-                            temp[rankCursor][fileCursor] = new Bishop(Color.WHITE, 
-                                fileCursor, rankCursor);
+                            replaceHandler(temp, playerSetCopy, 
+                                Bishop.class, rankCursor, fileCursor);
                             break;
                         case 'q':
                             temp[rankCursor][fileCursor] = new Queen(Color.BLACK, 
                                 fileCursor, rankCursor);
                             break;
                         case 'Q':
-                            temp[rankCursor][fileCursor] = new Queen(Color.WHITE, 
-                                fileCursor, rankCursor);
+                            replaceHandler(temp, playerSetCopy, 
+                                Queen.class, rankCursor, fileCursor);
                             break;
                         case 'k':
                             temp[rankCursor][fileCursor] = new King(Color.BLACK, 
                                 fileCursor, rankCursor);
                             break;
                         case 'K':
-                            temp[rankCursor][fileCursor] = new King(Color.WHITE, 
-                                fileCursor, rankCursor);
+                            replaceHandler(temp, playerSetCopy, 
+                                King.class, rankCursor, fileCursor);
                             break;
                         case 'p':
                             temp[rankCursor][fileCursor] = new Pawn(Color.BLACK, 
                                 fileCursor, rankCursor);
                             break;
                         case 'P':
-                            temp[rankCursor][fileCursor] = new Pawn(Color.WHITE, 
-                                fileCursor, rankCursor);
+                            replaceHandler(temp, playerSetCopy, 
+                                Pawn.class, rankCursor, fileCursor);
                             break;
                     }
                     fileCursor++;
@@ -96,6 +100,23 @@ public final class FenParse {
         }
         return temp;
     }
-    // TODO do the piece set piece replacement shit and also make it apply to black too
-    // a working method, athena deliver unto me!!
+
+    /**
+     * lol i cannot believe java let me get away with this shit<p>
+     * i only did this to make the ugly switch case in the prase method
+     * slightly more readable, but in doing this i've made this code 100x harder to
+     * maintain, thats ok though its worth it for the Aesthetic
+     */
+    private static <P extends Piece> void replaceHandler(Piece[][] temp, 
+        Map<Piece, Piece> playerSetCopy, Class<P> type, int rankCursor, int fileCursor) {
+        for (Piece p : playerSetCopy.keySet()) {
+            if (type.isInstance(p)) {
+                temp[rankCursor][fileCursor] = playerSetCopy.get(p);
+                playerSetCopy.get(p).piecePosition(fileCursor, rankCursor);
+                playerSetCopy.remove(p);
+                return;
+            }
+        }
+    }
+
 }

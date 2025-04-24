@@ -1,8 +1,15 @@
 package cids.grouptwo.gdx;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.util.Random;
+
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -72,6 +79,14 @@ public class GdxChessGame extends Game {
             Gdx.app.error("chessgame", "this asset doesnt exist!");
         }
         return (T) assets.getAssetManager().get(descriptor);
+    }
+
+    public String getRandomFen() {
+        FileHandle fens = Gdx.files.internal("fens.fen");
+        String[] array = fens.readString().split("\r?\n");
+        String output = array[(int)(Math.random() * (array.length - 1))];
+        Gdx.app.log("chessgame", output);
+        return output;
     }
 
 }

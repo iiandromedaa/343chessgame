@@ -1,6 +1,5 @@
 package cids.grouptwo;
 
-import cids.grouptwo.pieces.Piece;
 import java.util.Random;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +42,10 @@ public class Board {
         if (fen == null)
             return;
         try {
-			setBoard(FenParse.parse(fen, pieceSet));
+            if (pieceSet.isEmpty())
+                setBoard(FenParse.parse(fen, defaultBoard(pieceSet)));
+            else
+                setBoard(FenParse.parse(fen, pieceSet));
 		} catch (BoardException | FenParseException e) {
 			e.printStackTrace();
 		}
@@ -223,44 +225,41 @@ public class Board {
         }
     }
 
-
     /**
      * Sets up the chess board with an initial configuration
      *
      * @param board the chess board to set up
      */
-    private void defaultBoard(Map<Piece, Piece> pieceSet) {
+    private Map<Piece, Piece> defaultBoard(Map<Piece, Piece> pieceSet) {
         // Add pieces in their initial positions
 
         // White pieces
         setPiece(new Rook(WHITE, 0, 7));
-        pieceSet.put(getPieceFromXY(0, 7), getPieceFromXY(0, 7));
-
         setPiece(new Knight(WHITE, 1, 7));
-        pieceSet.put(getPieceFromXY(1, 7), getPieceFromXY(1, 7));
-
         setPiece(new Bishop(WHITE, 2, 7));
-        pieceSet.put(getPieceFromXY(2, 7), getPieceFromXY(2, 7));
-
         setPiece(new Queen(WHITE, 3, 7));
-        pieceSet.put(getPieceFromXY(3, 7), getPieceFromXY(3, 7));
-
         setPiece(new King(WHITE, 4, 7));
-        pieceSet.put(getPieceFromXY(4, 7), getPieceFromXY(4, 7));
-
         setPiece(new Bishop(WHITE, 5, 7));
-        pieceSet.put(getPieceFromXY(5, 7), getPieceFromXY(5, 7));
-        
         setPiece(new Knight(WHITE, 6, 7));
-        pieceSet.put(getPieceFromXY(6, 7), getPieceFromXY(6, 7));
-
         setPiece(new Rook(WHITE, 7, 7));
-        pieceSet.put(getPieceFromXY(7, 7), getPieceFromXY(7, 7));
 
         // White pawns
         for (int i = 0; i < 8; i++) {
             setPiece(new Pawn(WHITE, i, 6));
-            pieceSet.put(getPieceFromXY(i, 6), getPieceFromXY(i, 6));
+        }
+
+        if (pieceSet.isEmpty()) {
+            pieceSet.put(getPieceFromXY(0, 7), getPieceFromXY(0, 7));
+            pieceSet.put(getPieceFromXY(1, 7), getPieceFromXY(1, 7));
+            pieceSet.put(getPieceFromXY(2, 7), getPieceFromXY(2, 7));
+            pieceSet.put(getPieceFromXY(3, 7), getPieceFromXY(3, 7));
+            pieceSet.put(getPieceFromXY(4, 7), getPieceFromXY(4, 7));
+            pieceSet.put(getPieceFromXY(5, 7), getPieceFromXY(5, 7));
+            pieceSet.put(getPieceFromXY(6, 7), getPieceFromXY(6, 7));
+            pieceSet.put(getPieceFromXY(7, 7), getPieceFromXY(7, 7));
+            for (int i = 0; i < board.length; i++) {
+                pieceSet.put(getPieceFromXY(i, 6), getPieceFromXY(i, 6));
+            }
         }
 
         // Black pieces
@@ -277,6 +276,8 @@ public class Board {
         for (int i = 0; i < 8; i++) {
             setPiece(new Pawn(BLACK, i, 1));
         }
+
+        return pieceSet;
     }
 
 }
