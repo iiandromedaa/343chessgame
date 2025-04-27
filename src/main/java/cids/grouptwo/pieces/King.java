@@ -116,11 +116,58 @@ public class King extends Piece {
             }
         }
         
-        // TODO: Check if king is in check or would pass through check
-        // Full implementation would verify the king is not in check and doesn't
-        // move through or into check when castling
+        // Check if king is in check or would pass through check
+        // 1. Store original position
+        int origX = getX();
+        int origY = getY();
+        
+        // 2. Check if king is currently in check
+        if (isSquareAttacked(board, origX, origY)) {
+            return false; // Cannot castle out of check
+        }
+        
+        // 3. Check if king passes through check
+        int midX = kingSide ? origX + 1 : origX - 1;
+        if (isSquareAttacked(board, midX, origY)) {
+            return false; // Cannot castle through check
+        }
+        
+        // 4. Check if king would end up in check
+        int destX = kingSide ? origX + 2 : origX - 2;
+        if (isSquareAttacked(board, destX, origY)) {
+            return false; // Cannot castle into check
+        }
         
         return true;
+    }
+    
+    /**
+     * Helper method to determine if a square is under attack by any opponent piece
+     * @param board the board state
+     * @param x x-coordinate to check
+     * @param y y-coordinate to check
+     * @return true if the square is attacked by any opponent piece
+     */
+    private boolean isSquareAttacked(Piece[][] board, int x, int y) {
+        for (int row = 0; row < 8; row++) {
+            for (int col = 0; col < 8; col++) {
+                Piece piece = board[row][col];
+                if (piece != null && piece.getColor() != getColor()) {
+                    // Check if the opponent piece can move to this square
+                    // For pawns, we need to check capture moves specifically
+                    if (piece instanceof Pawn) {
+                        // Pawns attack diagonally, not with their regular move logic
+                        int dy = piece.getColor() == Color.WHITE ? -1 : 1;
+                        if ((row + dy == y) && (Math.abs(col - x) == 1)) {
+                            return true;
+                        }
+                    } else if (piece.isValidMove(x, y, board)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     /**
