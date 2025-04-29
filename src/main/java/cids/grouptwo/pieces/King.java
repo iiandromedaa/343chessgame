@@ -88,7 +88,7 @@ public class King extends Piece {
             }
         }
 
-        System.out.println("King valid moves: " + validMoves);
+        // System.out.println("King valid moves: " + validMoves);
         
         return validMoves;
     }

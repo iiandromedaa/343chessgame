@@ -73,7 +73,7 @@ public abstract class Piece {
      * use the old check because we weren't supposed to be overriding this method in the first place
      * its like the whole point of the OOP principles here
      * @param board
-     * @return
+     * @return list of coordinates for all valid moves
      */
     public List<Coordinate> getValidMovesUnoverridden(Piece [][] board) {
         List<Coordinate> retList = new ArrayList<>();

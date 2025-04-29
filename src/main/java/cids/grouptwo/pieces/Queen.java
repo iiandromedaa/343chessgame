@@ -79,7 +79,7 @@ public class Queen extends Piece {
             }
         }
 
-        System.out.println("Queen valid moves: " + validMoves);
+        // System.out.println("Queen valid moves: " + validMoves);
         
         return validMoves;
     }

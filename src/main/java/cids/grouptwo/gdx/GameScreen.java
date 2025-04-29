@@ -26,11 +26,12 @@ import com.crashinvaders.vfx.effects.GaussianBlurEffect;
 
 import cids.grouptwo.ChessGame;
 import cids.grouptwo.Coordinate;
+import cids.grouptwo.KillListener;
 import cids.grouptwo.gdx.board.GdxBoard;
 import cids.grouptwo.gdx.board.PieceSpriteLookup;
 import cids.grouptwo.pieces.*;
 
-public class GameScreen extends MenuScreen {
+public class GameScreen extends MenuScreen implements KillListener {
 
     private CameraShake cShake;
     private Music sound;
@@ -221,6 +222,11 @@ public class GameScreen extends MenuScreen {
             }
         }));
         stage.getRoot().addAction(sequenceAction);
+    }
+
+    @Override
+    public void killNotify(int turn) {
+        newRound();
     }
     
 }

@@ -64,7 +64,7 @@ public class Knight extends Piece {
             }
         }
 
-        System.out.println("Knight valid moves: " + validMoves);
+        // System.out.println("Knight valid moves: " + validMoves);
         
         return validMoves;
     }

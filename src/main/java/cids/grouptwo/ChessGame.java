@@ -1,5 +1,8 @@
 package cids.grouptwo;
 
+import static cids.grouptwo.pieces.Piece.Color.BLACK;
+import static cids.grouptwo.pieces.Piece.Color.WHITE;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +33,7 @@ public class ChessGame {
     private Board board;
     // temporary, we dont know how we wanna store modifiers yet
     private List<Modifier> modifiers;
+    private List<KillListener> killListeners;
     /**
      * map to store piece transformations (promotion / swapping a piece for another as a modifier)
      * when the FEN parser is setting up a game state, it will refer to this map to place pieces
@@ -413,12 +417,16 @@ public class ChessGame {
      */
     public void step() {
         if (turn == 0) {
+            if (checkKingCapture() == turn)
+                kill();
             // Change from white's turn to black's turn
             turn = 1;
             // Bot implementation would go here
             // HypotheticalChessBot.playSickAssMove();
             // Don't automatically step again! That skips black's turn
         } else if (turn == 1) {
+            if (checkKingCapture() == turn)
+                kill();
             // Change from black's turn to white's turn
             turn = 0;
         } else {
@@ -427,13 +435,21 @@ public class ChessGame {
         }
     }
 
+    
     /**
      * Ends the game by setting turn to -1
      */
     public void kill() {
         turn = -1;
+        for (KillListener killListener : killListeners) {
+            killListener.killNotify(turn);
+        }
     }
 
+    public void addListener(KillListener killListener) {
+        killListeners.add(killListener);
+    }
+    
     /**
      * Resets the game state to start a new game
      */
@@ -442,6 +458,21 @@ public class ChessGame {
         turn = 0;
         // TODO choose random FEN from our cool list of chess midgames
         // TODO set board state to that FEN
+    }
+
+    /**
+     * @return the colour of the winning player
+     * <p> 0 - white
+     * <p> 1 - black
+     * <p> -1 - nobody has won yet
+     */
+    private int checkKingCapture() {
+        if (findKing(WHITE) == null)
+            return turn;
+        else if (findKing(BLACK) == null)
+            return turn;
+        else
+            return -1;
     }
     
     /**

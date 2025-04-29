@@ -95,7 +95,7 @@ public class Bishop extends Piece {
             }
         }
 
-        System.out.println("Bishop valid moves: " + validMoves);
+        // System.out.println("Bishop valid moves: " + validMoves);
         
         return validMoves;
     }
