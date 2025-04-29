@@ -53,6 +53,7 @@ public class GameScreen extends MenuScreen implements KillListener {
         vfxManager.addEffect(blur);
 
         currentFen = game.getRandomFen();
+        backend.reset();
         backend.newBoard(currentFen);
         boardTable = new GdxBoard(game, width/2, height, this);
         backend.addListener(this);
@@ -217,6 +218,7 @@ public class GameScreen extends MenuScreen implements KillListener {
             @Override
             public void run() {
                 game.setScreen(new GameScreen(width, height, game, vfxManager, backend));
+                game.getBackend().killKillListener(GameScreen.this);
                 GameScreen.this.dispose();
             }
         }));
@@ -226,7 +228,6 @@ public class GameScreen extends MenuScreen implements KillListener {
     @Override
     public void killNotify(int turn) {
         Gdx.app.log("chessgame", turn == 0 ? "white wins!" : "black wins!");
-        game.getBackend().reset();
         newRound();
     }
     

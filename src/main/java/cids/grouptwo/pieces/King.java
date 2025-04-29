@@ -87,8 +87,6 @@ public class King extends Piece {
                 validMoves.add(new Coordinate(getX() - 2, getY()));
             }
         }
-
-        // System.out.println("King valid moves: " + validMoves);
         
         return validMoves;
     }

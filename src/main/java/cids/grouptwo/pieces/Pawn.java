@@ -111,8 +111,6 @@ public class Pawn extends Piece {
             }
         }
 
-        // System.out.println("Pawn valid moves: " + validMoves);
-
         return validMoves;
     }
 

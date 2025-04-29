@@ -104,8 +104,6 @@ public class Rook extends Piece {
                 }
             }
         }
-
-        // System.out.println("Rook valid moves: " + validMoves);
         
         return validMoves;
     }

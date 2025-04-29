@@ -53,7 +53,7 @@ public class ChessGame {
     public ChessGame() {
         // white first move of course
         turn = 0;
-        round = 0;
+        round = 1;
         pieceSet = new HashMap<>();
         killListeners = new ArrayList<>();
     }
@@ -452,8 +452,8 @@ public class ChessGame {
      * Ends the game by setting turn to -1
      */
     public void kill() {
-        turn = -1;
         round++;
+        // turn = -1;
         for (KillListener killListener : killListeners) {
             killListener.killNotify(turn);
         }
@@ -461,6 +461,14 @@ public class ChessGame {
 
     public void addListener(KillListener killListener) {
         killListeners.add(killListener);
+    }
+
+    /**
+     * removes the specified listener from the list
+     * @param killListener
+     */
+    public void killKillListener(KillListener killListener) {
+        killListeners.remove(killListener);
     }
     
     /**
