@@ -5,7 +5,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
-import cids.grouptwo.pieces.*;
+import cids.grouptwo.pieces.Bishop;
+import cids.grouptwo.pieces.King;
+import cids.grouptwo.pieces.Knight;
+import cids.grouptwo.pieces.Pawn;
+import cids.grouptwo.pieces.Piece;
+import cids.grouptwo.pieces.Queen;
+import cids.grouptwo.pieces.Rook;
 import cids.grouptwo.roguestuff.Modifier;
 
 /**
@@ -73,6 +79,18 @@ public class ChessGame {
         while (turn != -1) { // Game loop continues until the game is over
             displayGameState();
 
+            // Check and notify if the current player is in check
+            if (isCheck()) {
+                System.out.println("CHECK! " + (turn == 0 ? "White" : "Black") + "'s king is under attack!");
+                
+                // After notifying about check, check for checkmate
+                if (isCheckmate()) {
+                    System.out.println("Checkmate! " + (turn == 1 ? "White" : "Black") + " wins!");
+                    kill();
+                    break;
+                }
+            }
+
             System.out.println((turn == 0 ? "White" : "Black") + "'s turn. Enter your move (e.g., 'e2 e4'): ");
             String input = scanner.nextLine();
 
@@ -98,31 +116,45 @@ public class ChessGame {
                     throw new IllegalArgumentException("Invalid move for the selected piece.");
                 }
 
+                // Save the current state to check if move puts own king in check
+                Piece capturedPiece = board.getPieceFromXY(to.X, to.Y);
+                int oldX = piece.getX();
+                int oldY = piece.getY();
+                
+                // Make the move temporarily
+                board.clearPosition(oldX, oldY);
+                piece.piecePosition(to.X, to.Y);
+                board.setPiece(piece);
+                
                 // Handle special moves
                 handleSpecialMoves(piece, from, to);
-
-                // Clear the old position properly
-                board.clearPosition(from);
                 
-                // Update the piece's infernal position
-                piece.piecePosition(to);
-                
-                // Set the piece at its new position
-                board.setPiece(piece);
+                // Check if the move puts or leaves own king in check
+                if (isCheck()) {
+                    // Undo the move
+                    handleUndoSpecialMoves(piece, from, to);
+                    board.clearPosition(to.X, to.Y);
+                    piece.piecePosition(oldX, oldY);
+                    board.setPiece(piece);
+                    if (capturedPiece != null) {
+                        board.setPiece(capturedPiece);
+                    }
+                    throw new IllegalArgumentException("Illegal move: would leave your king in check!");
+                }
                 
                 // Handle pawn promotion if needed
                 handlePawnPromotion(piece, scanner);
 
-                // Check for game-ending conditions
-                if (isCheckmate()) {
-                    displayGameState();
-                    System.out.println("Checkmate! " + (turn == 0 ? "White" : "Black") + " wins!");
+                // Advance the game state
+                step();
+                
+                // Check if the move resulted in opponent being in checkmate
+                displayGameState();
+                if (isCheck() && isCheckmate()) {
+                    System.out.println("Checkmate! " + (turn == 1 ? "White" : "Black") + " wins!");
                     kill();
                     break;
                 }
-
-                // Advance the game state
-                step();
 
             } catch (Exception e) {
                 System.out.println("Error: " + e.getMessage());
@@ -167,6 +199,39 @@ public class ChessGame {
             // If moving diagonally to an empty square, it must be en passant
             board.clearPosition(to.X, from.Y); // Remove the captured pawn
         }
+    }
+
+    /**
+     * Undoes special chess moves like castling and en passant when a move is reversed
+     * @param piece the piece being moved
+     * @param from original starting coordinate
+     * @param to destination coordinate that's being undone
+     */
+    private void handleUndoSpecialMoves(Piece piece, Coordinate from, Coordinate to) {
+        // Undo castling
+        if (piece instanceof King && Math.abs(from.X - to.X) == 2) {
+            // Kingside castling (right)
+            if (to.X > from.X) {
+                Piece rook = board.getPieceFromXY(from.X + 1, from.Y);
+                if (rook instanceof Rook) {
+                    board.clearPosition(from.X + 1, from.Y);
+                    rook.piecePosition(7, from.Y);
+                    board.setPiece(rook);
+                }
+            } 
+            // Queenside castling (left)
+            else {
+                Piece rook = board.getPieceFromXY(from.X - 1, from.Y);
+                if (rook instanceof Rook) {
+                    board.clearPosition(from.X - 1, from.Y);
+                    rook.piecePosition(0, from.Y);
+                    board.setPiece(rook);
+                }
+            }
+        }
+        
+        // Note: For en passant, we don't need special handling here since the captured pawn
+        // will be restored by the calling method if it was stored in capturedPiece
     }
 
     /**
@@ -377,6 +442,34 @@ public class ChessGame {
         turn = 0;
         // TODO choose random FEN from our cool list of chess midgames
         // TODO set board state to that FEN
+    }
+    
+    /**
+     * Checks if the current player is in check
+     * @return true if the current player's king is under attack
+     */
+    public boolean getCheck() {
+        return isCheck();
+    }
+    
+    /**
+     * Checks if the current player is in checkmate
+     * @return true if the current player is in checkmate
+     */
+    public boolean getCheckmate() {
+        return isCheckmate();
+    }
+    
+    /**
+     * Gets the color of the player who won by checkmate, if any
+     * @return "WHITE" if black is checkmated, "BLACK" if white is checkmated, or null if no checkmate
+     */
+    public String getWinningPlayer() {
+        if (isCheckmate()) {
+            // If current player is checkmated, the other player won
+            return (turn == 0) ? "BLACK" : "WHITE";
+        }
+        return null;
     }
 
 }
