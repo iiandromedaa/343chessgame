@@ -20,15 +20,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.badlogic.gdx.utils.Align;
 import com.crashinvaders.vfx.VfxManager;
 import com.crashinvaders.vfx.effects.GaussianBlurEffect;
 
 import cids.grouptwo.ChessGame;
-import cids.grouptwo.Coordinate;
 import cids.grouptwo.KillListener;
 import cids.grouptwo.gdx.board.GdxBoard;
-import cids.grouptwo.gdx.board.PieceSpriteLookup;
 import cids.grouptwo.pieces.*;
 
 public class GameScreen extends MenuScreen implements KillListener {
@@ -58,6 +55,7 @@ public class GameScreen extends MenuScreen implements KillListener {
         currentFen = game.getRandomFen();
         backend.newBoard(currentFen);
         boardTable = new GdxBoard(game, width/2, height, this);
+        backend.addListener(this);
         backend.getBoard().addListener(boardTable);
         Gdx.app.log("chessgame", backend.getPieceSet().toString());
         boardTable.populate();
@@ -209,8 +207,9 @@ public class GameScreen extends MenuScreen implements KillListener {
     }
 
     private void newRound() {
-        Gdx.app.log("chessgame", "swapping out gamescreen, now round " + "round goes here");
-        sound.play();
+        Gdx.app.log("chessgame", "swapping out gamescreen, now round " + 
+            game.getBackend().getRound());
+        ((Music) game.getAsset("notifySound")).play();
         stage.getRoot().getColor().a = 1;
         SequenceAction sequenceAction = new SequenceAction();
         sequenceAction.addAction(Actions.fadeOut(0.5f));
@@ -226,6 +225,8 @@ public class GameScreen extends MenuScreen implements KillListener {
 
     @Override
     public void killNotify(int turn) {
+        Gdx.app.log("chessgame", turn == 0 ? "white wins!" : "black wins!");
+        game.getBackend().reset();
         newRound();
     }
     

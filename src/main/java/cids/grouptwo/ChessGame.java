@@ -3,6 +3,7 @@ package cids.grouptwo;
 import static cids.grouptwo.pieces.Piece.Color.BLACK;
 import static cids.grouptwo.pieces.Piece.Color.WHITE;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +31,7 @@ public class ChessGame {
      * </p><p>1: black's turn
      */
     private int turn;
+    private int round;
     private Board board;
     // temporary, we dont know how we wanna store modifiers yet
     private List<Modifier> modifiers;
@@ -51,7 +53,9 @@ public class ChessGame {
     public ChessGame() {
         // white first move of course
         turn = 0;
+        round = 0;
         pieceSet = new HashMap<>();
+        killListeners = new ArrayList<>();
     }
 
     public void newBoard() {
@@ -72,6 +76,14 @@ public class ChessGame {
      */
     public Board getBoard() {
         return board;
+    }
+
+    /**
+     * gets the current round of the game
+     * @return the current round of the game...
+     */
+    public int getRound() {
+        return round;
     }
 
     /**
@@ -441,6 +453,7 @@ public class ChessGame {
      */
     public void kill() {
         turn = -1;
+        round++;
         for (KillListener killListener : killListeners) {
             killListener.killNotify(turn);
         }

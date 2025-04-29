@@ -140,6 +140,12 @@ public class GdxBoard extends Table implements BoardListener {
             return;
         }
 
+        gameScreen.getCameraShake().shake(7.5f, 0.075f);
+        if (getTileFromCoordinate(to).getPiece() != null)
+            ((Music) game.getAsset("captureSound")).play();
+        else
+            ((Music) game.getAsset("moveSound")).play();
+
         Gdx.app.log("chessgame", "move from " + coordinateToAlgebraic(from) + 
             " to " + coordinateToAlgebraic(to) + " | " + piece.getClass().getCanonicalName());
         Tile fromTile = getTileFromCoordinate(from);
@@ -161,8 +167,6 @@ public class GdxBoard extends Table implements BoardListener {
             toTile.lerpFrom(fromTile);
             fromTile.clearPiece();
         }
-        gameScreen.getCameraShake().shake(7.5f, 0.075f);
-        ((Music) game.getAsset("moveSound")).play();
     }
 
     private void tileSelection(Tile tile) {

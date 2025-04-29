@@ -70,8 +70,7 @@ public abstract class Piece {
 
     /**
      * for pieces that extend other pieces but not their behaviour, this method will allow you to
-     * use the old check because we weren't supposed to be overriding this method in the first place
-     * its like the whole point of the OOP principles here
+     * use the old check because we dont need to be overriding this method in the first place
      * @param board
      * @return list of coordinates for all valid moves
      */

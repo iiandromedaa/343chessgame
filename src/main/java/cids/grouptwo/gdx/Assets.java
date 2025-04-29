@@ -1,6 +1,5 @@
 package cids.grouptwo.gdx;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,6 +24,8 @@ public class Assets {
     Assets() {
         map = new HashMap<>();
         map.put("moveSound", new AssetDescriptor<>("moveShort.mp3", Music.class));
+        map.put("captureSound", new AssetDescriptor<>("capture.mp3", Music.class));
+        map.put("notifySound", new AssetDescriptor<>("notify.mp3", Music.class));
         map.put("skin", new AssetDescriptor<>("uiskin.json", Skin.class));
         map.put("logo", new AssetDescriptor<>("logo.png", Texture.class));
         map.put("background", new AssetDescriptor<>("background.png", Texture.class));
