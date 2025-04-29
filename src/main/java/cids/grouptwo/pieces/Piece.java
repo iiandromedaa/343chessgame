@@ -68,6 +68,24 @@ public abstract class Piece {
         return retList;
     }
 
+    /**
+     * for pieces that extend other pieces but not their behaviour, this method will allow you to
+     * use the old check because we weren't supposed to be overriding this method in the first place
+     * its like the whole point of the OOP principles here
+     * @param board
+     * @return
+     */
+    public List<Coordinate> getValidMovesUnoverridden(Piece [][] board) {
+        List<Coordinate> retList = new ArrayList<>();
+        for (int row = 0; row < board.length; row++) {
+            for (int col = 0; col < board[row].length; col++) {
+                if (isValidMove(col, row, board))
+                    retList.add(new Coordinate(col, row));
+            }
+        }
+        return retList;
+    }
+
     public boolean isValidMove(int newX, int newY, Piece[][] board) {
         // Default implementation, can be overridden by subclasses
         return false;

@@ -1,5 +1,9 @@
 package cids.grouptwo.pieces;
 
+import java.util.List;
+
+import cids.grouptwo.Coordinate;
+
 public class Lance extends Rook implements Shogi {
 
 	public Lance(Color color, int x, int y) {
@@ -40,6 +44,11 @@ public class Lance extends Rook implements Shogi {
         
         // Valid move if destination has opponent's piece
         return (board[newY][newX].getColor() != getColor());
+    }
+
+    @Override
+    public List<Coordinate> getValidMoves(Piece[][] board) {
+        return super.getValidMovesUnoverridden(board);
     }
 
     @Override
