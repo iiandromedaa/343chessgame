@@ -98,8 +98,8 @@ public class Queen extends Piece {
     @Override
     public String toString() {
         if (getColor() == Color.WHITE)
-            return "♕";
+            return "q";
         else
-            return "♛";
+            return "Q";
     }
 }

@@ -13,58 +13,88 @@ public class ai {
      * @param board
      * @param depth
      * @param isMaximisingPlayer
-     * @return
+     * @return board with the optimal move for the given side
      */
     public static Board minimaxRoot(Board board, int depth, boolean isMaximisingPlayer){
-        List<Board> newGameMoves;
-        newGameMoves = generateMoves(board, isMaximisingPlayer);
-        double bestMove = -9999;
-        Board bestMoveFound = null;
-        for(int i=0; i < newGameMoves.size(); i++){
-            Board newGameMove = newGameMoves.get(i);
-            double value = minimax(newGameMove, depth-1, -10000, 10000, !isMaximisingPlayer);
-            if(value >= bestMove){
-                bestMove = value;
-                bestMoveFound = newGameMove;
+        double bestMove = isMaximisingPlayer ? -10000 : 10000;
+        Coordinate bestStart = null;
+        Coordinate bestEnd = null;
+        List<Piece> pieceList = generatePieces(board, isMaximisingPlayer);
+        for(Piece piece : pieceList){
+            Coordinate start = piece.getPosition();
+            List<Coordinate> newGameMoves = piece.getValidMoves(board.getBoard());
+            for(Coordinate end : newGameMoves){
+                Board tempBoard = new Board(board);
+                Piece tempPiece = tempBoard.getPieceFromCoordinate(start);
+                tempBoard.clearPosition(start);
+                tempPiece.piecePosition(end);
+                tempBoard.setPiece(tempPiece);
+                double value = minimax(tempBoard, depth-1, -10000, 10000, !isMaximisingPlayer);
+                if((isMaximisingPlayer && value > bestMove) || (!isMaximisingPlayer && value < bestMove)){
+                    bestMove = value;
+                    bestStart = start;
+                    bestEnd = end;
+                }
             }
         }
-        return bestMoveFound;
+        Board resultBoard = new Board(board);
+        Piece pieceToMove = resultBoard.getPieceFromCoordinate(bestStart);
+        resultBoard.clearPosition(bestStart);
+        pieceToMove.piecePosition(bestEnd);
+        resultBoard.setPiece(pieceToMove);
+        return resultBoard;
     }
 
     private static double minimax(Board board, int depth, double alpha, double beta, boolean isMaximisingPlayer){
         if(depth == 0){
             return evaluateBoard(board);
         }
-            List<Board> newGameMoves = generateMoves(board, isMaximisingPlayer);
+            List<Piece> pieceList = generatePieces(board, isMaximisingPlayer);
+            double bestMove;
         if(isMaximisingPlayer){
-            double bestMove = -9999;
-            for(int i = 0; i < newGameMoves.size(); i++){
-                Board newGameMove = newGameMoves.get(i);
-                bestMove = Math.max(bestMove, minimax(newGameMove, depth - 1, alpha, beta, !isMaximisingPlayer));
-                alpha = Math.max(alpha, bestMove);
-                if (beta <= alpha) {
-                    return bestMove;
-                }
-            }  
-
-        }
-        else{
-            double bestMove = 9999;
-            for(int i = 0; i < newGameMoves.size(); i++){
-                Board newGameMove = newGameMoves.get(i);
-                bestMove = Math.min(bestMove, minimax(newGameMove, depth - 1, alpha, beta, !isMaximisingPlayer));
-                beta = Math.min(beta, bestMove);
-                if (beta <= alpha) {
-                    return bestMove;
+            bestMove = -9999;
+            for(Piece piece : pieceList){
+                Coordinate start = piece.getPosition();
+                List<Coordinate> newGameMoves = piece.getValidMoves(board.getBoard());
+                for(Coordinate end : newGameMoves){
+                    Board tempBoard = new Board(board);
+                    Piece tempPiece = tempBoard.getPieceFromCoordinate(start);
+                    tempBoard.clearPosition(start);
+                    tempPiece.piecePosition(end);
+                    tempBoard.setPiece(tempPiece);
+                    double value = minimax(tempBoard, depth-1, alpha, beta, !isMaximisingPlayer);
+                    bestMove = Math.max(bestMove, value);
+                    alpha = Math.max(bestMove, alpha);
+                    if (beta <= alpha) {
+                        return bestMove;
+                    }
                 }
             }
         }
-        return evaluateBoard(board);
+        else{
+            bestMove = 9999;
+            for(Piece piece : pieceList){
+                Coordinate start = piece.getPosition();
+                List<Coordinate> newGameMoves = piece.getValidMoves(board.getBoard());
+                for(Coordinate end : newGameMoves){
+                    Board tempBoard = new Board(board);
+                    Piece tempPiece = tempBoard.getPieceFromCoordinate(start);
+                    tempBoard.clearPosition(start);
+                    tempPiece.piecePosition(end);
+                    tempBoard.setPiece(tempPiece);
+                    double value = minimax(tempBoard, depth-1, alpha, beta, !isMaximisingPlayer);
+                    bestMove = Math.min(bestMove, value);
+                    beta = Math.min(beta, bestMove);
+                    if (beta <= alpha) {
+                        return bestMove;
+                    }
+                }
+            }
+        }
+        return bestMove;
     }
 
-    //need to impliment a method to find every available move 
-    private static List<Board> generateMoves(Board board, boolean isMaximisingPlayer){
-        List<Board> boardList = new ArrayList<>();
+    private static List<Piece> generatePieces(Board board, boolean isMaximisingPlayer){
         List<Piece> pieces = new ArrayList<>();
         String color;
         if(isMaximisingPlayer == true){
@@ -82,21 +112,10 @@ public class ai {
                 }
             }
         }
-        for(int k = 0; k < pieces.size(); k++){
-            List<Coordinate> possibleMoves = pieces.get(k).getValidMoves(board.getBoard());
-           for(int r = 0; r < possibleMoves.size(); r++){
-                Board tempBoard = new Board(board);
-                Piece tempPiece = tempBoard.getPieceFromCoordinate(pieces.get(k).getPosition());
-                Coordinate tempCoordinate = tempPiece.getPosition();
-                tempBoard.clearPosition(tempCoordinate);
-                tempPiece.piecePosition(possibleMoves.get(r));
-                tempBoard.setPiece(tempPiece);
-                //tempBoard.displayBoard();
-                boardList.add(tempBoard);
-           }
-        }
-        return boardList;
+        return pieces;
     }
+    
+        
 
     //need a way to get the pieces from a board
     private static double evaluateBoard(Board board) {
@@ -112,7 +131,8 @@ public class ai {
         return totalEvaluation;
     };
 
-    //Helper method to reverse certain states for black
+    //Helper method to reverse certain states for black, no longer used because I hard coded them but might be
+    //useful in the future.
     private static double[][] reverseArray(double[][] array){
         double[][] newArray = new double[8][8];
         for (int i = 0; i < 8; i++) {
@@ -141,7 +161,16 @@ public class ai {
             {0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0}
         };
     
-        private final static double[][] pawnEvalBlack = reverseArray(pawnEvalWhite);
+        private final static double[][] pawnEvalBlack = {
+            {0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0},
+            {0.5,  1.0, 1.0,  -2.0, -2.0,  1.0,  1.0,  0.5},
+            {0.5, -0.5, -1.0,  0.0,  0.0, -1.0, -0.5,  0.5},
+            {0.0,  0.0,  0.0,  2.0,  2.0,  0.0,  0.0,  0.0},
+            {0.5,  0.5,  1.0,  2.5,  2.5,  1.0,  0.5,  0.5},
+            {1.0,  1.0,  2.0,  3.0,  3.0,  2.0,  1.0,  1.0},
+            {5.0,  5.0,  5.0,  5.0,  5.0,  5.0,  5.0,  5.0},
+            {0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0}
+        };;
     
     private  final static double[][] knightEval =
         {
@@ -164,9 +193,19 @@ public class ai {
         { -1.0,  1.0,  1.0,  1.0,  1.0,  1.0,  1.0, -1.0},
         { -1.0,  0.5,  0.0,  0.0,  0.0,  0.0,  0.5, -1.0},
         { -2.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -2.0}
-    };
+        };
     
-    private final static double[][] bishopEvalBlack = reverseArray(bishopEvalWhite);
+    private final static double[][] bishopEvalBlack = {
+        { -2.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -2.0},
+        { -1.0,  0.5,  0.0,  0.0,  0.0,  0.0,  0.5, -1.0},
+        { -1.0,  1.0,  1.0,  1.0,  1.0,  1.0,  1.0, -1.0},
+        { -1.0,  0.0,  1.0,  1.0,  1.0,  1.0,  0.0, -1.0},
+        { -1.0,  0.5,  0.5,  1.0,  1.0,  0.5,  0.5, -1.0},
+        { -1.0,  0.0,  0.5,  1.0,  1.0,  0.5,  0.0, -1.0},
+        { -1.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0, -1.0},
+        { -2.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -2.0}
+        
+        };;
     
     private final static double[][] rookEvalWhite = {
         {  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0},
@@ -179,7 +218,17 @@ public class ai {
         {  0.0,   0.0, 0.0,  0.5,  0.5,  0.0,  0.0,  0.0}
     };
     
-    private final static double[][] rookEvalBlack = reverseArray(rookEvalWhite);
+    private final static double[][] rookEvalBlack = {
+        {  0.0,   0.0, 0.0,  0.5,  0.5,  0.0,  0.0,  0.0},
+        { -0.5,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0, -0.5},
+        { -0.5,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0, -0.5},
+        { -0.5,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0, -0.5},
+        { -0.5,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0, -0.5},
+        { -0.5,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0, -0.5},
+        {  0.5,  1.0,  1.0,  1.0,  1.0,  1.0,  1.0,  0.5},
+        {  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0}
+        
+    };
     
     private final static double[][] evalQueen = {
         { -2.0, -1.0, -1.0, -0.5, -0.5, -1.0, -1.0, -2.0},
@@ -204,7 +253,17 @@ public class ai {
         {  2.0,  3.0,  1.0,  0.0,  0.0,  1.0,  3.0,  2.0 }
     };
     
-    private final static double[][] kingEvalBlack = reverseArray(kingEvalWhite);
+    private final static double[][] kingEvalBlack = {
+    
+        {  2.0,  3.0,  1.0,  0.0,  0.0,  1.0,  3.0,  2.0 },
+        {  2.0,  2.0,  0.0,  0.0,  0.0,  0.0,  2.0,  2.0 },
+        { -1.0, -2.0, -2.0, -2.0, -2.0, -2.0, -2.0, -1.0},
+        { -2.0, -3.0, -3.0, -4.0, -4.0, -3.0, -3.0, -2.0},
+        { -3.0, -4.0, -4.0, -5.0, -5.0, -4.0, -4.0, -3.0},
+        { -3.0, -4.0, -4.0, -5.0, -5.0, -4.0, -4.0, -3.0},
+        { -3.0, -4.0, -4.0, -5.0, -5.0, -4.0, -4.0, -3.0},
+        { -3.0, -4.0, -4.0, -5.0, -5.0, -4.0, -4.0, -3.0}
+    };
 
     //Gives the value of a piece being on a certain space
     private static double getPieceValue(Piece piece, int x, int y){

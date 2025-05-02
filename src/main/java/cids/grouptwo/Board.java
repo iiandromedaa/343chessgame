@@ -75,7 +75,7 @@ public class Board {
      * Black pieces are at the top (rows 0-1), white pieces at the bottom (rows 6-7)
      */
     public void displayBoard() {
-        Main.clear();
+        //Main.clear();
         
         // Print the header with file (column) coordinates
         System.out.println("    BLACK SIDE");

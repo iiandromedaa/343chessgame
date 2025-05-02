@@ -141,7 +141,8 @@ public class King extends Piece {
         }
         
         // Check for castling moves
-        if (!hasMoved) {
+        /**
+         * if (!hasMoved) {
             // Kingside castling
             if (canCastle(board, true)) {
                 validMoves.add(new Coordinate(getX() + 2, getY()));
@@ -151,6 +152,8 @@ public class King extends Piece {
                 validMoves.add(new Coordinate(getX() - 2, getY()));
             }
         }
+         */
+       
 
         //System.out.println("King valid moves: " + validMoves);
         
@@ -160,9 +163,9 @@ public class King extends Piece {
     @Override
     public String toString() {
         if (getColor() == Color.WHITE)
-            return "♔";
+            return "k";
         else
-            return "♚";
+            return "K";
     }
     
 }

@@ -176,9 +176,9 @@ public class Pawn extends Piece {
     @Override
     public String toString() {
         if (getColor() == Color.WHITE)
-            return "♙";
+            return "p";
         else if (getColor() == Color.BLACK)
-            return "♟";
+            return "P";
         else
             return "P";
     }

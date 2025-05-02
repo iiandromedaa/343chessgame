@@ -20,12 +20,47 @@ import cids.grouptwo.pieces.Piece;
 public class Main {
 
     public static void main(String[] args) {
-        ChessGame game = new ChessGame();
-        // game.getBoard().defaultBoard(game.getPieceSet());
+        //ChessGame game = new ChessGame();
+        
+        Map<Piece, Piece> pieceSet = new HashMap<>();
+        Board game =  new Board(pieceSet);
+        Board game2 = minimaxRoot(game, 6, true);
+        game2 = minimaxRoot(game2, 6, false);
+        /*
+         * for(int i = 0; i <10; i++){
+            game2 = minimaxRoot(game2, 4, true);
+            game2 = minimaxRoot(game2, 4, false);
+        }
+         */
+        
+        
+        
+        /* 
+        List<Piece> pieces = new ArrayList<>();
+        String color= "WHITE";
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if(game2.getPieceFromXY(i, j) != null){
+                    if(game2.getPieceFromXY(i, j).getColor().toString().equals(color)){
+                        pieces.add(game2.getPieceFromXY(i, j));
+                    }
+                }
+            }
+        }
+        for(int j = 0; j < pieces.size(); j++){
+            List<Coordinate> possibleMoves = pieces.get(j).getValidMoves(game2.getBoard());
+            System.out.println(pieces.get(j) + "" + possibleMoves);
+        }
+            */
+        
+        
+        
+        game2.displayBoard();
+        
         // game.estoyLoopin();
-        launchGdx(game);
+        //launchGdx(game);
     }
-    
+
     private static void launchGdx(ChessGame game) {
         int w, h;
         boolean fullscreen;
