@@ -82,13 +82,6 @@ public class ChessGame {
             // Check and notify if the current player is in check
             if (isCheck()) {
                 System.out.println("CHECK! " + (turn == 0 ? "White" : "Black") + "'s king is under attack!");
-                
-                // After notifying about check, check for checkmate
-                if (isCheckmate()) {
-                    System.out.println("Checkmate! " + (turn == 1 ? "White" : "Black") + " wins!");
-                    kill();
-                    break;
-                }
             }
 
             System.out.println((turn == 0 ? "White" : "Black") + "'s turn. Enter your move (e.g., 'e2 e4'): ");
@@ -148,13 +141,8 @@ public class ChessGame {
                 // Advance the game state
                 step();
                 
-                // Check if the move resulted in opponent being in checkmate
+                // Display updated game state
                 displayGameState();
-                if (isCheck() && isCheckmate()) {
-                    System.out.println("Checkmate! " + (turn == 1 ? "White" : "Black") + " wins!");
-                    kill();
-                    break;
-                }
 
             } catch (Exception e) {
                 System.out.println("Error: " + e.getMessage());
@@ -179,7 +167,7 @@ public class ChessGame {
                 Piece rook = board.getPieceFromXY(7, from.Y);
                 if (rook instanceof Rook) {
                     board.clearPosition(7, from.Y);
-                    rook.piecePosition(from.X + 1, from.Y);
+                    ((Rook)rook).piecePosition(from.X + 1, from.Y);
                     board.setPiece(rook);
                 }
             } 
@@ -188,7 +176,8 @@ public class ChessGame {
                 Piece rook = board.getPieceFromXY(0, from.Y);
                 if (rook instanceof Rook) {
                     board.clearPosition(0, from.Y);
-                    rook.piecePosition(from.X - 1, from.Y);
+
+                    ((Rook)rook).piecePosition(from.X - 1, from.Y);
                     board.setPiece(rook);
                 }
             }
@@ -315,63 +304,6 @@ public class ChessGame {
     }
 
     /**
-     * Checks if the current player is in checkmate
-     * @return true if the current player is in checkmate
-     */
-    private boolean isCheckmate() {
-        // If not in check, cannot be in checkmate
-        if (!isCheck()) {
-            return false;
-        }
-        
-        // Find all pieces of the current player
-        Piece.Color currentColor = (turn == 0) ? Piece.Color.WHITE : Piece.Color.BLACK;
-        
-        // Try all possible moves for all pieces
-        for (int y = 0; y < 8; y++) {
-            for (int x = 0; x < 8; x++) {
-                Piece piece = board.getPieceFromXY(x, y);
-                if (piece != null && piece.getColor() == currentColor) {
-                    // Get all valid moves for this piece
-                    List<Coordinate> validMoves = piece.getValidMoves(board.getBoard());
-                    
-                    // Try each move to see if it gets out of check
-                    for (Coordinate move : validMoves) {
-                        // Save the current state
-                        Piece capturedPiece = board.getPieceFromXY(move.X, move.Y);
-                        int oldX = piece.getX();
-                        int oldY = piece.getY();
-                        
-                        // Make the move temporarily
-                        board.clearPosition(oldX, oldY);
-                        piece.piecePosition(move.X, move.Y);
-                        board.setPiece(piece);
-                        
-                        // Check if still in check
-                        boolean stillInCheck = isCheck();
-                        
-                        // Restore the original position
-                        board.clearPosition(move.X, move.Y);
-                        piece.piecePosition(oldX, oldY);
-                        board.setPiece(piece);
-                        if (capturedPiece != null) {
-                            board.setPiece(capturedPiece);
-                        }
-                        
-                        // If any move gets out of check, not checkmate
-                        if (!stillInCheck) {
-                            return false;
-                        }
-                    }
-                }
-            }
-        }
-        
-        // If no move gets out of check, it's checkmate
-        return true;
-    }
-
-    /**
      * Display the current state of the chess board
      */
     private void displayGameState() {
@@ -449,26 +381,6 @@ public class ChessGame {
      */
     public boolean getCheck() {
         return isCheck();
-    }
-    
-    /**
-     * Checks if the current player is in checkmate
-     * @return true if the current player is in checkmate
-     */
-    public boolean getCheckmate() {
-        return isCheckmate();
-    }
-    
-    /**
-     * Gets the color of the player who won by checkmate, if any
-     * @return "WHITE" if black is checkmated, "BLACK" if white is checkmated, or null if no checkmate
-     */
-    public String getWinningPlayer() {
-        if (isCheckmate()) {
-            // If current player is checkmated, the other player won
-            return (turn == 0) ? "BLACK" : "WHITE";
-        }
-        return null;
     }
 
 }
