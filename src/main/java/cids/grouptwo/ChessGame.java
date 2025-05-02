@@ -40,6 +40,10 @@ public class ChessGame {
      */
     private Map<Piece, Piece> pieceSet;
 
+    // Add instance variables to track king positions
+    private Coordinate whiteKingPos;
+    private Coordinate blackKingPos;
+
     /**
      * Constructor initializes a new chess game with white to move first
      * and an empty board
@@ -52,10 +56,36 @@ public class ChessGame {
 
     public void newBoard() {
         board = new Board(pieceSet);
+        initializeKingPositions();
     }
 
     public void newBoard(String fen) {
         board = new Board(pieceSet, fen);
+        initializeKingPositions();
+    }
+
+    /**
+     * Initializes the king position tracking
+     * Called when a new board is created
+     */
+    private void initializeKingPositions() {
+        // Reset king positions
+        whiteKingPos = null;
+        blackKingPos = null;
+        
+        // Find the kings on the board
+        for (int y = 0; y < 8; y++) {
+            for (int x = 0; x < 8; x++) {
+                Piece piece = board.getPieceFromXY(x, y);
+                if (piece instanceof King) {
+                    if (piece.getColor() == Piece.Color.WHITE) {
+                        whiteKingPos = new Coordinate(x, y);
+                    } else {
+                        blackKingPos = new Coordinate(x, y);
+                    }
+                }
+            }
+        }
     }
 
     public Map<Piece, Piece> getPieceSet() {
@@ -118,6 +148,15 @@ public class ChessGame {
                 board.clearPosition(oldX, oldY);
                 piece.piecePosition(to.X, to.Y);
                 board.setPiece(piece);
+                
+                // Update king position tracking if a king was moved
+                if (piece instanceof King) {
+                    if (piece.getColor() == Piece.Color.WHITE) {
+                        whiteKingPos = new Coordinate(to.X, to.Y);
+                    } else {
+                        blackKingPos = new Coordinate(to.X, to.Y);
+                    }
+                }
                 
                 // Handle special moves
                 handleSpecialMoves(piece, from, to);
@@ -292,19 +331,21 @@ public class ChessGame {
      * @return the King piece or null if not found
      */
     private King findKing(Piece.Color color) {
-        for (int y = 0; y < 8; y++) {
-            for (int x = 0; x < 8; x++) {
-                Piece piece = board.getPieceFromXY(x, y);
-                if (piece instanceof King && piece.getColor() == color) {
-                    return (King) piece;
-                }
+        // Check tracked positions
+        Coordinate kingPos = (color == Piece.Color.WHITE) ? whiteKingPos : blackKingPos;
+        
+        if (kingPos != null) {
+            Piece piece = board.getPieceFromXY(kingPos.X, kingPos.Y);
+            if (piece instanceof King && piece.getColor() == color) {
+                return (King) piece;
             }
         }
+        
         return null;
     }
 
     /**
-     * Display the current state of the chess board
+* Display the current state of the chess board
      */
     private void displayGameState() {
         board.displayBoard();
