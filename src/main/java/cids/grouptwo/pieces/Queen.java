@@ -19,7 +19,7 @@ public class Queen extends Piece {
     };
 
     public Queen(Color color, int x, int y) {
-       super(color, x, y);
+        super(color, x, y);
     }
 
     @Override
@@ -73,7 +73,11 @@ public class Queen extends Piece {
         return rookMove.isValidMove(newX, newY, board) || bishopMove.isValidMove(newX, newY, board);
     }
 
+<<<<<<< HEAD
      /**
+=======
+    /**
+>>>>>>> origin/gameLoop
      * Efficiently gets all possible valid moves for the Queen
      */
     @Override
@@ -117,7 +121,11 @@ public class Queen extends Piece {
             }
         }
 
+<<<<<<< HEAD
         //System.out.println("Queen valid moves: " + validMoves);
+=======
+        System.out.println("Queen valid moves: " + validMoves);
+>>>>>>> origin/gameLoop
         
         return validMoves;
     }

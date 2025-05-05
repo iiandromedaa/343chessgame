@@ -10,7 +10,10 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 
 import cids.grouptwo.gdx.GdxChessGame;
+<<<<<<< HEAD
 import cids.grouptwo.pieces.Piece;
+=======
+>>>>>>> origin/gameLoop
 
 /**
  * just for neatness' sake, use the main method just to bootstrap
@@ -19,6 +22,7 @@ import cids.grouptwo.pieces.Piece;
 public class Main {
 
     public static void main(String[] args) {
+<<<<<<< HEAD
         //ChessGame game = new ChessGame();
         
         Map<Piece, Piece> pieceSet = new HashMap<>();
@@ -40,6 +44,12 @@ public class Main {
         
         // game.estoyLoopin();
         //launchGdx(game);
+=======
+        ChessGame game = new ChessGame();
+        game.newBoard(); // Initialize the board
+        game.estoyLoopin(); // Launch the terminal-based game loop
+        //launchGdx(game); // Comment out the graphical interface launch
+>>>>>>> origin/gameLoop
     }
 
     private static void launchGdx(ChessGame game) {

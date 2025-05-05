@@ -5,7 +5,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
-import cids.grouptwo.pieces.*;
+import cids.grouptwo.pieces.Bishop;
+import cids.grouptwo.pieces.King;
+import cids.grouptwo.pieces.Knight;
+import cids.grouptwo.pieces.Pawn;
+import cids.grouptwo.pieces.Piece;
+import cids.grouptwo.pieces.Queen;
+import cids.grouptwo.pieces.Rook;
 import cids.grouptwo.roguestuff.Modifier;
 
 /**
@@ -34,6 +40,10 @@ public class ChessGame {
      */
     private Map<Piece, Piece> pieceSet;
 
+    // Add instance variables to track king positions
+    private Coordinate whiteKingPos;
+    private Coordinate blackKingPos;
+
     /**
      * Constructor initializes a new chess game with white to move first
      * and an empty board
@@ -46,10 +56,36 @@ public class ChessGame {
 
     public void newBoard() {
         board = new Board(pieceSet);
+        initializeKingPositions();
     }
 
     public void newBoard(String fen) {
         board = new Board(pieceSet, fen);
+        initializeKingPositions();
+    }
+
+    /**
+     * Initializes the king position tracking
+     * Called when a new board is created
+     */
+    private void initializeKingPositions() {
+        // Reset king positions
+        whiteKingPos = null;
+        blackKingPos = null;
+        
+        // Find the kings on the board
+        for (int y = 0; y < 8; y++) {
+            for (int x = 0; x < 8; x++) {
+                Piece piece = board.getPieceFromXY(x, y);
+                if (piece instanceof King) {
+                    if (piece.getColor() == Piece.Color.WHITE) {
+                        whiteKingPos = new Coordinate(x, y);
+                    } else {
+                        blackKingPos = new Coordinate(x, y);
+                    }
+                }
+            }
+        }
     }
 
     public Map<Piece, Piece> getPieceSet() {
@@ -72,6 +108,11 @@ public class ChessGame {
 
         while (turn != -1) { // Game loop continues until the game is over
             displayGameState();
+
+            // Check and notify if the current player is in check
+            if (isCheck()) {
+                System.out.println("CHECK! " + (turn == 0 ? "White" : "Black") + "'s king is under attack!");
+            }
 
             System.out.println((turn == 0 ? "White" : "Black") + "'s turn. Enter your move (e.g., 'e2 e4'): ");
             String input = scanner.nextLine();
@@ -98,31 +139,49 @@ public class ChessGame {
                     throw new IllegalArgumentException("Invalid move for the selected piece.");
                 }
 
+                // Save the current state to check if move puts own king in check
+                Piece capturedPiece = board.getPieceFromXY(to.X, to.Y);
+                int oldX = piece.getX();
+                int oldY = piece.getY();
+                
+                // Make the move temporarily
+                board.clearPosition(oldX, oldY);
+                piece.piecePosition(to.X, to.Y);
+                board.setPiece(piece);
+                
+                // Update king position tracking if a king was moved
+                if (piece instanceof King) {
+                    if (piece.getColor() == Piece.Color.WHITE) {
+                        whiteKingPos = new Coordinate(to.X, to.Y);
+                    } else {
+                        blackKingPos = new Coordinate(to.X, to.Y);
+                    }
+                }
+                
                 // Handle special moves
                 handleSpecialMoves(piece, from, to);
-
-                // Clear the old position properly
-                board.clearPosition(from);
                 
-                // Update the piece's infernal position
-                piece.piecePosition(to);
-                
-                // Set the piece at its new position
-                board.setPiece(piece);
+                // Check if the move puts or leaves own king in check
+                if (isCheck()) {
+                    // Undo the move
+                    handleUndoSpecialMoves(piece, from, to);
+                    board.clearPosition(to.X, to.Y);
+                    piece.piecePosition(oldX, oldY);
+                    board.setPiece(piece);
+                    if (capturedPiece != null) {
+                        board.setPiece(capturedPiece);
+                    }
+                    throw new IllegalArgumentException("Illegal move: would leave your king in check!");
+                }
                 
                 // Handle pawn promotion if needed
                 handlePawnPromotion(piece, scanner);
 
-                // Check for game-ending conditions
-                if (isCheckmate()) {
-                    displayGameState();
-                    System.out.println("Checkmate! " + (turn == 0 ? "White" : "Black") + " wins!");
-                    kill();
-                    break;
-                }
-
                 // Advance the game state
                 step();
+                
+                // Display updated game state
+                displayGameState();
 
             } catch (Exception e) {
                 System.out.println("Error: " + e.getMessage());
@@ -147,7 +206,7 @@ public class ChessGame {
                 Piece rook = board.getPieceFromXY(7, from.Y);
                 if (rook instanceof Rook) {
                     board.clearPosition(7, from.Y);
-                    rook.piecePosition(from.X + 1, from.Y);
+                    ((Rook)rook).piecePosition(from.X + 1, from.Y);
                     board.setPiece(rook);
                 }
             } 
@@ -156,7 +215,8 @@ public class ChessGame {
                 Piece rook = board.getPieceFromXY(0, from.Y);
                 if (rook instanceof Rook) {
                     board.clearPosition(0, from.Y);
-                    rook.piecePosition(from.X - 1, from.Y);
+
+                    ((Rook)rook).piecePosition(from.X - 1, from.Y);
                     board.setPiece(rook);
                 }
             }
@@ -167,6 +227,39 @@ public class ChessGame {
             // If moving diagonally to an empty square, it must be en passant
             board.clearPosition(to.X, from.Y); // Remove the captured pawn
         }
+    }
+
+    /**
+     * Undoes special chess moves like castling and en passant when a move is reversed
+     * @param piece the piece being moved
+     * @param from original starting coordinate
+     * @param to destination coordinate that's being undone
+     */
+    private void handleUndoSpecialMoves(Piece piece, Coordinate from, Coordinate to) {
+        // Undo castling
+        if (piece instanceof King && Math.abs(from.X - to.X) == 2) {
+            // Kingside castling (right)
+            if (to.X > from.X) {
+                Piece rook = board.getPieceFromXY(from.X + 1, from.Y);
+                if (rook instanceof Rook) {
+                    board.clearPosition(from.X + 1, from.Y);
+                    rook.piecePosition(7, from.Y);
+                    board.setPiece(rook);
+                }
+            } 
+            // Queenside castling (left)
+            else {
+                Piece rook = board.getPieceFromXY(from.X - 1, from.Y);
+                if (rook instanceof Rook) {
+                    board.clearPosition(from.X - 1, from.Y);
+                    rook.piecePosition(0, from.Y);
+                    board.setPiece(rook);
+                }
+            }
+        }
+        
+        // Note: For en passant, we don't need special handling here since the captured pawn
+        // will be restored by the calling method if it was stored in capturedPiece
     }
 
     /**
@@ -238,76 +331,21 @@ public class ChessGame {
      * @return the King piece or null if not found
      */
     private King findKing(Piece.Color color) {
-        for (int y = 0; y < 8; y++) {
-            for (int x = 0; x < 8; x++) {
-                Piece piece = board.getPieceFromXY(x, y);
-                if (piece instanceof King && piece.getColor() == color) {
-                    return (King) piece;
-                }
+        // Check tracked positions
+        Coordinate kingPos = (color == Piece.Color.WHITE) ? whiteKingPos : blackKingPos;
+        
+        if (kingPos != null) {
+            Piece piece = board.getPieceFromXY(kingPos.X, kingPos.Y);
+            if (piece instanceof King && piece.getColor() == color) {
+                return (King) piece;
             }
         }
+        
         return null;
     }
 
     /**
-     * Checks if the current player is in checkmate
-     * @return true if the current player is in checkmate
-     */
-    private boolean isCheckmate() {
-        // If not in check, cannot be in checkmate
-        if (!isCheck()) {
-            return false;
-        }
-        
-        // Find all pieces of the current player
-        Piece.Color currentColor = (turn == 0) ? Piece.Color.WHITE : Piece.Color.BLACK;
-        
-        // Try all possible moves for all pieces
-        for (int y = 0; y < 8; y++) {
-            for (int x = 0; x < 8; x++) {
-                Piece piece = board.getPieceFromXY(x, y);
-                if (piece != null && piece.getColor() == currentColor) {
-                    // Get all valid moves for this piece
-                    List<Coordinate> validMoves = piece.getValidMoves(board.getBoard());
-                    
-                    // Try each move to see if it gets out of check
-                    for (Coordinate move : validMoves) {
-                        // Save the current state
-                        Piece capturedPiece = board.getPieceFromXY(move.X, move.Y);
-                        int oldX = piece.getX();
-                        int oldY = piece.getY();
-                        
-                        // Make the move temporarily
-                        board.clearPosition(oldX, oldY);
-                        piece.piecePosition(move.X, move.Y);
-                        board.setPiece(piece);
-                        
-                        // Check if still in check
-                        boolean stillInCheck = isCheck();
-                        
-                        // Restore the original position
-                        board.clearPosition(move.X, move.Y);
-                        piece.piecePosition(oldX, oldY);
-                        board.setPiece(piece);
-                        if (capturedPiece != null) {
-                            board.setPiece(capturedPiece);
-                        }
-                        
-                        // If any move gets out of check, not checkmate
-                        if (!stillInCheck) {
-                            return false;
-                        }
-                    }
-                }
-            }
-        }
-        
-        // If no move gets out of check, it's checkmate
-        return true;
-    }
-
-    /**
-     * Display the current state of the chess board
+* Display the current state of the chess board
      */
     private void displayGameState() {
         board.displayBoard();
@@ -376,6 +414,14 @@ public class ChessGame {
         turn = 0;
         // TODO choose random FEN from our cool list of chess midgames
         // TODO set board state to that FEN
+    }
+    
+    /**
+     * Checks if the current player is in check
+     * @return true if the current player's king is under attack
+     */
+    public boolean getCheck() {
+        return isCheck();
     }
 
 }
