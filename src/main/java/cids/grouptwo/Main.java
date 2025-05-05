@@ -35,27 +35,6 @@ public class Main {
         }
         
         
-
-        
-        /* 
-        List<Piece> pieces = new ArrayList<>();
-        String color= "WHITE";
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
-                if(game2.getPieceFromXY(i, j) != null){
-                    if(game2.getPieceFromXY(i, j).getColor().toString().equals(color)){
-                        pieces.add(game2.getPieceFromXY(i, j));
-                    }
-                }
-            }
-        }
-        for(int j = 0; j < pieces.size(); j++){
-            List<Coordinate> possibleMoves = pieces.get(j).getValidMoves(game2.getBoard());
-            System.out.println(pieces.get(j) + "" + possibleMoves);
-        }
-            */
-        
-        
         
         game.displayBoard();
         
