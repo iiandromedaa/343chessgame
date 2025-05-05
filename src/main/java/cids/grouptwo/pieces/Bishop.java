@@ -6,6 +6,29 @@ import java.util.List;
 import cids.grouptwo.Coordinate;
 
 public class Bishop extends Piece {
+
+    private final double[][] bishopEvalWhite = {
+        { -2.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -2.0},
+        { -1.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0, -1.0},
+        { -1.0,  0.0,  0.5,  1.0,  1.0,  0.5,  0.0, -1.0},
+        { -1.0,  0.5,  0.5,  1.0,  1.0,  0.5,  0.5, -1.0},
+        { -1.0,  0.0,  1.0,  1.0,  1.0,  1.0,  0.0, -1.0},
+        { -1.0,  1.0,  1.0,  1.0,  1.0,  1.0,  1.0, -1.0},
+        { -1.0,  0.5,  0.0,  0.0,  0.0,  0.0,  0.5, -1.0},
+        { -2.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -2.0}
+        };
+    
+    private final double[][] bishopEvalBlack = {
+        { -2.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -2.0},
+        { -1.0,  0.5,  0.0,  0.0,  0.0,  0.0,  0.5, -1.0},
+        { -1.0,  1.0,  1.0,  1.0,  1.0,  1.0,  1.0, -1.0},
+        { -1.0,  0.0,  1.0,  1.0,  1.0,  1.0,  0.0, -1.0},
+        { -1.0,  0.5,  0.5,  1.0,  1.0,  0.5,  0.5, -1.0},
+        { -1.0,  0.0,  0.5,  1.0,  1.0,  0.5,  0.0, -1.0},
+        { -1.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0, -1.0},
+        { -2.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -2.0}
+        
+        };
     
     public Bishop(Color color, int x, int y) {
         super(color, x, y);
@@ -20,6 +43,25 @@ public class Bishop extends Piece {
     @Override
     public String returnName(){
         return "Bishop";
+    }
+
+    @Override
+    public int returnNumber(){
+        return 2;
+    }
+
+    @Override
+    public int getValue(){
+        return 30;
+    }
+
+
+    @Override
+    public double getValueOfSpace(int x, int y){
+        if(getColor() == Color.WHITE)
+            return bishopEvalWhite[x][y];
+        else 
+            return bishopEvalBlack[x][y];
     }
 
     /**

@@ -7,6 +7,29 @@ import cids.grouptwo.Coordinate;
 
 public class Rook extends Piece {
 
+    private final double[][] rookEvalWhite = {
+        {  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0},
+        {  0.5,  1.0,  1.0,  1.0,  1.0,  1.0,  1.0,  0.5},
+        { -0.5,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0, -0.5},
+        { -0.5,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0, -0.5},
+        { -0.5,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0, -0.5},
+        { -0.5,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0, -0.5},
+        { -0.5,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0, -0.5},
+        {  0.0,   0.0, 0.0,  0.5,  0.5,  0.0,  0.0,  0.0}
+    };
+    
+    private final double[][] rookEvalBlack = {
+        {  0.0,   0.0, 0.0,  0.5,  0.5,  0.0,  0.0,  0.0},
+        { -0.5,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0, -0.5},
+        { -0.5,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0, -0.5},
+        { -0.5,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0, -0.5},
+        { -0.5,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0, -0.5},
+        { -0.5,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0, -0.5},
+        {  0.5,  1.0,  1.0,  1.0,  1.0,  1.0,  1.0,  0.5},
+        {  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0}
+        
+    };
+
     private boolean hasMoved = false;
 
     public Rook(Color color, int x, int y) {
@@ -22,6 +45,25 @@ public class Rook extends Piece {
     public Rook copyPiece(){
         Rook tempPiece = new Rook(this.getColor(), this.getX(), this.getY());
         return tempPiece;
+    }
+
+    @Override
+    public int returnNumber(){
+        return 3;
+    }
+
+    @Override
+    public int getValue(){
+        return 50;
+    }
+
+
+    @Override
+    public double getValueOfSpace(int x, int y){
+        if(getColor() == Color.WHITE)
+            return rookEvalWhite[x][y];
+        else 
+            return rookEvalBlack[x][y];
     }
 
     /**

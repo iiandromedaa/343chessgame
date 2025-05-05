@@ -9,7 +9,6 @@ import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 
-import static cids.grouptwo.ai.minimaxRoot;
 import cids.grouptwo.gdx.GdxChessGame;
 import cids.grouptwo.pieces.Piece;
 
@@ -24,16 +23,19 @@ public class Main {
         
         Map<Piece, Piece> pieceSet = new HashMap<>();
         Board game =  new Board(pieceSet);
-        Board game2 = minimaxRoot(game, 6, true);
-        game2 = minimaxRoot(game2, 6, false);
-        /*
-         * for(int i = 0; i <10; i++){
-            game2 = minimaxRoot(game2, 4, true);
-            game2 = minimaxRoot(game2, 4, false);
+        ai chessAi = new ai();
+
+     
+        game = chessAi.minimaxRoot(game, 6, true);
+        game = chessAi.minimaxRoot(game, 6, false);
+       
+        for(int i = 0; i <10; i++){
+            game = chessAi.minimaxRoot(game, 6, true);
+            game = chessAi.minimaxRoot(game, 6, false);
         }
-         */
         
         
+
         
         /* 
         List<Piece> pieces = new ArrayList<>();
@@ -55,7 +57,7 @@ public class Main {
         
         
         
-        game2.displayBoard();
+        game.displayBoard();
         
         // game.estoyLoopin();
         //launchGdx(game);

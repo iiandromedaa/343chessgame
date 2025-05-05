@@ -224,6 +224,40 @@ public class Board {
         return obstacles[y][x];
     }
 
+    /**
+     * This method can be used to easily make a move on the board
+     * @param x1
+     * @param y1
+     * @param x2
+     * @param y2
+     */
+    public void makeMove(int startX, int startY, int endX, int endY) {
+        Piece piece = getPieceFromXY(startX, startY);
+        if (piece == null) {
+            throw new IllegalStateException("No piece at start: (" + startX + ", " + startY + ")");
+        }
+        clearPosition(startX, startY);
+        piece.piecePosition(endX, endY);
+        setPiece(piece);
+    }
+
+    /**
+     * This method can be used to easily undo a move on the board
+     * @param from
+     * @param to
+     */
+    public void undoMove(int startX, int startY, int endX, int endY, Piece capturedPiece) {
+        Piece piece = getPieceFromXY(endX, endY);
+        if (piece == null) {
+            throw new IllegalStateException("No piece at destination to undo move");
+        }
+        clearPosition(endX, endY);
+        piece.piecePosition(startX, startY);
+        setPiece(piece);
+        if (capturedPiece != null) {
+            setPiece(capturedPiece);
+        }
+    }
 
     /**
      * Sets up the chess board with an initial configuration

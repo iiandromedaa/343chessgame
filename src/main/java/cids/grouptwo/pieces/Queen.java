@@ -7,6 +7,17 @@ import cids.grouptwo.Coordinate;
 
 public class Queen extends Piece {
 
+    private final double[][] evalQueen = {
+        { -2.0, -1.0, -1.0, -0.5, -0.5, -1.0, -1.0, -2.0},
+        { -1.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0, -1.0},
+        { -1.0,  0.0,  0.5,  0.5,  0.5,  0.5,  0.0, -1.0},
+        { -0.5,  0.0,  0.5,  0.5,  0.5,  0.5,  0.0, -0.5},
+        {  0.0,  0.0,  0.5,  0.5,  0.5,  0.5,  0.0, -0.5},
+        { -1.0,  0.5,  0.5,  0.5,  0.5,  0.5,  0.0, -1.0},
+        { -1.0,  0.0,  0.5,  0.0,  0.0,  0.0,  0.0, -1.0},
+        { -2.0, -1.0, -1.0, -0.5, -0.5, -1.0, -1.0, -2.0}
+    };
+
     public Queen(Color color, int x, int y) {
        super(color, x, y);
     }
@@ -20,6 +31,22 @@ public class Queen extends Piece {
     public Queen copyPiece(){
         Queen tempPiece = new Queen(this.getColor(), this.getX(), this.getY());
         return tempPiece;
+    }
+
+    @Override
+    public int returnNumber(){
+        return 4;
+    }
+
+    @Override
+    public int getValue(){
+        return 90;
+    }
+
+
+    @Override
+    public double getValueOfSpace(int x, int y){
+        return evalQueen[x][y];
     }
 
     /**
