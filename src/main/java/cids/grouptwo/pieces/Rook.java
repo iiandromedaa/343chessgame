@@ -158,18 +158,10 @@ public class Rook extends Piece {
             }
         }
 
-<<<<<<< HEAD
         //System.out.println("Rook valid moves: " + validMoves);
         
         return validMoves;
     }
-=======
-        System.out.println("Rook valid moves: " + validMoves);
-        
-        return validMoves;
-    }
-
->>>>>>> origin/gameLoop
     /**
      * Updates the rook's position and records that it has moved
      */

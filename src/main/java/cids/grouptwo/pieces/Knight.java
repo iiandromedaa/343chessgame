@@ -103,11 +103,7 @@ public class Knight extends Piece {
             }
         }
 
-<<<<<<< HEAD
         //System.out.println("Knight valid moves: " + validMoves);
-=======
-        System.out.println("Knight valid moves: " + validMoves);
->>>>>>> origin/gameLoop
         
         return validMoves;
     }

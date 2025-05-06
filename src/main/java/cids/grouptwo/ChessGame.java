@@ -30,6 +30,11 @@ public class ChessGame {
     private Board board;
     // temporary, we dont know how we wanna store modifiers yet
     private List<Modifier> modifiers;
+
+    //Added by Adam
+    private ai Ai;
+
+
     /**
      * map to store piece transformations (promotion / swapping a piece for another as a modifier)
      * when the FEN parser is setting up a game state, it will refer to this map to place pieces
@@ -52,6 +57,11 @@ public class ChessGame {
         // white first move of course
         turn = 0;
         pieceSet = new HashMap<>();
+
+        //Added by Adam
+        Ai = new ai();
+
+
     }
 
     public void newBoard() {
@@ -345,7 +355,7 @@ public class ChessGame {
     }
 
     /**
-* Display the current state of the chess board
+    * Display the current state of the chess board
      */
     private void displayGameState() {
         board.displayBoard();
@@ -388,10 +398,27 @@ public class ChessGame {
             // Change from white's turn to black's turn
             turn = 1;
             // Bot implementation would go here
+
+
+
+           
+
+
             // HypotheticalChessBot.playSickAssMove();
             // Don't automatically step again! That skips black's turn
         } else if (turn == 1) {
             // Change from black's turn to white's turn
+
+             //Added by Adam
+             Board bestBoard = Ai.minimaxRoot(board, 4, false); 
+             if (bestBoard != null) {
+                 board = bestBoard;
+                 initializeKingPositions(); 
+             }
+ 
+             //Added by Adam
+             displayGameState();
+             
             turn = 0;
         } else {
             // It's not either black's or white's turn, the game must be over

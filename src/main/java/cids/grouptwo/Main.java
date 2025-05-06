@@ -1,8 +1,6 @@
 package cids.grouptwo;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.prefs.Preferences;
 
 import com.badlogic.gdx.Graphics;
@@ -10,10 +8,6 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 
 import cids.grouptwo.gdx.GdxChessGame;
-<<<<<<< HEAD
-import cids.grouptwo.pieces.Piece;
-=======
->>>>>>> origin/gameLoop
 
 /**
  * just for neatness' sake, use the main method just to bootstrap
@@ -22,34 +16,29 @@ import cids.grouptwo.pieces.Piece;
 public class Main {
 
     public static void main(String[] args) {
-<<<<<<< HEAD
-        //ChessGame game = new ChessGame();
-        
-        Map<Piece, Piece> pieceSet = new HashMap<>();
+        ChessGame game = new ChessGame();
+        game.newBoard();
+        /**
+         * Map<Piece, Piece> pieceSet = new HashMap<>();
         Board game =  new Board(pieceSet);
         ai chessAi = new ai();
 
      
         game = chessAi.minimaxRoot(game, 6, true);
         game = chessAi.minimaxRoot(game, 6, false);
-       
-        for(int i = 0; i <10; i++){
+        
+        
+        for(int i = 0; i <6; i++){
             game = chessAi.minimaxRoot(game, 6, true);
             game = chessAi.minimaxRoot(game, 6, false);
         }
         
-        
-        
         game.displayBoard();
+         */
         
-        // game.estoyLoopin();
-        //launchGdx(game);
-=======
-        ChessGame game = new ChessGame();
-        game.newBoard(); // Initialize the board
-        game.estoyLoopin(); // Launch the terminal-based game loop
-        //launchGdx(game); // Comment out the graphical interface launch
->>>>>>> origin/gameLoop
+        
+        game.estoyLoopin();
+        launchGdx(game);
     }
 
     private static void launchGdx(ChessGame game) {

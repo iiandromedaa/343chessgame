@@ -236,9 +236,28 @@ public class Board {
         if (piece == null) {
             throw new IllegalStateException("No piece at start: (" + startX + ", " + startY + ")");
         }
-        clearPosition(startX, startY);
+        clearPosition(startX, startY); 
+        if (piece.returnNumber() == 0 && Math.abs(startX - endX) == 1 && Math.abs(startY - endY) == 1) {
+            if (getPieceFromXY(endX, endY) == null) {
+                clearPosition(endX, startY); 
+            }
+        }
         piece.piecePosition(endX, endY);
         setPiece(piece);
+        if((piece.returnNumber() == 5) && (Math.abs(startX-endX) == 2)){
+            if(endX == 6){
+                Piece rook = getPieceFromXY(7, startY);
+                clearPosition(7, startY);
+                rook.piecePosition(5, startY);
+                setPiece(rook);
+            }
+            else{
+                Piece rook = getPieceFromXY(0, startY);
+                clearPosition(0, startY);
+                rook.piecePosition(3, startY);
+                setPiece(rook);
+            }
+        }
     }
 
     /**
@@ -254,6 +273,21 @@ public class Board {
         clearPosition(endX, endY);
         piece.piecePosition(startX, startY);
         setPiece(piece);
+        if((piece.returnNumber() == 5) && (Math.abs(startX-endX) == 2)){
+            if(endX == 6){
+                Piece rook = getPieceFromXY(5, startY);
+                clearPosition(5, startY);
+                rook.piecePosition(7, startY);
+                setPiece(rook);
+            }
+            else{
+                Piece rook = getPieceFromXY(3, startY);
+                clearPosition(3, startY);
+                rook.piecePosition(0, startY);
+                setPiece(rook);
+            }
+        }
+
         if (capturedPiece != null) {
             setPiece(capturedPiece);
         }

@@ -101,64 +101,7 @@ public class Bishop extends Piece {
         // Valid move if destination has opponent's piece
         return (board[newY][newX].getColor() != getColor());
     }
-    
-        @Override
-        public List<Coordinate> getValidMoves(Piece[][] board) {
-            List<Coordinate> validMoves = new ArrayList<>();
-            
-            // Define the four diagonal directions
-            int[][] directions = {
-                {1, 1},   // Down-right
-                {1, -1},  // Up-right
-                {-1, 1},  // Down-left
-                {-1, -1}  // Up-left
-            };
-            
-            // Check each direction
-            for (int[] dir : directions) {
-                int dx = dir[0];
-                int dy = dir[1];
-                
-                // Move in this direction until we hit a piece or the edge
-                for (int i = 1; i < 8; i++) {
-                    int newX = getX() + i * dx;
-                    int newY = getY() + i * dy;
-                    
-                    // Stop if we're off the board
-                    if (newX < 0 || newX >= 8 || newY < 0 || newY >= 8) {
-                        break;
-                    }
-                    
-                    // Empty square is valid
-                    if (board[newY][newX] == null) {
-                        validMoves.add(new Coordinate(newX, newY));
-                    }
-                    // Capture opponent piece and stop
-                    else if (board[newY][newX].getColor() != getColor()) {
-                        validMoves.add(new Coordinate(newX, newY));
-                        break;
-                    }
-                    // Our piece blocks the path
-                    else {
-                        break;
-                    }
-                }
-            }
-    
-            //System.out.println("Bishop valid moves: " + validMoves);
-            
-            return validMoves;
-        }
 
-<<<<<<< HEAD
-        @Override
-        public String toString() {
-            if (getColor() == Color.WHITE)
-                return "b";
-            else
-                return "B";
-        }
-=======
     /**
      * Efficiently gets all possible valid moves for the Bishop
      */
@@ -205,18 +148,17 @@ public class Bishop extends Piece {
             }
         }
 
-        System.out.println("Bishop valid moves: " + validMoves);
+        //System.out.println("Bishop valid moves: " + validMoves);
         
         return validMoves;
     }
 
     @Override
-    public String toString() {
-        if (getColor() == Color.WHITE)
-            return "♗";
-        else
-            return "♝";
-    }
->>>>>>> origin/gameLoop
+        public String toString() {
+            if (getColor() == Color.WHITE)
+                return "b";
+            else
+                return "B";
+        }
     
 }
