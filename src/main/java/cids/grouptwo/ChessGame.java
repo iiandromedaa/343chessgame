@@ -107,6 +107,13 @@ public class ChessGame {
         Scanner scanner = new Scanner(System.in);
 
         while (turn != -1) { // Game loop continues until the game is over
+
+            //if turns remaining decrease obstacle lifespan
+            if (board.getObstacleTurnsRemaining() > 0) {
+                board.decreaseObstacleTimer();
+                System.out.println("the obstacle has disappeared");
+            }
+
             displayGameState();
 
             // Check and notify if the current player is in check
@@ -185,13 +192,14 @@ public class ChessGame {
                 handlePawnPromotion(piece, scanner);
 
                 //if turns remaining decrease obstacle lifespan
-                if (board.getObstacleTurnsRemaining() > 0) {
-                    board.decreaseObstacleTimer();
-                }
+                //if (board.getObstacleTurnsRemaining() > 0) {
+                    //board.decreaseObstacleTimer();
+                //}
 
                 // Advance the game state
                 step();
                 
+
                 // Display updated game state
                 displayGameState();
 
