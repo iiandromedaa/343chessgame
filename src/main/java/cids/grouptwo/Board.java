@@ -2,7 +2,7 @@ package cids.grouptwo;
 
 import cids.grouptwo.pieces.Piece;
 import java.util.Random;
-
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -14,20 +14,25 @@ import static cids.grouptwo.pieces.Piece.Color.*;
 
 public class Board {
 
-    private boolean[][] obstacles;
+    //private boolean[][] obstacles;
     private Random random = new Random();
 
     private Piece[][] board;
 
     private final int BOARDPARAMS = 8;
+    private List<Coordinate> obstacles;
+    
+    //modify this to change obstacle lifespan
+    private int obstacleTurnsRemaining = 5;
 
     /**
      * creates standard chess board
      */
     public Board(Map<Piece, Piece> pieceSet) {
         board = new Piece[BOARDPARAMS][BOARDPARAMS];
-        obstacles = new boolean[BOARDPARAMS][BOARDPARAMS];
+        //obstacles = new boolean[BOARDPARAMS][BOARDPARAMS];
         defaultBoard(pieceSet);
+        placeObstacles();
     }
 
     /**
@@ -37,7 +42,7 @@ public class Board {
      */
     public Board(Map<Piece, Piece> pieceSet, String fen) {
         board = new Piece[BOARDPARAMS][BOARDPARAMS];
-        obstacles = new boolean[BOARDPARAMS][BOARDPARAMS];
+        //obstacles = new boolean[BOARDPARAMS][BOARDPARAMS];
         if (fen == null)
             return;
         try {
@@ -69,13 +74,25 @@ public class Board {
             System.out.print((8 - y) + " ");
             
             // Print pieces in this rank
+            //I modified this a bit for the obstacles. the previous logic is commented above what i added
             for (int x = 0; x < BOARDPARAMS; x++) {
-                if (board[y][x] == null)
+              /*   if (board[y][x] == null)
+
                     System.out.print("[ ]");
                 else
                     System.out.print("[" + board[y][x].toString() + "]");
             }
-            
+            */
+            Coordinate current = new Coordinate(x, y);
+            if (obstacles.contains(current)) {
+                System.out.print("[X]"); // Print obstacle
+            } else if (board[y][x] == null) {
+                System.out.print("[ ]"); // Empty square
+            } else {
+                System.out.print("[" + board[y][x].toString() + "]"); // Piece in square
+            }
+        }
+
             // Print rank number again at the end of the row
             System.out.println(" " + (8 - y));
         }
@@ -168,7 +185,7 @@ public class Board {
         this.board = board;
     }
 
-    /* 10% chance of spawning an obstacle on the board */
+    /* 10% chance of spawning an obstacle on the board 
     public void attemptObstacleSpawn() {
         if (random.nextInt(100) < 10) {
             int x, y;
@@ -182,7 +199,7 @@ public class Board {
         }
     }
 
-    /* method to clear obstacles (50% chance each turn - can be changed to whatever) */
+    /* method to clear obstacles (50% chance each turn - can be changed to whatever) 
     public void clearObstacles() {
         for (int y = 0; y < BOARDPARAMS; y++) {
             for (int x = 0; x < BOARDPARAMS; x++) {
@@ -196,6 +213,32 @@ public class Board {
 
     public boolean isBlocked(int x, int y) {
         return obstacles[y][x];
+    }
+    */
+
+    //This is where obstacles are placed on the board, I have location predetermined for testing
+    private void placeObstacles() {
+        obstacles = new ArrayList<>();
+        obstacles.add(new Coordinate(6, 4));
+        obstacles.add(new Coordinate(4, 4));
+    }
+
+    //returns obstacle list
+    public List<Coordinate> getObstacles() {
+        return obstacles;
+    }
+
+    //decreases the obstacle timer (set to start at 5 currently)
+    public void decreaseObstacleTimer() {
+        obstacleTurnsRemaining--;
+        if (obstacleTurnsRemaining == 0) {
+            obstacles.clear();
+        }
+    }
+
+    //returns remaining obstacle turns
+    public int getObstacleTurnsRemaining() {
+        return obstacleTurnsRemaining;
     }
 
 

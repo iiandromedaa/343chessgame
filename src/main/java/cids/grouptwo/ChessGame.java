@@ -126,6 +126,13 @@ public class ChessGame {
                 Coordinate from = parseCoordinate(parts[0]);
                 Coordinate to = parseCoordinate(parts[1]);
 
+                //prevent moving onto obstacles
+                for (Coordinate obs : board.getObstacles()) {
+                    if (obs.equals(to)) {
+                        throw new IllegalArgumentException("Obstacle in the way! Move blocked." + to);
+                    }
+                }
+
                 // Get the piece at the starting position
                 Piece piece = board.getPieceFromXY(from.X, from.Y);
                 
@@ -176,6 +183,11 @@ public class ChessGame {
                 
                 // Handle pawn promotion if needed
                 handlePawnPromotion(piece, scanner);
+
+                //if turns remaining decrease obstacle lifespan
+                if (board.getObstacleTurnsRemaining() > 0) {
+                    board.decreaseObstacleTimer();
+                }
 
                 // Advance the game state
                 step();
