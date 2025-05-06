@@ -11,6 +11,17 @@ public class Queen extends Piece {
         super(color, x, y);
     }
 
+    @Override
+    public String returnName(){
+        return "Queen";
+    }
+    
+    @Override
+    public Queen copyPiece(){
+        Queen tempPiece = new Queen(this.getColor(), this.getX(), this.getY());
+        return tempPiece;
+    }
+
     /**
      * Validates moves for the Queen piece
      * Queens can move horizontally, vertically or diagonally any number of squares
@@ -35,7 +46,7 @@ public class Queen extends Piece {
         return rookMove.isValidMove(newX, newY, board) || bishopMove.isValidMove(newX, newY, board);
     }
 
-    /**
+     /**
      * Efficiently gets all possible valid moves for the Queen
      */
     @Override
@@ -78,6 +89,8 @@ public class Queen extends Piece {
                 }
             }
         }
+
+        //System.out.println("Queen valid moves: " + validMoves);
         
         return validMoves;
     }

@@ -14,6 +14,17 @@ public class Pawn extends Piece {
         super(color, x, y);
     }
 
+    @Override
+    public String returnName(){
+        return "Pawn";
+    }
+
+    @Override
+    public Pawn copyPiece(){
+        Pawn tempPiece = new Pawn(this.getColor(), this.getX(), this.getY());
+        return tempPiece;
+    }
+
     /**
      * Checks if a move is valid for a pawn
      * Includes standard moves, captures, en passant and first-move double step
@@ -137,6 +148,55 @@ public class Pawn extends Piece {
         
         // Mark that the pawn has moved
         hasMoved = true;
+    }
+
+     /**
+     * Efficiently gets all possible valid moves for the Pawn
+     * including forward moves, captures, and en passant
+     */
+    @Override
+    public List<Coordinate> getValidMoves(Piece[][] board) {
+        List<Coordinate> validMoves = new ArrayList<>();
+        
+        // Direction depends on pawn color
+        int direction = (getColor() == Color.WHITE) ? -1 : 1;
+        
+        // Forward move (one square)
+        int forwardY = getY() + direction;
+        if (forwardY >= 0 && forwardY < 8 && board[forwardY][getX()] == null) {
+            validMoves.add(new Coordinate(getX(), forwardY));
+            
+            // Double forward move from starting position
+            int startingRow = (getColor() == Color.WHITE) ? 6 : 1;
+            if (getY() == startingRow && board[forwardY + direction][getX()] == null) {
+                validMoves.add(new Coordinate(getX(), forwardY + direction));
+            }
+        }
+        
+        // Diagonal captures (including en passant)
+        for (int dx : new int[]{-1, 1}) {
+            int captureX = getX() + dx;
+            // Check if diagonal is on the board
+            if (captureX >= 0 && captureX < 8 && forwardY >= 0 && forwardY < 8) {
+                // Standard capture
+                if (board[forwardY][captureX] != null && 
+                    board[forwardY][captureX].getColor() != getColor()) {
+                    validMoves.add(new Coordinate(captureX, forwardY));
+                } 
+                // En passant capture
+                else if (board[forwardY][captureX] == null && board[getY()][captureX] instanceof Pawn) {
+                    Piece adjacentPawn = board[getY()][captureX];
+                    if (adjacentPawn.getColor() != getColor() && 
+                        ((Pawn)adjacentPawn).hasMovedTwoSquaresLastTurn()) {
+                        validMoves.add(new Coordinate(captureX, forwardY));
+                    }
+                }
+            }
+        }
+
+        //System.out.println("Pawn valid moves: " + validMoves);
+
+        return validMoves;
     }
 
     /**

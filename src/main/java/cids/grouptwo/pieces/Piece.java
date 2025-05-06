@@ -16,9 +16,23 @@ public abstract class Piece {
         this.color = color;
     }
 
+    /**
+     * this method is used for the Ai to determine which piece is which
+     * @return
+     */
+    public String returnName(){
+        return null;
+    }
+
     public Piece(Color color, Coordinate coordinate) {
         this(color, coordinate.X, coordinate.Y);
     }
+
+    /**
+     * This is a method to copy a Piece
+     * @return
+     */
+    public abstract Piece copyPiece();
 
     public int getX() {
         return x;

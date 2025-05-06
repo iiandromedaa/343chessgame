@@ -7,6 +7,12 @@ public class Ferz extends Bishop {
 	}
 
     @Override
+    public Ferz copyPiece(){
+        Ferz tempPiece = new Ferz(this.getColor(), this.getX(), this.getY());
+        return tempPiece;
+    }
+
+    @Override
     public boolean isValidMove(int newX, int newY, Piece[][] board) {
         // one square diagonally
         if (Math.abs(newX - getX()) != 1 || Math.abs(newY - getY()) != 1)

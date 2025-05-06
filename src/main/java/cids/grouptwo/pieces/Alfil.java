@@ -10,6 +10,12 @@ public class Alfil extends Bishop {
 	}
 
     @Override
+    public Alfil copyPiece(){
+        Alfil tempPiece = new Alfil(this.getColor(), this.getX(), this.getY());
+        return tempPiece;
+    }
+
+    @Override
     public boolean isValidMove(int newX, int newY, Piece[][] board) {
         // two square diagonally
         if (Math.abs(newX - getX()) != 2 || Math.abs(newY - getY()) != 2)

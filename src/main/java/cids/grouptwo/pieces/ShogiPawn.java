@@ -11,6 +11,12 @@ public class ShogiPawn extends Pawn implements Shogi {
 	}
 
     @Override
+    public ShogiPawn copyPiece(){
+        ShogiPawn tempPiece = new ShogiPawn(this.getColor(), this.getX(), this.getY());
+        return tempPiece;
+    }
+
+    @Override
     public boolean isValidMove(int newX, int newY, Piece[][] board) {
         if (getColor() == Color.WHITE)
             return newX == getX() && newY == getY() - 1 && 

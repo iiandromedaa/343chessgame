@@ -13,6 +13,17 @@ public class Rook extends Piece {
         super(color, x, y);
     }
 
+    @Override
+    public String returnName(){
+        return "Rook";
+    }
+
+    @Override
+    public Rook copyPiece(){
+        Rook tempPiece = new Rook(this.getColor(), this.getX(), this.getY());
+        return tempPiece;
+    }
+
     /**
      * Checks if a move is valid for a rook
      * Rooks move horizontally or vertically any number of squares

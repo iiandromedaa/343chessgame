@@ -11,6 +11,17 @@ public class Knight extends Piece {
         super(color, x, y);
     }
 
+    @Override
+    public String returnName(){
+        return "Knight";
+    }
+
+    @Override
+    public Knight copyPiece(){
+        Knight tempPiece = new Knight(this.getColor(), this.getX(), this.getY());
+        return tempPiece;
+    }
+
     /**
      * Validates moves for the Knight piece
      * Knights move in an L-shape: two squares in one direction and one square perpendicular
