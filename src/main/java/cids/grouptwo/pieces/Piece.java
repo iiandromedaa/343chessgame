@@ -18,7 +18,7 @@ public abstract class Piece {
 
     /**
      * this method is used for the Ai to determine which piece is which
-     * @return
+     * @return name of piece
      */
     public String returnName(){
         return null;
@@ -48,6 +48,32 @@ public abstract class Piece {
 
     public Color getColor() {
         return color;
+    }
+
+    /**
+     * Gives the value of the piece
+     * @return piece value
+     */
+    public int getValue(){
+        return 0;
+    }
+
+    /**
+     * Gives how valuable a space is to a piece
+     * @param x
+     * @param y
+     * @return space evaluation
+     */
+    public double getValueOfSpace(int x, int y){
+        return 0;
+    }
+
+    /**
+     * Returns an identifying number, easier to sort through
+     * @return Piece ID number
+     */
+    public int returnNumber(){
+        return -1;
     }
 
     public void piecePosition(int x, int y) {

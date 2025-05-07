@@ -83,7 +83,7 @@ public class Board {
      * Black pieces are at the top (rows 0-1), white pieces at the bottom (rows 6-7)
      */
     public void displayBoard() {
-        Main.clear();
+        //Main.clear();
         
         // Print the header with file (column) coordinates
         System.out.println("    BLACK SIDE");
@@ -261,6 +261,72 @@ public class Board {
     public void notifyListeners(Move move) {
         for (BoardListener boardListener : listeners) {
             boardListener.boardUpdate(this, move);
+    /**
+     * This method can be used to easily make a move on the board
+     * @param x1
+     * @param y1
+     * @param x2
+     * @param y2
+     */
+    public void makeMove(int startX, int startY, int endX, int endY) {
+        Piece piece = getPieceFromXY(startX, startY);
+        if (piece == null) {
+            throw new IllegalStateException("No piece at start: (" + startX + ", " + startY + ")");
+        }
+        clearPosition(startX, startY); 
+        if (piece.returnNumber() == 0 && Math.abs(startX - endX) == 1 && Math.abs(startY - endY) == 1) {
+            if (getPieceFromXY(endX, endY) == null) {
+                clearPosition(endX, startY); 
+            }
+        }
+        piece.piecePosition(endX, endY);
+        setPiece(piece);
+        if((piece.returnNumber() == 5) && (Math.abs(startX-endX) == 2)){
+            if(endX == 6){
+                Piece rook = getPieceFromXY(7, startY);
+                clearPosition(7, startY);
+                rook.piecePosition(5, startY);
+                setPiece(rook);
+            }
+            else{
+                Piece rook = getPieceFromXY(0, startY);
+                clearPosition(0, startY);
+                rook.piecePosition(3, startY);
+                setPiece(rook);
+            }
+        }
+    }
+
+    /**
+     * This method can be used to easily undo a move on the board
+     * @param from
+     * @param to
+     */
+    public void undoMove(int startX, int startY, int endX, int endY, Piece capturedPiece) {
+        Piece piece = getPieceFromXY(endX, endY);
+        if (piece == null) {
+            throw new IllegalStateException("No piece at destination to undo move");
+        }
+        clearPosition(endX, endY);
+        piece.piecePosition(startX, startY);
+        setPiece(piece);
+        if((piece.returnNumber() == 5) && (Math.abs(startX-endX) == 2)){
+            if(endX == 6){
+                Piece rook = getPieceFromXY(5, startY);
+                clearPosition(5, startY);
+                rook.piecePosition(7, startY);
+                setPiece(rook);
+            }
+            else{
+                Piece rook = getPieceFromXY(3, startY);
+                clearPosition(3, startY);
+                rook.piecePosition(0, startY);
+                setPiece(rook);
+            }
+        }
+
+        if (capturedPiece != null) {
+            setPiece(capturedPiece);
         }
     }
 

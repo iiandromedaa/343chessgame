@@ -7,6 +7,18 @@ import cids.grouptwo.Coordinate;
 
 public class Knight extends Piece {
 
+    private  final double[][] knightEval =
+        {
+            {-5.0, -4.0, -3.0, -3.0, -3.0, -3.0, -4.0, -5.0},
+            {-4.0, -2.0,  0.0,  0.0,  0.0,  0.0, -2.0, -4.0},
+            {-3.0,  0.0,  1.0,  1.5,  1.5,  1.0,  0.0, -3.0},
+            {-3.0,  0.5,  1.5,  2.0,  2.0,  1.5,  0.5, -3.0},
+            {-3.0,  0.0,  1.5,  2.0,  2.0,  1.5,  0.0, -3.0},
+            {-3.0,  0.5,  1.0,  1.5,  1.5,  1.0,  0.5, -3.0},
+            {-4.0, -2.0,  0.0,  0.5,  0.5,  0.0, -2.0, -4.0},
+            {-5.0, -4.0, -3.0, -3.0, -3.0, -3.0, -4.0, -5.0}
+        };
+
     public Knight(Color color, int x, int y) {
         super(color, x, y);
     }
@@ -14,6 +26,22 @@ public class Knight extends Piece {
     @Override
     public String returnName(){
         return "Knight";
+    }
+
+    @Override
+    public int returnNumber(){
+        return 1;
+    }
+
+    @Override
+    public int getValue(){
+        return 30;
+    }
+
+
+    @Override
+    public double getValueOfSpace(int x, int y){
+        return knightEval[x][y];
     }
 
     @Override
@@ -81,9 +109,9 @@ public class Knight extends Piece {
     @Override
     public String toString() {
         if (getColor() == Color.WHITE)
-            return "♘";
+            return "n";
         else
-            return "♞";
+            return "N";
     }
     
 }

@@ -9,6 +9,27 @@ public class Pawn extends Piece {
 
     private boolean hasMoved = false;
     private boolean movedTwoSquares = false;
+    private final double[][] pawnEvalWhite =  {
+        {0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0},
+        {5.0,  5.0,  5.0,  5.0,  5.0,  5.0,  5.0,  5.0},
+        {1.0,  1.0,  2.0,  3.0,  3.0,  2.0,  1.0,  1.0},
+        {0.5,  0.5,  1.0,  2.5,  2.5,  1.0,  0.5,  0.5},
+        {0.0,  0.0,  0.0,  2.0,  2.0,  0.0,  0.0,  0.0},
+        {0.5, -0.5, -1.0,  0.0,  0.0, -1.0, -0.5,  0.5},
+        {0.5,  1.0, 1.0,  -2.0, -2.0,  1.0,  1.0,  0.5},
+        {0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0}
+    };
+
+    private final double[][] pawnEvalBlack = {
+        {0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0},
+        {0.5,  1.0, 1.0,  -2.0, -2.0,  1.0,  1.0,  0.5},
+        {0.5, -0.5, -1.0,  0.0,  0.0, -1.0, -0.5,  0.5},
+        {0.0,  0.0,  0.0,  2.0,  2.0,  0.0,  0.0,  0.0},
+        {0.5,  0.5,  1.0,  2.5,  2.5,  1.0,  0.5,  0.5},
+        {1.0,  1.0,  2.0,  3.0,  3.0,  2.0,  1.0,  1.0},
+        {5.0,  5.0,  5.0,  5.0,  5.0,  5.0,  5.0,  5.0},
+        {0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0}
+    };
 
     public Pawn(Color color, int x, int y) {
         super(color, x, y);
@@ -17,6 +38,25 @@ public class Pawn extends Piece {
     @Override
     public String returnName(){
         return "Pawn";
+    }
+
+    @Override
+    public int returnNumber(){
+        return 0;
+    }
+
+    @Override
+    public int getValue(){
+        return 10;
+    }
+
+
+    @Override
+    public double getValueOfSpace(int x, int y){
+        if(getColor() == Color.WHITE)
+            return pawnEvalWhite[x][y];
+        else 
+            return pawnEvalBlack[x][y];
     }
 
     @Override
@@ -174,9 +214,9 @@ public class Pawn extends Piece {
     @Override
     public String toString() {
         if (getColor() == Color.WHITE)
-            return "♙";
+            return "p";
         else if (getColor() == Color.BLACK)
-            return "♟";
+            return "P";
         else
             return "P";
     }

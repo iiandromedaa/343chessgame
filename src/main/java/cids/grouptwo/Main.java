@@ -1,17 +1,13 @@
 package cids.grouptwo;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.prefs.Preferences;
 
 import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 
-import static cids.grouptwo.ai.minimaxRoot;
 import cids.grouptwo.gdx.GdxChessGame;
-import cids.grouptwo.pieces.Piece;
 
 /**
  * just for neatness' sake, use the main method just to bootstrap
@@ -21,11 +17,30 @@ public class Main {
 
     public static void main(String[] args) {
         ChessGame game = new ChessGame();
-        // game.getBoard().defaultBoard(game.getPieceSet());
-        // game.estoyLoopin();
+        game.newBoard();
+        /**
+         * Map<Piece, Piece> pieceSet = new HashMap<>();
+        Board game =  new Board(pieceSet);
+        ai chessAi = new ai();
+
+     
+        game = chessAi.minimaxRoot(game, 6, true);
+        game = chessAi.minimaxRoot(game, 6, false);
+        
+        
+        for(int i = 0; i <6; i++){
+            game = chessAi.minimaxRoot(game, 6, true);
+            game = chessAi.minimaxRoot(game, 6, false);
+        }
+        
+        game.displayBoard();
+         */
+        
+        
+        game.estoyLoopin();
         launchGdx(game);
     }
-    
+
     private static void launchGdx(ChessGame game) {
         int w, h;
         boolean fullscreen;

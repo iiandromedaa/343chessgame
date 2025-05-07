@@ -7,6 +7,28 @@ import cids.grouptwo.Coordinate;
 
 public class King extends Piece {
 
+    private final double[][] kingEvalWhite = {
+        { -3.0, -4.0, -4.0, -5.0, -5.0, -4.0, -4.0, -3.0},
+        { -3.0, -4.0, -4.0, -5.0, -5.0, -4.0, -4.0, -3.0},
+        { -3.0, -4.0, -4.0, -5.0, -5.0, -4.0, -4.0, -3.0},
+        { -3.0, -4.0, -4.0, -5.0, -5.0, -4.0, -4.0, -3.0},
+        { -2.0, -3.0, -3.0, -4.0, -4.0, -3.0, -3.0, -2.0},
+        { -1.0, -2.0, -2.0, -2.0, -2.0, -2.0, -2.0, -1.0},
+        {  2.0,  2.0,  0.0,  0.0,  0.0,  0.0,  2.0,  2.0 },
+        {  2.0,  3.0,  1.0,  0.0,  0.0,  1.0,  3.0,  2.0 }
+    };
+    
+    private final double[][] kingEvalBlack = {
+        {  2.0,  3.0,  1.0,  0.0,  0.0,  1.0,  3.0,  2.0 },
+        {  2.0,  2.0,  0.0,  0.0,  0.0,  0.0,  2.0,  2.0 },
+        { -1.0, -2.0, -2.0, -2.0, -2.0, -2.0, -2.0, -1.0},
+        { -2.0, -3.0, -3.0, -4.0, -4.0, -3.0, -3.0, -2.0},
+        { -3.0, -4.0, -4.0, -5.0, -5.0, -4.0, -4.0, -3.0},
+        { -3.0, -4.0, -4.0, -5.0, -5.0, -4.0, -4.0, -3.0},
+        { -3.0, -4.0, -4.0, -5.0, -5.0, -4.0, -4.0, -3.0},
+        { -3.0, -4.0, -4.0, -5.0, -5.0, -4.0, -4.0, -3.0}
+    };
+
     private boolean hasMoved = false;
 
     public King(Color color, int x, int y) {
@@ -16,6 +38,24 @@ public class King extends Piece {
     @Override
     public String returnName(){
         return "King";
+    }
+
+    @Override
+    public int returnNumber(){
+        return 5;
+    }
+
+    @Override
+    public int getValue(){
+        return 900;
+    }
+
+    @Override
+    public double getValueOfSpace(int x, int y){
+        if(getColor() == Color.WHITE)
+            return kingEvalWhite[x][y];
+        else 
+            return kingEvalBlack[x][y];
     }
 
     @Override
@@ -205,9 +245,9 @@ public class King extends Piece {
     @Override
     public String toString() {
         if (getColor() == Color.WHITE)
-            return "♔";
+            return "k";
         else
-            return "♚";
+            return "K";
     }
     
 }
