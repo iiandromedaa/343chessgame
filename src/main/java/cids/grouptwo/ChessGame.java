@@ -39,7 +39,7 @@ public class ChessGame {
     private List<KillListener> killListeners;
 
     //Added by Adam
-    private ai Ai;
+    private Ai ai;
 
 
     /**
@@ -68,7 +68,7 @@ public class ChessGame {
         killListeners = new ArrayList<>();
 
         //Added by Adam
-        Ai = new ai();
+        ai = new Ai();
     }
 
     public void newBoard() {
@@ -416,30 +416,24 @@ public class ChessGame {
             // Change from white's turn to black's turn
             turn = 1;
             // Bot implementation would go here
-
-
-
-           
-
-
-            // HypotheticalChessBot.playSickAssMove();
-            board.move(Move.findDiff(board, ai.minimaxRoot(board, 3, false)));
+            step();
             // Don't automatically step again! That skips black's turn
         } else if (turn == 1) {
             if (checkKingCapture() == turn)
                 kill();
             // Change from black's turn to white's turn
 
-             //Added by Adam
-             Board bestBoard = Ai.minimaxRoot(board, 4, false); 
-             if (bestBoard != null) {
-                 board = bestBoard;
-                 initializeKingPositions(); 
-             }
- 
-             //Added by Adam
-             displayGameState();
-             
+            //Added by Adam
+            
+            Board bestBoard = ai.minimaxRoot(board, 4, false);
+            if (bestBoard != null) {
+                board.move(Move.findDiff(board, bestBoard));
+                initializeKingPositions(); 
+            }
+
+            //Added by Adam
+            displayGameState();
+            
             turn = 0;
         } else {
             // It's not either black's or white's turn, the game must be over

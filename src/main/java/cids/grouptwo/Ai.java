@@ -5,7 +5,7 @@ import java.util.List;
 
 import cids.grouptwo.pieces.Piece;
 
-public class ai {
+public class Ai {
 
     private static final int TABLE_POWER = 20;
     private final TranspositionTable transpositionTable = new TranspositionTable(TABLE_POWER);
@@ -14,7 +14,7 @@ public class ai {
     /**
      * initializes the ai and sets the Zorbist Hash value
      */
-    public ai() {
+    public Ai() {
         ZorbHash.initialise();
     }
 

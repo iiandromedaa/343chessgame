@@ -8,16 +8,10 @@ import java.util.Random;
 
 import cids.grouptwo.exceptions.BoardException;
 import cids.grouptwo.exceptions.FenParseException;
-import cids.grouptwo.pieces.Bishop;
-import cids.grouptwo.pieces.King;
-import cids.grouptwo.pieces.Knight;
-import cids.grouptwo.pieces.Pawn;
-import cids.grouptwo.pieces.Piece;
+import cids.grouptwo.pieces.*;
 import static cids.grouptwo.pieces.Piece.Color.BLACK;
 import static cids.grouptwo.pieces.Piece.Color.DEBUG;
 import static cids.grouptwo.pieces.Piece.Color.WHITE;
-import cids.grouptwo.pieces.Queen;
-import cids.grouptwo.pieces.Rook;
 
 public class Board {
 
@@ -261,6 +255,9 @@ public class Board {
     public void notifyListeners(Move move) {
         for (BoardListener boardListener : listeners) {
             boardListener.boardUpdate(this, move);
+        }
+    }
+
     /**
      * This method can be used to easily make a move on the board
      * @param x1
