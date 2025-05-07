@@ -203,12 +203,22 @@ public class Board {
      */
     public void move(Piece piece, Coordinate coordinate) {
         clearPosition(piece.getPosition());
-        notifyListeners(piece.getPosition(), coordinate, piece);
+        notifyListeners(new Move(piece.getPosition(), coordinate, piece));
         piece.piecePosition(coordinate);
         setPiece(piece);
     }
 
-    private void setBoard(Piece[][] board) throws BoardException {
+    public void move(Move move) {
+        System.out.println(move);
+        Piece piece = getPieceFromCoordinate(move.to);
+        if (piece.getPosition() != null)
+            clearPosition(move.to);
+        notifyListeners(move);
+        // move.piece.piecePosition(move.to);
+        setPiece(move.piece);
+    }
+
+    public void setBoard(Piece[][] board) throws BoardException {
         if (board.length != this.board.length)
             throw new BoardException();
         this.board = board;
@@ -248,9 +258,9 @@ public class Board {
         listeners.add(boardListener);
     }
 
-    public void notifyListeners(Coordinate from, Coordinate to, Piece piece) {
+    public void notifyListeners(Move move) {
         for (BoardListener boardListener : listeners) {
-            boardListener.boardUpdate(this, from, to, piece);
+            boardListener.boardUpdate(this, move);
         }
     }
 

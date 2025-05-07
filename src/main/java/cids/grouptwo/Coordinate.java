@@ -1,5 +1,7 @@
 package cids.grouptwo;
 
+import java.util.Objects;
+
 /**
  * one of us was gonna have to make this class sooner or later honestly
  */
@@ -30,6 +32,11 @@ public class Coordinate {
             return (((Coordinate)obj).X == X && ((Coordinate)obj).Y == Y);
         } else
             return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(Y, X);
     }
 
 }

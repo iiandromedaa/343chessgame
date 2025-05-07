@@ -15,6 +15,7 @@ import com.badlogic.gdx.audio.Music;
 import cids.grouptwo.Board;
 import cids.grouptwo.BoardListener;
 import cids.grouptwo.Coordinate;
+import cids.grouptwo.Move;
 import cids.grouptwo.gdx.GameScreen;
 import cids.grouptwo.gdx.GdxChessGame;
 import cids.grouptwo.pieces.Piece;
@@ -132,38 +133,38 @@ public class GdxBoard extends Table implements BoardListener {
      * @param coordinate the square being updated
      * @param piece the piece involved in the update, if null, piece was moved off of square
      */
-    public void boardUpdate(Board board, Coordinate from, Coordinate to, Piece piece) {
+    public void boardUpdate(Board board, Move move) {
         // if this is true, its a promotion/swap
-        if (from.equals(to)) {
-            getTileFromCoordinate(from).setPiece(piece, 
-                PieceSpriteLookup.pieceToSprite(piece, game.getAsset("piecesAtlas")));
+        if (move.from.equals(move.to)) {
+            getTileFromCoordinate(move.from).setPiece(move.piece, 
+                PieceSpriteLookup.pieceToSprite(move.piece, game.getAsset("piecesAtlas")));
             return;
         }
 
         gameScreen.getCameraShake().shake(7.5f, 0.075f);
-        if (getTileFromCoordinate(to).getPiece() != null)
+        if (getTileFromCoordinate(move.to).getPiece() != null)
             ((Music) game.getAsset("captureSound")).play();
         else
             ((Music) game.getAsset("moveSound")).play();
 
-        Gdx.app.log("chessgame", "move from " + coordinateToAlgebraic(from) + 
-            " to " + coordinateToAlgebraic(to) + " | " + piece.getClass().getCanonicalName());
-        Tile fromTile = getTileFromCoordinate(from);
-        Tile toTile = getTileFromCoordinate(to);
+        Gdx.app.log("chessgame", "move from " + coordinateToAlgebraic(move.from) + 
+            " to " + coordinateToAlgebraic(move.to) + " | " + move.piece.getClass().getCanonicalName());
+        Tile fromTile = getTileFromCoordinate(move.from);
+        Tile toTile = getTileFromCoordinate(move.to);
         // now we handle the graphical move
         // this mess is to lerp the pieces while respecting the z order of the tiles
-        if (((from.Y > to.Y) || (from.X > to.X)) &&
-            !((from.X > to.X) && (from.Y < to.Y))) {
+        if (((move.from.Y > move.to.Y) || (move.from.X > move.to.X)) &&
+            !((move.from.X > move.to.X) && (move.from.Y < move.to.Y))) {
             fromTile.lerpTo(toTile);
             Timer.schedule(new Task(){
                 @Override
                 public void run() {
-                    toTile.setPiece(piece, PieceSpriteLookup.pieceToSprite(piece, piecesAtlas));
+                    toTile.setPiece(move.piece, PieceSpriteLookup.pieceToSprite(move.piece, piecesAtlas));
                     fromTile.clearPiece();
                 }
             }, 0.175f);
         } else {
-            toTile.setPiece(piece, PieceSpriteLookup.pieceToSprite(piece, piecesAtlas));
+            toTile.setPiece(move.piece, PieceSpriteLookup.pieceToSprite(move.piece, piecesAtlas));
             toTile.lerpFrom(fromTile);
             fromTile.clearPiece();
         }
@@ -324,6 +325,11 @@ public class GdxBoard extends Table implements BoardListener {
             BLACKHOVER = 7,
             WHITETAKE = 8,
             BLACKTAKE = 9;
+    }
+
+    @Override
+    public void boardSet(Board board) {
+        populate();
     }
 
 }

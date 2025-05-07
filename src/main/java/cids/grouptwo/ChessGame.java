@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
+import cids.grouptwo.exceptions.BoardException;
 import cids.grouptwo.pieces.Bishop;
 import cids.grouptwo.pieces.King;
 import cids.grouptwo.pieces.Knight;
@@ -283,7 +284,7 @@ public class ChessGame {
     public void swapPiece(Piece from, Piece to) {
         pieceSet.put(from, to);
         board.setPiece(to);
-        board.notifyListeners(from.getPosition(), to.getPosition(), to);
+        board.notifyListeners(new Move(from.getPosition(), to.getPosition(), to));
     }
 
     /**
@@ -435,6 +436,7 @@ public class ChessGame {
             turn = 1;
             // Bot implementation would go here
             // HypotheticalChessBot.playSickAssMove();
+            board.move(Move.findDiff(board, ai.minimaxRoot(board, 3, false)));
             // Don't automatically step again! That skips black's turn
         } else if (turn == 1) {
             if (checkKingCapture() == turn)
