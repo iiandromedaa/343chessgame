@@ -20,7 +20,7 @@ public class CameraShake {
         position = new Vector3();
     }
 
-    void shake(float power, float time) {
+    public void shake(float power, float time) {
         this.power = power;
         this.time = time;
         curTime = 0;

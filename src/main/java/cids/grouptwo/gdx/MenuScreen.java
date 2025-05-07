@@ -13,7 +13,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 import cids.grouptwo.ChessGame;
 
-public class MenuScreen extends ScreenAdapter{
+public class MenuScreen extends ScreenAdapter {
 
     Skin skin;
     int width, height;

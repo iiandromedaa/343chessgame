@@ -4,16 +4,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.utils.Timer;
+import com.badlogic.gdx.utils.Timer.Task;
 import com.badlogic.gdx.audio.Music;
 
+import cids.grouptwo.Board;
+import cids.grouptwo.BoardListener;
 import cids.grouptwo.Coordinate;
+import cids.grouptwo.Move;
+import cids.grouptwo.gdx.GameScreen;
 import cids.grouptwo.gdx.GdxChessGame;
 import cids.grouptwo.pieces.Piece;
 
-public class Board extends Table {
+public class GdxBoard extends Table implements BoardListener {
 
     private GdxChessGame game;
     private TextureAtlas tilesAtlas;
@@ -21,16 +28,22 @@ public class Board extends Table {
     private Cell<Tile> cellBoard[][];
     private Cell<Tile> selected;
     private List<Cell<Tile>> valid;
+    private GameScreen gameScreen;
 
-    private cids.grouptwo.Board realBoard;
+    private Board realBoard;
 
     private final char LETTERS[] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
     
     @SuppressWarnings("unchecked")
-    public Board(GdxChessGame game, int width, int height) {
+    public GdxBoard(GdxChessGame game, int width, int height, GameScreen gameScreen) {
         this.game = game;
+        this.gameScreen = gameScreen;
         tilesAtlas = this.game.getAsset("tilesAtlas");
         piecesAtlas = this.game.getAsset("piecesAtlas");
+        tilesAtlas.getTextures().forEach(t -> 
+            t.setFilter(TextureFilter.Linear, TextureFilter.Linear));
+        piecesAtlas.getTextures().forEach(t -> 
+            t.setFilter(TextureFilter.Linear, TextureFilter.Linear));
         cellBoard = new Cell[8][8];
         realBoard = game.getBackend().getBoard();
         valid = new ArrayList<>();
@@ -108,8 +121,54 @@ public class Board extends Table {
                         PieceSpriteLookup.pieceToSprite(realBoard.getBoard()[row][col], 
                             piecesAtlas)
                     );
+                } else {
+                    this.cellBoard[row][col].getActor().clearPiece();
                 }
             }
+        }
+    }
+
+    /**
+     * runs the graphical move so this will be triggered even if the move occurs from outside 
+     * the gui, for example if the ai moves a piece
+     * @param board the board, duh
+     * @param coordinate the square being updated
+     * @param piece the piece involved in the update, if null, piece was moved off of square
+     */
+    public void boardUpdate(Board board, Move move) {
+        // if this is true, its a promotion/swap
+        if (move.from.equals(move.to)) {
+            getTileFromCoordinate(move.from).setPiece(move.piece, 
+                PieceSpriteLookup.pieceToSprite(move.piece, game.getAsset("piecesAtlas")));
+            return;
+        }
+
+        gameScreen.getCameraShake().shake(7.5f, 0.075f);
+        if (getTileFromCoordinate(move.to).getPiece() != null)
+            ((Music) game.getAsset("captureSound")).play();
+        else
+            ((Music) game.getAsset("moveSound")).play();
+
+        Gdx.app.log("chessgame", "move from " + coordinateToAlgebraic(move.from) + 
+            " to " + coordinateToAlgebraic(move.to) + " | " + move.piece.getClass().getCanonicalName());
+        Tile fromTile = getTileFromCoordinate(move.from);
+        Tile toTile = getTileFromCoordinate(move.to);
+        // now we handle the graphical move
+        // this mess is to lerp the pieces while respecting the z order of the tiles
+        if (((move.from.Y > move.to.Y) || (move.from.X > move.to.X)) &&
+            !((move.from.X > move.to.X) && (move.from.Y < move.to.Y))) {
+            fromTile.lerpTo(toTile);
+            Timer.schedule(new Task(){
+                @Override
+                public void run() {
+                    toTile.setPiece(move.piece, PieceSpriteLookup.pieceToSprite(move.piece, piecesAtlas));
+                    fromTile.clearPiece();
+                }
+            }, 0.175f);
+        } else {
+            toTile.setPiece(move.piece, PieceSpriteLookup.pieceToSprite(move.piece, piecesAtlas));
+            toTile.lerpFrom(fromTile);
+            fromTile.clearPiece();
         }
     }
 
@@ -121,7 +180,7 @@ public class Board extends Table {
             });
             valid.clear();
             Gdx.app.log("chessgame", coordinateToAlgebraic(selected.getActor()
-                .getCoordinate()) + " deselect | " + selected.getActor().getPiece()
+                .getCoord()) + " deselect | " + selected.getActor().getPiece()
                 .getClass().getCanonicalName() + " " + selected.getActor().getPiece().getColor());
             selected = null;
             tileBgDeselect(tile);
@@ -130,12 +189,20 @@ public class Board extends Table {
 
         // tile already selected
         if (selected != null) {
-            if (!valid.contains(getCell(tile)))
+            if (!valid.contains(getCell(tile)) && tile.getPiece() == null)
+                return;
+            if (!valid.contains(getCell(tile)) && tile.getPiece().getColor() != 
+                (game.getBackend().getTurn() == 0 ? Piece.Color.WHITE : Piece.Color.BLACK))
                 return;
             tileBgDeselect(selected.getActor());
             selected.getActor().getPiece().getValidMoves(realBoard.getBoard()).forEach(c -> {
                 tileBgDemove(getTileFromCoordinate(c));
             });
+            if (!valid.contains(getCell(tile))) {
+                selected = null;
+                select(tile);
+                return;
+            }
             move(selected.getActor(), tile);
             valid.clear();
             selected = null;
@@ -146,17 +213,21 @@ public class Board extends Table {
         if (tile.getPiece() == null)
             return;
 
-        // discard wrong colour selections
+        // discard wrong colour click
         if (tile.getPiece().getColor() != (game.getBackend().getTurn() == 0 ? 
             Piece.Color.WHITE : Piece.Color.BLACK))
             return;
 
         // no tile selected
+        select(tile);
+    }
+
+    private void select(Tile tile) {
         selected = getCell(tile);
         tileBgSelect(tile);
         valid.clear();
         Gdx.app.log("chessgame", coordinateToAlgebraic(selected.getActor()
-                .getCoordinate()) + " select | " + selected.getActor().getPiece()
+                .getCoord()) + " select | " + selected.getActor().getPiece()
                 .getClass().getCanonicalName() + " " + selected.getActor().getPiece().getColor());
         selected.getActor().getPiece().getValidMoves(realBoard.getBoard()).forEach(c -> {
             valid.add(getCell(getTileFromCoordinate(c)));
@@ -167,21 +238,10 @@ public class Board extends Table {
     }
 
     private void move(Tile from, Tile to) {
-        Gdx.app.log("chessgame", "move from " + coordinateToAlgebraic(from.getCoordinate()) + 
-            " to " + coordinateToAlgebraic(to.getCoordinate()) + " | " + from.getPiece()
-            .getClass().getCanonicalName());
-        // calls to backend methods
-        cids.grouptwo.Board board = game.getBackend().getBoard();
-        board.clearPosition(from.getCoordinate());
+        Board board = game.getBackend().getBoard();
         Piece piece = from.getPiece();
-        piece.piecePosition(to.getCoordinate());
-        board.setPiece(piece);
+        board.move(piece, to.getCoord());
         game.getBackend().step();
-        // now we handle the graphical move
-        // TODO lerp piece when move is performed before handing over ownership to next tile
-        from.clearPiece();
-        to.setPiece(piece, PieceSpriteLookup.pieceToSprite(piece, piecesAtlas));
-        ((Music) game.getAsset("moveSound")).play();
     }
 
     private void tileBgSelect(Tile tile) {
@@ -267,6 +327,11 @@ public class Board extends Table {
             BLACKHOVER = 7,
             WHITETAKE = 8,
             BLACKTAKE = 9;
-    }  
+    }
+
+    @Override
+    public void boardSet(Board board) {
+        populate();
+    }
 
 }
