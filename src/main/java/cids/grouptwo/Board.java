@@ -39,6 +39,7 @@ public class Board {
      * @param fen FEN notation
      */
     public Board(Map<Piece, Piece> pieceSet, String fen) {
+        listeners = new ArrayList<>();
         board = new Piece[BOARDPARAMS][BOARDPARAMS];
         obstacles = new boolean[BOARDPARAMS][BOARDPARAMS];
         if (fen == null)
@@ -51,7 +52,6 @@ public class Board {
 		} catch (BoardException | FenParseException e) {
 			e.printStackTrace();
 		}
-        listeners = new ArrayList<>();
     }
 
     /**
@@ -204,7 +204,7 @@ public class Board {
 
     public void move(Move move) {
         System.out.println(move);
-        Piece piece = getPieceFromCoordinate(move.to);
+        Piece piece = getPieceFromCoordinate(move.from);
         if (piece.getPosition() != null)
             clearPosition(move.to);
         notifyListeners(move);
@@ -216,6 +216,7 @@ public class Board {
         if (board.length != this.board.length)
             throw new BoardException();
         this.board = board;
+        notifyListeners(this);
     }
 
     /* 10% chance of spawning an obstacle on the board */
@@ -255,6 +256,14 @@ public class Board {
     public void notifyListeners(Move move) {
         for (BoardListener boardListener : listeners) {
             boardListener.boardUpdate(this, move);
+        }
+    }
+
+    public void notifyListeners(Board board) {
+        if (!listeners.isEmpty()) {
+            for (BoardListener boardListener : listeners) {
+                boardListener.boardSet(board);
+            }
         }
     }
 

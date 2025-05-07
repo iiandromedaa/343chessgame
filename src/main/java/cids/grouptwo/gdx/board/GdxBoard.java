@@ -121,6 +121,8 @@ public class GdxBoard extends Table implements BoardListener {
                         PieceSpriteLookup.pieceToSprite(realBoard.getBoard()[row][col], 
                             piecesAtlas)
                     );
+                } else {
+                    this.cellBoard[row][col].getActor().clearPiece();
                 }
             }
         }

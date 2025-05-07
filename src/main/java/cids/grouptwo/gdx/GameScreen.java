@@ -114,7 +114,7 @@ public class GameScreen extends MenuScreen implements KillListener {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if (game.getBackend().getTurn() != 0)
-                    game.getBackend().step();
+                    game.getBackend().setTurn(0);
                 newRound();
             }
         });

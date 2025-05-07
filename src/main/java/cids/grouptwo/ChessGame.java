@@ -9,6 +9,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
+import com.badlogic.gdx.utils.Timer;
+import com.badlogic.gdx.utils.Timer.Task;
+
 import cids.grouptwo.exceptions.BoardException;
 import cids.grouptwo.pieces.Bishop;
 import cids.grouptwo.pieces.King;
@@ -359,7 +362,7 @@ public class ChessGame {
     private King findKing(Piece.Color color) {
         // Check tracked positions
         Coordinate kingPos = (color == Piece.Color.WHITE) ? whiteKingPos : blackKingPos;
-        
+        System.out.println(kingPos);
         if (kingPos != null) {
             Piece piece = board.getPieceFromXY(kingPos.X, kingPos.Y);
             if (piece instanceof King && piece.getColor() == color) {
@@ -405,29 +408,45 @@ public class ChessGame {
         return turn;
     }
 
+    public void setTurn(int turn) {
+        this.turn = turn;
+    }
+
     /**
      * Advances the game state after a player has moved
      * Switches turns between white and black
      */
     public void step() {
         if (turn == 0) {
-            if (checkKingCapture() == turn)
+            if (checkKingCapture() == turn) {
                 kill();
+                return;
+            }
             // Change from white's turn to black's turn
             turn = 1;
-            // Bot implementation would go here
-            step();
-            // Don't automatically step again! That skips black's turn
+            Timer.schedule(new Task() {
+                @Override
+                public void run() {
+                    step();
+                }
+            }, 0.5f);
         } else if (turn == 1) {
-            if (checkKingCapture() == turn)
+            if (checkKingCapture() == turn) {
                 kill();
+                return;
+            }
             // Change from black's turn to white's turn
 
             //Added by Adam
             
-            Board bestBoard = ai.minimaxRoot(board, 4, false);
+            Board bestBoard = ai.minimaxRoot(board, 10, false);
             if (bestBoard != null) {
-                board.move(Move.findDiff(board, bestBoard));
+                // board.move(Move.findDiff(board, bestBoard));
+                try {
+                    board.setBoard(bestBoard.getBoard());
+                } catch (BoardException b) {
+                    b.printStackTrace();
+                }
                 initializeKingPositions(); 
             }
 

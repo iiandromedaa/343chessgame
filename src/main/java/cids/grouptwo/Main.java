@@ -18,26 +18,6 @@ public class Main {
     public static void main(String[] args) {
         ChessGame game = new ChessGame();
         game.newBoard();
-        /**
-         * Map<Piece, Piece> pieceSet = new HashMap<>();
-        Board game =  new Board(pieceSet);
-        ai chessAi = new ai();
-
-     
-        game = chessAi.minimaxRoot(game, 6, true);
-        game = chessAi.minimaxRoot(game, 6, false);
-        
-        
-        for(int i = 0; i <6; i++){
-            game = chessAi.minimaxRoot(game, 6, true);
-            game = chessAi.minimaxRoot(game, 6, false);
-        }
-        
-        game.displayBoard();
-         */
-        
-        
-        game.estoyLoopin();
         launchGdx(game);
     }
 

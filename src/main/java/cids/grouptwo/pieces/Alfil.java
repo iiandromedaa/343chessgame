@@ -1,5 +1,9 @@
 package cids.grouptwo.pieces;
 
+import java.util.List;
+
+import cids.grouptwo.Coordinate;
+
 /**
  * elephant
  */
@@ -22,6 +26,11 @@ public class Alfil extends Bishop {
             return false;
         return Math.abs(newX - getX()) == Math.abs(newY - getY()) &&
             (board[newY][newX] == null || board[newY][newX].getColor() != getColor());
+    }
+
+    @Override
+    public List<Coordinate> getValidMoves(Piece[][] board) {
+        return super.getValidMovesUnoverridden(board);
     }
 
     @Override

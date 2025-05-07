@@ -34,10 +34,10 @@ public class Move {
 
                 if(!Objects.equals(oldPiece, newPiece)) {
                     if (oldPiece != null && newPiece == null) {
-                        from = new Coordinate(row, col);
+                        from = new Coordinate(col, row);
                     } else if ((oldPiece == null && newPiece != null) || 
                         oldPiece != null && newPiece != null && !oldPiece.equals(newPiece)) {
-                            to = new Coordinate(row, col);
+                            to = new Coordinate(col, row);
                         }
                 }
             }
