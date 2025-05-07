@@ -207,6 +207,24 @@ public class GameScreen extends MenuScreen implements KillListener {
         stage.addActor(boardTable);
     }
 
+    private void toShop() {
+        Gdx.app.log("chessgame", "swapping to shop, now round " + 
+            game.getBackend().getRound());
+        ((Music) game.getAsset("notifySound")).play();
+        stage.getRoot().getColor().a = 1;
+        SequenceAction sequenceAction = new SequenceAction();
+        sequenceAction.addAction(Actions.fadeOut(0.5f));
+        sequenceAction.addAction(Actions.run(new Runnable() {
+            @Override
+            public void run() {
+                game.setScreen(new ShopScreen(width, height, game, vfxManager, backend));
+                game.getBackend().killKillListener(GameScreen.this);
+                GameScreen.this.dispose();
+            }
+        }));
+        stage.getRoot().addAction(sequenceAction);
+    }
+
     private void newRound() {
         Gdx.app.log("chessgame", "swapping out gamescreen, now round " + 
             game.getBackend().getRound());
@@ -228,7 +246,7 @@ public class GameScreen extends MenuScreen implements KillListener {
     @Override
     public void killNotify(int turn) {
         Gdx.app.log("chessgame", turn == 0 ? "white wins!" : "black wins!");
-        newRound();
+        toShop();
     }
     
 }

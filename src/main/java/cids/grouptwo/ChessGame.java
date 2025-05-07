@@ -360,13 +360,12 @@ public class ChessGame {
      * @return the King piece or null if not found
      */
     private King findKing(Piece.Color color) {
-        // Check tracked positions
-        Coordinate kingPos = (color == Piece.Color.WHITE) ? whiteKingPos : blackKingPos;
-        System.out.println(kingPos);
-        if (kingPos != null) {
-            Piece piece = board.getPieceFromXY(kingPos.X, kingPos.Y);
-            if (piece instanceof King && piece.getColor() == color) {
-                return (King) piece;
+        
+        for (int row = 0; row < 8; row++) {
+            for (int col = 0; col < 8; col++) {
+                if (board.getBoard()[row][col] instanceof King && 
+                    board.getBoard()[row][col].getColor() == color)
+                    return (King)board.getBoard()[row][col];
             }
         }
         
@@ -427,6 +426,22 @@ public class ChessGame {
             Timer.schedule(new Task() {
                 @Override
                 public void run() {
+                    //Added by Adam
+            
+                    Board bestBoard = ai.minimaxRoot(board, 6, false);
+                    if (bestBoard != null) {
+                        // board.move(Move.findDiff(board, bestBoard));
+                        try {
+                            board.setBoard(bestBoard.getBoard());
+                        } catch (BoardException b) {
+                            b.printStackTrace();
+                        }
+                        initializeKingPositions(); 
+                    }
+
+                    //Added by Adam
+                    // displayGameState();
+
                     step();
                 }
             }, 0.5f);
@@ -436,22 +451,6 @@ public class ChessGame {
                 return;
             }
             // Change from black's turn to white's turn
-
-            //Added by Adam
-            
-            Board bestBoard = ai.minimaxRoot(board, 10, false);
-            if (bestBoard != null) {
-                // board.move(Move.findDiff(board, bestBoard));
-                try {
-                    board.setBoard(bestBoard.getBoard());
-                } catch (BoardException b) {
-                    b.printStackTrace();
-                }
-                initializeKingPositions(); 
-            }
-
-            //Added by Adam
-            displayGameState();
             
             turn = 0;
         } else {
