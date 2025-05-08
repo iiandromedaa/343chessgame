@@ -51,6 +51,14 @@ You can use any other diagram that you find helpful for describing your software
 
 This section will contain the most content. The documentation should fully document the latest version of your software. If you make changes to your software, you should update this document to reflect those changes. 
 
+![ChessGame_LogicUML](https://github.com/user-attachments/assets/bc9a6c53-f3c0-4190-b825-55ebe762d7e3)
+
+The above UML Class Diagram serves as a rough overview to the functionality of our Board code. We have the Board class which makes use of Piece, Move and, Board listener. Board is the main class displaying, moving, and interacting with each of the pieces depending on the board listener. Each of the individual pieces maintain their own functionality but heavily rely on our abstract class Piece. All of the regular or "Canon" pieces take inspiration from the classic Chess game using movement variables int x + int y and a Color enumeration. The pieces and board states function with a coordinates system as well as the "isValidMove" methods. Our newer implementations of additional pieces take inspiration from Shogi, we use a Shogi interface to separate the additional pieces, Ferz, Lance, ShogiPawn, Alfil. The Move and Coordinate classes as touched on before are what allow for the pieces and board states to function properly with the int x + int y variables. 
+
+![ChessGame_GuiUML](https://github.com/user-attachments/assets/cb63c29c-c071-4895-b090-811a1787c9c9)
+
+The above UML Class Diagram .........
+
 ## Examples
 
 This is an image of the games mainmenu starting screen:
