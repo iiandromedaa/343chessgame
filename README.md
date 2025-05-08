@@ -21,7 +21,20 @@ Your documentation should have three sections: Overview, Design, Examples, and S
 
 ## Overview
 
-Give a high-level description of your software. The description should be clear and professional. You can use images if it helps. 
+![ChessGame_mainmenu](https://github.com/user-attachments/assets/ff1a2613-681a-4f7b-b28c-f74e5e7216fd)
+
+
+Throughout the course of the semester, our group has been working to develop a game that takes inspiration from the concept of Chess.
+
+The name of our software initially, "Rougelike Chess" currently, "Chess But Cooler" is an attempt at making a rougelike chess game with an incredible potential for growth and development. Our main focus was to first generate a functioning Java based chess game and then further implement our own ideas to make it something unique to us.
+
+We made use of Visual Studio Code, Maven + Gradle, LibGDX, and other Java related tools to develop our software into a functioning project.
+
+Currently there is a working Chess board game with several piece implementations that have allowed for us to create "levels" or variations of chess games that the user can step through and attempt to solve. The chess game itself not only has basic functionality but uses AI for the opponent allowing the game to serve as a Player VS. Enemy style rougelike chess game. The chess game also has a piece swap feature allowing the user to change there own pieces into pieces from other similar games like shogi. 
+
+The GUI is quite fleshed out for our game. By making use of the model and view aspects of our code, the interface looks great. There are sprites, custom backgrounds, and sound implementation that really bring our chess game to life.
+
+There are around 200 individual puzzles that the player can access and play though. Although the AI enemy isn't perfect it is still a sufficient addition to our project, allowing for a competitive side to our game. There is always room for improvement with our levels and rougelike elements.
 
 ## Design
 
@@ -60,4 +73,17 @@ This is an example of the result of using the piece swap button on some of the p
 
 ## Status
 
-Give the current status of the software. List what is working and what is planned for future releases. When listing planned features, assume that the the project will continue even after the course ends.
+Currently the software is a fully functioning chess game with a fully polished GUI that features piece movement animations, and audio effects. It functions the same as classic chess currently but is played through level style. When playing the game you will randomly be assigned one of 200 puzzles. The game also has some additional working features including a on demand new puzzle button, piece swap button, and a fully funcitoning AI opponent. 
+
+Here is a list of planned additions for future releases:
+ - Board Obstacles
+ - Board Hazards
+ - Shop system inbetween levels (partially complete see image below)
+ - settings
+ - powerup & debuff items
+ - piece hitpoints and damage
+ - higher level AI capable of handling all of the additions listed above
+
+Here is an image of the current shop screen that displays inbetween games:
+![ChessGame_shopscreenexample](https://github.com/user-attachments/assets/2f8c4151-bda4-41c7-87a5-562b6dc025ac)
+
