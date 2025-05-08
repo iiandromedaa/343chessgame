@@ -40,7 +40,23 @@ This section will contain the most content. The documentation should fully docum
 
 ## Examples
 
-Give screenshots of your running project and briefly describe what is in the screenshots.
+This is an image of the games mainmenu starting screen:
+![ChessGame_mainmenu](https://github.com/user-attachments/assets/e0a66e89-c61a-48d3-b1ff-7f310b266485)
+
+The following examples are images of 3 of the 200 possible chess game puzzles:
+![ChessGame_boardexample](https://github.com/user-attachments/assets/83586b58-7975-4cbd-9bd8-f00cd06facfa)
+![ChessGame_boardexample2](https://github.com/user-attachments/assets/01192e1b-3fe4-49bd-82c7-a3d691519d08)
+![ChessGame_boardexample3](https://github.com/user-attachments/assets/824b3087-6b11-4ca7-b9d4-92b4678bffb9)
+
+This is an image of the preview of possible moves when you select a chess piece: 
+![ChessGame_piecemoveexample](https://github.com/user-attachments/assets/e30a0e87-475a-4203-bcc9-1880fc553ac2)
+
+This is another example of a moving preview with a different piece: 
+![ChessGame_piecemoveexample2](https://github.com/user-attachments/assets/50ee45f7-fa0d-4cf4-bfdd-34913c73548d)
+
+This is an example of the result of using the piece swap button on some of the pieces:
+![ChessGame_pieceswapexample](https://github.com/user-attachments/assets/a8872fdc-f570-473f-b2c2-d85ab6b071ba)
+
 
 ## Status
 
