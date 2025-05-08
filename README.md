@@ -20,8 +20,21 @@ Your documentation should have three sections: Overview, Design, Examples, and S
 # Overview of Required Sections
 
 ## Overview
-
 Give a high-level description of your software. The description should be clear and professional. You can use images if it helps. 
+
+##PLACE IMAGE HERE
+
+Throughout the course of the semester, our group has been working to develop a game that takes inspiration from the concept of Chess. 
+
+The name of our software initially, "Rougelike Chess" currently, "Chess But Cooler" is an attempt at making a rougelike chess game with an incredible potential for growth and development. Our main focus was to first generate a functioning Java based chess game and then further implement our own ideas to make it something unique to us. 
+
+We made use of Visual Studio Code, Maven + Gradle, LibGDX, and other Java related tools to develop our software into a functioning project.
+
+Currently there is a working Chess board game with several piece implementations that have allowed for us to create "levels" or variations of chess games that the user can step through and attempt to solve. The chess game itself not only has basic functionality but uses AI for the opponent allowing the game to serve as a Player VS. Enemy style rougelike chess game.
+
+The GUI is quite fleshed out for our game. By making use of the model and view aspects of our code, the interface looks great. There are sprites, custom backgrounds, and sound implementation that really bring our chess game to life.
+
+There are around 200 individual puzzles that the player can access and play though. Although the AI enemy isn't perfect it is still a sufficient addition to our project, allowing for a competitive side to our game. There is always room for improvement with our levels and rougelike elements.
 
 ## Design
 
