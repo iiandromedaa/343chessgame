@@ -1,11 +1,69 @@
 package cids.grouptwo.pieces;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import cids.grouptwo.Coordinate;
+
 public class Rook extends Piece {
+
+    private final double[][] rookEvalWhite = {
+        {  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0},
+        {  0.5,  1.0,  1.0,  1.0,  1.0,  1.0,  1.0,  0.5},
+        { -0.5,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0, -0.5},
+        { -0.5,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0, -0.5},
+        { -0.5,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0, -0.5},
+        { -0.5,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0, -0.5},
+        { -0.5,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0, -0.5},
+        {  0.0,   0.0, 0.0,  0.5,  0.5,  0.0,  0.0,  0.0}
+    };
+    
+    private final double[][] rookEvalBlack = {
+        {  0.0,   0.0, 0.0,  0.5,  0.5,  0.0,  0.0,  0.0},
+        { -0.5,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0, -0.5},
+        { -0.5,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0, -0.5},
+        { -0.5,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0, -0.5},
+        { -0.5,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0, -0.5},
+        { -0.5,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0, -0.5},
+        {  0.5,  1.0,  1.0,  1.0,  1.0,  1.0,  1.0,  0.5},
+        {  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0}
+        
+    };
 
     private boolean hasMoved = false;
 
     public Rook(Color color, int x, int y) {
         super(color, x, y);
+    }
+
+    @Override
+    public String returnName(){
+        return "Rook";
+    }
+
+    @Override
+    public Rook copyPiece(){
+        Rook tempPiece = new Rook(this.getColor(), this.getX(), this.getY());
+        return tempPiece;
+    }
+
+    @Override
+    public int returnNumber(){
+        return 3;
+    }
+
+    @Override
+    public int getValue(){
+        return 50;
+    }
+
+
+    @Override
+    public double getValueOfSpace(int x, int y){
+        if(getColor() == Color.WHITE)
+            return rookEvalWhite[x][y];
+        else 
+            return rookEvalBlack[x][y];
     }
 
     /**
@@ -55,6 +113,55 @@ public class Rook extends Piece {
     }
 
     /**
+     * Efficiently gets all possible valid moves for the Rook
+     */
+    @Override
+    public List<Coordinate> getValidMoves(Piece[][] board) {
+        List<Coordinate> validMoves = new ArrayList<>();
+        
+        // Define the four orthogonal directions
+        int[][] directions = {
+            {0, 1},   // Down
+            {0, -1},  // Up
+            {1, 0},   // Right
+            {-1, 0}   // Left
+        };
+        
+        // Check each direction
+        for (int[] dir : directions) {
+            int dx = dir[0];
+            int dy = dir[1];
+            
+            // Move in this direction until we hit a piece or the edge
+            for (int i = 1; i < 8; i++) {
+                int newX = getX() + i * dx;
+                int newY = getY() + i * dy;
+                
+                // Stop if we're off the board
+                if (newX < 0 || newX >= 8 || newY < 0 || newY >= 8) {
+                    break;
+                }
+                
+                // Empty square is valid
+                if (board[newY][newX] == null) {
+                    validMoves.add(new Coordinate(newX, newY));
+                }
+                // Capture opponent piece and stop
+                else if (board[newY][newX].getColor() != getColor()) {
+                    validMoves.add(new Coordinate(newX, newY));
+                    break;
+                }
+                // Our piece blocks the path
+                else {
+                    break;
+                }
+            }
+        }
+        
+        return validMoves;
+    }
+
+    /**
      * Updates the rook's position and records that it has moved
      */
     @Override
@@ -74,9 +181,9 @@ public class Rook extends Piece {
     @Override
     public String toString() {
         if (getColor() == Color.WHITE)
-            return "♖";
+            return "r";
         else
-            return "♜";
+            return "R";
     }
 
 }

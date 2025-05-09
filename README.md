@@ -23,14 +23,13 @@ Your documentation should have three sections: Overview, Design, Examples, and S
 
 ![ChessGame_mainmenu](https://github.com/user-attachments/assets/ff1a2613-681a-4f7b-b28c-f74e5e7216fd)
 
+Throughout the course of the semester, our group has been working to develop a game that takes inspiration from the concept of Chess. 
 
-Throughout the course of the semester, our group has been working to develop a game that takes inspiration from the concept of Chess.
-
-The name of our software initially, "Rougelike Chess" currently, "Chess But Cooler" is an attempt at making a rougelike chess game with an incredible potential for growth and development. Our main focus was to first generate a functioning Java based chess game and then further implement our own ideas to make it something unique to us.
+The name of our software initially, "Rougelike Chess" currently, "Chess But Cooler" is an attempt at making a rougelike chess game with an incredible potential for growth and development. Our main focus was to first generate a functioning Java based chess game and then further implement our own ideas to make it something unique to us. 
 
 We made use of Visual Studio Code, Maven + Gradle, LibGDX, and other Java related tools to develop our software into a functioning project.
 
-Currently there is a working Chess board game with several piece implementations that have allowed for us to create "levels" or variations of chess games that the user can step through and attempt to solve. The chess game itself not only has basic functionality but uses AI for the opponent allowing the game to serve as a Player VS. Enemy style rougelike chess game. The chess game also has a piece swap feature allowing the user to change there own pieces into pieces from other similar games like shogi. 
+Currently there is a working Chess board game with several piece implementations that have allowed for us to create "levels" or variations of chess games that the user can step through and attempt to solve. The chess game itself not only has basic functionality but uses AI for the opponent allowing the game to serve as a Player VS. Enemy style rougelike chess game.
 
 The GUI is quite fleshed out for our game. By making use of the model and view aspects of our code, the interface looks great. There are sprites, custom backgrounds, and sound implementation that really bring our chess game to life.
 

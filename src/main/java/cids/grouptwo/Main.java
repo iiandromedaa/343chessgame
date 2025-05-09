@@ -3,10 +3,11 @@ package cids.grouptwo;
 import java.io.IOException;
 import java.util.prefs.Preferences;
 
-import cids.grouptwo.gdx.GdxChessGame;
 import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
+
+import cids.grouptwo.gdx.GdxChessGame;
 
 /**
  * just for neatness' sake, use the main method just to bootstrap
@@ -16,8 +17,7 @@ public class Main {
 
     public static void main(String[] args) {
         ChessGame game = new ChessGame();
-        // game.getBoard().defaultBoard(game.getPieceSet());
-        // game.estoyLoopin();
+        game.newBoard();
         launchGdx(game);
     }
 
@@ -70,5 +70,4 @@ public class Main {
             System.out.println("Clear failed :( " + e);
         }
     }
-    
 }
