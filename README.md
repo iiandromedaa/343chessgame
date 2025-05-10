@@ -56,7 +56,7 @@ The above UML Class Diagram serves as a rough overview to the functionality of o
 
 ![ChessGame_GuiUML](https://github.com/user-attachments/assets/cb63c29c-c071-4895-b090-811a1787c9c9)
 
-The above UML Class Diagram .........
+The above UML Class Diagram outlines the structure of the classes that run the GUI through LibGDX. The GdxBoard mirrors the Board within the backend, while extending from LibGDX's Table class to make use of the LibGDX Scene2D UI system. The GdxBoard is a table of cells containing Tiles, which store a reference to a piece as well as the tile's background which is used for tile colouring and highlighting when clicked. Using the listener/observer pattern with the TileClickListener class, Tiles call out to GdxBoard when they are interacted with, to perform highlighting and generally interact with the game backend, or model under MVC terminology. Each Screen class such as MainMenuScreen or GameScreen extend from MenuScreen due to the fact that all of our screens will be set to require the same methods and fields, such as a background. The background is in it's own class so that when it is instantiated it can take a plain chessboard image, tile it, and perform semi-random affine transformations to make a background that is somewhat unique each time the screen changes. 
 
 ## Examples
 
