@@ -91,6 +91,6 @@ Here is a list of planned additions for future releases:
  - piece hitpoints and damage
  - higher level AI capable of handling all of the additions listed above
 
-Here is an image of the current shop screen that displays inbetween games:
+Here is an image of the current shop screen that displays inbetween games, which sadly we did not have the time to flesh out:
 ![ChessGame_shopscreenexample](https://github.com/user-attachments/assets/2f8c4151-bda4-41c7-87a5-562b6dc025ac)
-
+The button would have applied a roguelite-esque modifier such as upgrading/swapping one of your pieces as a debug alternative to the planned idea of the player being offered several options.
