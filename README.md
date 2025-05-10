@@ -20,9 +20,8 @@ Your documentation should have three sections: Overview, Design, Examples, and S
 # Overview of Required Sections
 
 ## Overview
-Give a high-level description of your software. The description should be clear and professional. You can use images if it helps. 
 
-##PLACE IMAGE HERE
+![ChessGame_mainmenu](https://github.com/user-attachments/assets/ff1a2613-681a-4f7b-b28c-f74e5e7216fd)
 
 Throughout the course of the semester, our group has been working to develop a game that takes inspiration from the concept of Chess. 
 
@@ -51,10 +50,47 @@ You can use any other diagram that you find helpful for describing your software
 
 This section will contain the most content. The documentation should fully document the latest version of your software. If you make changes to your software, you should update this document to reflect those changes. 
 
+![ChessGame_LogicUML](https://github.com/user-attachments/assets/bc9a6c53-f3c0-4190-b825-55ebe762d7e3)
+
+The above UML Class Diagram serves as a rough overview to the functionality of our Board code. We have the Board class which makes use of Piece, Move and, Board listener. Board is the main class displaying, moving, and interacting with each of the pieces depending on the board listener. Each of the individual pieces maintain their own functionality but heavily rely on our abstract class Piece. All of the regular or "Canon" pieces take inspiration from the classic Chess game using movement variables int x + int y and a Color enumeration. The pieces and board states function with a coordinates system as well as the "isValidMove" methods. Our newer implementations of additional pieces take inspiration from Shogi, we use a Shogi interface to separate the additional pieces, Ferz, Lance, ShogiPawn, Alfil. The Move and Coordinate classes as touched on before are what allow for the pieces and board states to function properly with the int x + int y variables. 
+
+![ChessGame_GuiUML](https://github.com/user-attachments/assets/cb63c29c-c071-4895-b090-811a1787c9c9)
+
+The above UML Class Diagram outlines the structure of the classes that run the GUI through LibGDX. The GdxBoard mirrors the Board within the backend, while extending from LibGDX's Table class to make use of the LibGDX Scene2D UI system. The GdxBoard is a table of cells containing Tiles, which store a reference to a piece as well as the tile's background which is used for tile colouring and highlighting when clicked. Using the listener/observer pattern with the TileClickListener class, Tiles call out to GdxBoard when they are interacted with, to perform highlighting and generally interact with the game backend, or model under MVC terminology. Each Screen class such as MainMenuScreen or GameScreen extend from MenuScreen due to the fact that all of our screens will be set to require the same methods and fields, such as a background. The background is in it's own class so that when it is instantiated it can take a plain chessboard image, tile it, and perform semi-random affine transformations to make a background that is somewhat unique each time the screen changes. 
+
 ## Examples
 
-Give screenshots of your running project and briefly describe what is in the screenshots.
+This is an image of the games mainmenu starting screen:
+![ChessGame_mainmenu](https://github.com/user-attachments/assets/e0a66e89-c61a-48d3-b1ff-7f310b266485)
+
+The following examples are images of 3 of the 200 possible chess game puzzles:
+![ChessGame_boardexample](https://github.com/user-attachments/assets/83586b58-7975-4cbd-9bd8-f00cd06facfa)
+![ChessGame_boardexample2](https://github.com/user-attachments/assets/01192e1b-3fe4-49bd-82c7-a3d691519d08)
+![ChessGame_boardexample3](https://github.com/user-attachments/assets/824b3087-6b11-4ca7-b9d4-92b4678bffb9)
+
+This is an image of the preview of possible moves when you select a chess piece: 
+![ChessGame_piecemoveexample](https://github.com/user-attachments/assets/e30a0e87-475a-4203-bcc9-1880fc553ac2)
+
+This is another example of a moving preview with a different piece: 
+![ChessGame_piecemoveexample2](https://github.com/user-attachments/assets/50ee45f7-fa0d-4cf4-bfdd-34913c73548d)
+
+This is an example of the result of using the piece swap button on some of the pieces:
+![ChessGame_pieceswapexample](https://github.com/user-attachments/assets/a8872fdc-f570-473f-b2c2-d85ab6b071ba)
+
 
 ## Status
 
-Give the current status of the software. List what is working and what is planned for future releases. When listing planned features, assume that the the project will continue even after the course ends.
+Currently the software is a fully functioning chess game with a fully polished GUI that features piece movement animations, and audio effects. It functions the same as classic chess currently but is played through level style. When playing the game you will randomly be assigned one of 200 puzzles. The game also has some additional working features including a on demand new puzzle button, piece swap button, and a fully funcitoning AI opponent. 
+
+Here is a list of planned additions for future releases:
+ - Board Obstacles
+ - Board Hazards
+ - Shop system inbetween levels (partially complete see image below)
+ - settings
+ - powerup & debuff items
+ - piece hitpoints and damage
+ - higher level AI capable of handling all of the additions listed above
+
+Here is an image of the current shop screen that displays inbetween games, which sadly we did not have the time to flesh out:
+![ChessGame_shopscreenexample](https://github.com/user-attachments/assets/2f8c4151-bda4-41c7-87a5-562b6dc025ac)
+The button would have applied a roguelite-esque modifier such as upgrading/swapping one of your pieces as a debug alternative to the planned idea of the player being offered several options.
